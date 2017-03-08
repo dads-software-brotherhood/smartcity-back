@@ -7,7 +7,9 @@ import mx.infotec.smartcity.backend.model.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,25 +39,54 @@ public class CustomerController {
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public Customer getById(@PathParam("id") String id) {
+    public Customer getById(@PathVariable String id) {
         return customerRepository.findOne(id);
     }
     
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    public void deleteByID(@PathParam("id") String id) {
-        customerRepository.delete(id);
+    public ResponseEntity<?> deleteByID(@PathVariable String id) {
+        try {
+            customerRepository.delete(id);
+            return ResponseEntity.accepted().body(null);
+        } catch (Exception ex) {
+            LOGGER.error("Error at delete", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);            
+        }
     }
     
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> add(@RequestBody Customer customer) {
         if (customer.getId() != null) {
-            LOGGER.warn("ID is not null, perform update");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID must be null");
+        } else {
+            try {
+                return ResponseEntity.accepted().body(customerRepository.insert(customer));
+            } catch (Exception ex) {
+                LOGGER.error("Error at insert", ex);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            }
         }
-        return ResponseEntity.accepted().body(customerRepository.save(customer));
     }
     
-    @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<?> update(@RequestBody Customer customer) {
-        return ResponseEntity.accepted().body(customerRepository.save(customer));
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    public ResponseEntity<?> update(@RequestBody Customer customer, @PathVariable("id") String id) {        
+        try {
+            if (customerRepository.exists(id)) {
+                if (customer.getId() != null) {
+                    LOGGER.warn("ID from object is ignored");
+                }
+                
+                customer.setId(id);        
+                customerRepository.save(customer);
+                
+                return ResponseEntity.accepted().body(null);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
+            }
+        } catch (Exception ex) {
+            LOGGER.error("Error at update", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+        
     }
 }
