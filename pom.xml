@@ -72,7 +72,7 @@
     
     <profiles>
         <profile>
-            <id>development</id>
+            <id>default</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -81,12 +81,17 @@
             </properties>
         </profile>
         <profile>
+            <id>development</id>
+            <properties>
+                <packaging.target>jar</packaging.target>
+                <spring.profiles.active>development</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
             <id>production</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <packaging.target>war</packaging.target>
+                <spring.profiles.active>production</spring.profiles.active>
             </properties>
             <dependencies>
                 <dependency>

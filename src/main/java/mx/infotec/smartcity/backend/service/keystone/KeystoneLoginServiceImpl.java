@@ -39,6 +39,8 @@ public class KeystoneLoginServiceImpl implements LoginService {
     @PostConstruct
     protected void init() {
         tokenRequestUrl = keystonUrl + "/v3/auth/tokens";
+        
+        LOGGER.info("Token url: {}", tokenRequestUrl);
     }
 
     @Override
