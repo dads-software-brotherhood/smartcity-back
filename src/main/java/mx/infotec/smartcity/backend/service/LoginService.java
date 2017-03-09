@@ -3,6 +3,8 @@ package mx.infotec.smartcity.backend.service;
 import java.io.Serializable;
 import mx.infotec.smartcity.backend.model.IdmUser;
 import mx.infotec.smartcity.backend.model.Token;
+import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
+import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
 
 /**
  *
@@ -10,8 +12,17 @@ import mx.infotec.smartcity.backend.model.Token;
  */
 public interface LoginService extends Serializable {
 
-    IdmUser performLogin(String username, char[] password);
-    Token refreshToken(String token);
-    boolean validToken(String token);
+    /**
+     * Performs authentication on the IDM server, returns the user information with a valid token.
+     * 
+     * @param username Username
+     * @param password Password
+     * @return User information with a valid token
+     * @throws mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException
+     */
+    IdmUser performLogin(String username, char[] password) throws InvalidCredentialsException;
+    Token refreshToken(String token) throws  InvalidTokenException;
+    boolean isValidToken(String token);
+    boolean invalidToken(String token);
 
 }

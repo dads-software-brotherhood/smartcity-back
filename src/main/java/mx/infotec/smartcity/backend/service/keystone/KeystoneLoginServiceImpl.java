@@ -8,6 +8,10 @@ import javax.annotation.PostConstruct;
 import mx.infotec.smartcity.backend.model.IdmUser;
 import mx.infotec.smartcity.backend.model.Token;
 import mx.infotec.smartcity.backend.service.LoginService;
+import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
+import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +29,8 @@ public class KeystoneLoginServiceImpl implements LoginService {
 
     private static final long serialVersionUID = 1L;
     
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeystoneLoginServiceImpl.class);
+    
     @Value("${idm.servers.keystone}")
     private String keystonUrl;
     
@@ -36,24 +42,33 @@ public class KeystoneLoginServiceImpl implements LoginService {
     }
 
     @Override
-    public IdmUser performLogin(String username, char[] password) {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    public IdmUser performLogin(String username, char[] password) throws InvalidCredentialsException {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        Request request = new Request(new User(username, new String(password)));
-        HttpEntity<Request> requestEntity = new HttpEntity(request);
-        HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity, Response.class);
+            Request request = new Request(new User(username, new String(password)));
+            HttpEntity<Request> requestEntity = new HttpEntity(request);
+            HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity, Response.class);
 
-        return convert(responseEntity);
+            return convert(responseEntity);
+        } catch (Exception ex) {
+            throw new InvalidCredentialsException(ex);
+        }
     }
 
     @Override
-    public Token refreshToken(String token) {
+    public Token refreshToken(String token) throws InvalidTokenException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     @Override
-    public boolean validToken(String token) {
+    public boolean isValidToken(String token) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean invalidToken(String token) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
