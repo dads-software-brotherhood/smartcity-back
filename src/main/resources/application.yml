@@ -5,7 +5,7 @@ spring:
         mongodb:
             database: smartcity
 server:
-    port: 8084
+    port: 9000
 
 idm:
     servers:
