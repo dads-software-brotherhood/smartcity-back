@@ -1,0 +1,16 @@
+idm:
+    servers:
+        keystone: http://192.168.56.11:5000
+        horizon: http://192.168.56.11:5000
+    admin:
+        username: idm
+        password: idm
+
+spring:
+    application:
+        name: back-sdk
+    data:
+        mongodb:
+            database: smartcity
+server:
+    port: 9000

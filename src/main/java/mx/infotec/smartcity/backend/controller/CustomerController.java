@@ -23,29 +23,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/customers")
 public class CustomerController {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
-    
+
     @Autowired
     private CustomerRepository customerRepository;
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/count")
     public long count() {
         return customerRepository.count();
     }
-    
+
     @RequestMapping(method = RequestMethod.GET)
     public List<Customer> getAll(@RequestHeader HttpHeaders headers) {
         LOGGER.debug("Headers: {}", headers);
-        
+
         return customerRepository.findAll();
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public Customer getById(@PathVariable String id) {
         return customerRepository.findOne(id);
     }
-    
+
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public ResponseEntity<?> deleteByID(@PathVariable String id) {
         try {
@@ -53,10 +53,10 @@ public class CustomerController {
             return ResponseEntity.accepted().body(null);
         } catch (Exception ex) {
             LOGGER.error("Error at delete", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-    
+
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> add(@RequestBody Customer customer) {
         if (customer.getId() != null) {
@@ -70,18 +70,18 @@ public class CustomerController {
             }
         }
     }
-    
+
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-    public ResponseEntity<?> update(@RequestBody Customer customer, @PathVariable("id") String id) {        
+    public ResponseEntity<?> update(@RequestBody Customer customer, @PathVariable("id") String id) {
         try {
             if (customerRepository.exists(id)) {
                 if (customer.getId() != null) {
                     LOGGER.warn("ID from object is ignored");
                 }
-                
-                customer.setId(id);        
+
+                customer.setId(id);
                 customerRepository.save(customer);
-                
+
                 return ResponseEntity.accepted().body(null);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
@@ -90,6 +90,6 @@ public class CustomerController {
             LOGGER.error("Error at update", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
-        
+
     }
 }
