@@ -5,7 +5,7 @@ package mx.infotec.smartcity.backend.service.exception;
  * @author Erik Valdivieso
  */
 public class InvalidTokenException extends Exception {
-    
+
     private static final long serialVersionUID = 1L;
 
     public InvalidTokenException() {
@@ -26,5 +26,5 @@ public class InvalidTokenException extends Exception {
     public InvalidTokenException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
-    
+
 }
