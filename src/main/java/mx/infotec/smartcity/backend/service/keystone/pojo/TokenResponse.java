@@ -11,7 +11,7 @@ import java.util.List;
  * @author Erik Valdivieso
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Token implements Serializable {
+public class TokenResponse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

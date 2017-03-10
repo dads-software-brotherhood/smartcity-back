@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author Erik Valdivieso
  */
-public class ResponseToken implements Serializable {
+public class TokenResponse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
