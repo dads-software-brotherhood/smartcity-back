@@ -54,11 +54,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                  <profiles>
-                    <profile>development</profile>
-                    <profile>qa</profile>
-                    <profile>production</profile>
-                  </profiles>
+                    <profiles>
+                        <profile>development</profile>
+                        <profile>qa</profile>
+                        <profile>production</profile>
+                    </profiles>
                 </configuration>
             </plugin>
         </plugins>

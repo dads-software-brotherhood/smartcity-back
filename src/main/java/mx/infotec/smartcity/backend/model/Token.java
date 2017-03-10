@@ -13,7 +13,7 @@ public class Token {
     private Date start;
     private Date end;
     private int time;
-    
+
     private TokenType tokenType;
 
     public String getToken() {

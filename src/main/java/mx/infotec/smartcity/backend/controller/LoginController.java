@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
-    
+
     @Autowired
     @Qualifier("keystoneLoginService")
 //    @Qualifier("horizonLoginService")

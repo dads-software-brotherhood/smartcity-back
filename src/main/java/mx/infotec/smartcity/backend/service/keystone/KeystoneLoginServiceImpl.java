@@ -31,18 +31,18 @@ import org.springframework.web.client.RestTemplate;
 public class KeystoneLoginServiceImpl implements LoginService {
 
     private static final long serialVersionUID = 1L;
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(KeystoneLoginServiceImpl.class);
-    
+
     @Value("${idm.servers.keystone}")
     private String keystonUrl;
-    
+
     private String tokenRequestUrl;
-    
+
     @PostConstruct
     protected void init() {
         tokenRequestUrl = keystonUrl + "/v3/auth/tokens";
-        
+
         LOGGER.info("Token url: {}", tokenRequestUrl);
     }
 
@@ -66,7 +66,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
     public Token refreshToken(String token) throws InvalidTokenException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public boolean isValidToken(String token) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -80,43 +80,43 @@ public class KeystoneLoginServiceImpl implements LoginService {
     private IdentityUser convert(HttpEntity<Response> responseEntity) {
         Response response = responseEntity.getBody();
         HttpHeaders headers = responseEntity.getHeaders();
-        
+
         if (response.getToken() == null && response.getToken().getUser() == null) {
             return null;
         } else {
             IdentityUser idmUser = new IdentityUser();
-            
+
             if (response.getToken().getRoles() != null) {
                 Set<String> roles = new HashSet<>();
-                
+
                 response.getToken().getRoles().forEach((role) -> {
                     roles.add(role.getName());
                 });
-                
+
                 idmUser.setRoles(roles);
             }
-            
+
             Token token = new Token();
-            
+
             token.setTokenType(TokenType.OTHER);
             token.setStart(response.getToken().getIssuedAt());
             token.setEnd(response.getToken().getExpiresAt());
-            
+
             if (token.getStart() != null && token.getEnd() != null) {
                 long tmp = token.getEnd().getTime() - token.getStart().getTime();
                 token.setTime((int) tmp / 1000);
             }
-                        
+
             List<String> tmp = headers.get("x-subject-token");
-            
+
             if (!tmp.isEmpty()) {
                 token.setToken(tmp.get(0));
             }
-            
+
             idmUser.setToken(token);
-            
+
             idmUser.setUsername(response.getToken().getUser().getName());
-                        
+
             return idmUser;
         }
     }

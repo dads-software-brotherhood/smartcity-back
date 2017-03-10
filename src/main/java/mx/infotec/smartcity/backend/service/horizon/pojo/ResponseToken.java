@@ -8,9 +8,9 @@ import java.io.Serializable;
  * @author Erik Valdivieso
  */
 public class ResponseToken implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private String accessToken;
     private String tokenType;
     private int expiresIn;
@@ -55,5 +55,5 @@ public class ResponseToken implements Serializable {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
-   
+
 }
