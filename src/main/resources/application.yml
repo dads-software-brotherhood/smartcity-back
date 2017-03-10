@@ -6,7 +6,7 @@ spring:
             database: smartcity
 server:
     port: 9000
-    contextPath: /rest
+    contextPath: /back-sdk
 
 idm:
     servers:
@@ -15,6 +15,9 @@ idm:
     admin:
         username: idm
         password: idm
+    oauth:
+        clientId: 71c1a6a1a7f24345946509f826cb445f
+        clientSecret: 11ee4954366940a08e3565b34dea61d6
 
 ---
 spring:
@@ -26,7 +29,7 @@ spring:
             database: smartcity
 server:
     port: 9000
-    contextPath: /rest
+    contextPath: /back-sdk
 
 idm:
     servers:
@@ -35,6 +38,9 @@ idm:
     admin:
         username: idm
         password: idm
+    oauth:
+        clientId: 71c1a6a1a7f24345946509f826cb445f
+        clientSecret: 11ee4954366940a08e3565b34dea61d6
 
 ---
 spring:
@@ -46,7 +52,7 @@ spring:
             database: smartcity
 server:
     port: 8080
-    contextPath: /rest
+    contextPath: /back-sdk
 
 idm:
     servers:
@@ -55,6 +61,9 @@ idm:
     admin:
         username: idm
         password: idm
+    oauth:
+        clientId:
+        clientSecret:
 
 ---
 spring:
@@ -66,7 +75,7 @@ spring:
             database: smartcity
 server:
     port: 8080
-    contextPath: /rest
+    contextPath: /back-sdk
 
 idm:
     servers:
@@ -75,3 +84,6 @@ idm:
     admin:
         username: idm
         password: idm
+    oauth:
+        clientId:
+        clientSecret:
