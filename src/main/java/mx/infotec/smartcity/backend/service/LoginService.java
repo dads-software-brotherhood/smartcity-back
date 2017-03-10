@@ -1,7 +1,7 @@
 package mx.infotec.smartcity.backend.service;
 
 import java.io.Serializable;
-import mx.infotec.smartcity.backend.model.IdmUser;
+import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.Token;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
@@ -20,7 +20,7 @@ public interface LoginService extends Serializable {
      * @return User information with a valid token
      * @throws mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException
      */
-    IdmUser performLogin(String username, char[] password) throws InvalidCredentialsException;
+    IdentityUser performLogin(String username, char[] password) throws InvalidCredentialsException;
     Token refreshToken(String token) throws  InvalidTokenException;
     boolean isValidToken(String token);
     boolean invalidToken(String token);

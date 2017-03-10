@@ -1,12 +1,15 @@
 package mx.infotec.smartcity.backend.service.keystone;
 
-import mx.infotec.smartcity.backend.service.keystone.pojos.*;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Response;
+import mx.infotec.smartcity.backend.service.keystone.pojo.User;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.PostConstruct;
-import mx.infotec.smartcity.backend.model.IdmUser;
+import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.Token;
+import mx.infotec.smartcity.backend.model.TokenType;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
@@ -44,7 +47,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
     }
 
     @Override
-    public IdmUser performLogin(String username, char[] password) throws InvalidCredentialsException {
+    public IdentityUser performLogin(String username, char[] password) throws InvalidCredentialsException {
         try {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -74,14 +77,14 @@ public class KeystoneLoginServiceImpl implements LoginService {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    private IdmUser convert(HttpEntity<Response> responseEntity) {
+    private IdentityUser convert(HttpEntity<Response> responseEntity) {
         Response response = responseEntity.getBody();
         HttpHeaders headers = responseEntity.getHeaders();
         
         if (response.getToken() == null && response.getToken().getUser() == null) {
             return null;
         } else {
-            IdmUser idmUser = new IdmUser();
+            IdentityUser idmUser = new IdentityUser();
             
             if (response.getToken().getRoles() != null) {
                 Set<String> roles = new HashSet<>();
@@ -95,6 +98,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
             
             Token token = new Token();
             
+            token.setTokenType(TokenType.OTHER);
             token.setStart(response.getToken().getIssuedAt());
             token.setEnd(response.getToken().getExpiresAt());
             

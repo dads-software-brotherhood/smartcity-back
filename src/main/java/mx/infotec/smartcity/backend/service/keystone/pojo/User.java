@@ -1,4 +1,4 @@
-package mx.infotec.smartcity.backend.service.keystone.pojos;
+package mx.infotec.smartcity.backend.service.keystone.pojo;
 
 import java.io.Serializable;
 

@@ -6,7 +6,7 @@ import java.util.Set;
  *
  * @author Erik Valdivieso
  */
-public class IdmUser {
+public class IdentityUser {
 
     private String username;
     private Token token;

@@ -27,6 +27,7 @@ public class LoginController {
     
     @Autowired
     @Qualifier("keystoneLoginService")
+//    @Qualifier("horizonLoginService")
     private LoginService loginService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/token", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)

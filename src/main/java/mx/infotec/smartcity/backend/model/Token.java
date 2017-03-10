@@ -9,9 +9,12 @@ import java.util.Date;
 public class Token {
 
     private String token;
+    private String refreshToken;
     private Date start;
     private Date end;
     private int time;
+    
+    private TokenType tokenType;
 
     public String getToken() {
         return token;
@@ -19,6 +22,14 @@ public class Token {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
     public Date getStart() {
@@ -43,6 +54,14 @@ public class Token {
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public TokenType getTokenType() {
+        return tokenType;
+    }
+
+    public void setTokenType(TokenType tokenType) {
+        this.tokenType = tokenType;
     }
 
 }
