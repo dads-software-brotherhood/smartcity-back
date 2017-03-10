@@ -6,6 +6,7 @@ spring:
             database: smartcity
 server:
     port: 9000
+    contextPath: /rest
 
 idm:
     servers:
@@ -25,11 +26,32 @@ spring:
             database: smartcity
 server:
     port: 9000
+    contextPath: /rest
 
 idm:
     servers:
         keystone: http://192.168.56.11:5000
         horizon: http://192.168.56.11:8000
+    admin:
+        username: idm
+        password: idm
+
+---
+spring:
+    profiles: qa
+    application:
+        name: back-sdk
+    data:
+        mongodb:
+            database: smartcity
+server:
+    port: 8080
+    contextPath: /rest
+
+idm:
+    servers:
+        keystone: http://191.168.186.252:5000
+        horizon: http://191.168.186.252:8000
     admin:
         username: idm
         password: idm
@@ -44,6 +66,7 @@ spring:
             database: smartcity
 server:
     port: 8080
+    contextPath: /rest
 
 idm:
     servers:
