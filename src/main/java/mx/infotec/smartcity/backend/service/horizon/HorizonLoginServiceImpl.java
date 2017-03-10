@@ -2,6 +2,8 @@ package mx.infotec.smartcity.backend.service.horizon;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.Token;
@@ -9,7 +11,9 @@ import mx.infotec.smartcity.backend.model.TokenType;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
-import mx.infotec.smartcity.backend.service.horizon.pojo.ResponseToken;
+import mx.infotec.smartcity.backend.service.horizon.pojo.TokenResponse;
+import mx.infotec.smartcity.backend.service.horizon.pojo.UserResponse;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +25,7 @@ import org.springframework.util.Base64Utils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  *
@@ -42,12 +47,14 @@ public class HorizonLoginServiceImpl implements LoginService {
     private String horizonUrl;
 
     private String tokenUrl;
+    private String userUrl;
 
     private String authKey;
 
     @PostConstruct
     protected void init() {
         tokenUrl = horizonUrl + "/oauth2/token";
+        userUrl = horizonUrl + "/user";
 
         StringBuilder sb = new StringBuilder();
         sb.append(clientId).append(':').append(clientSecret);
@@ -77,18 +84,30 @@ public class HorizonLoginServiceImpl implements LoginService {
             HttpEntity requestEntity = new HttpEntity(map, headers);
 
             RestTemplate restTemplate = new RestTemplate();
-            HttpEntity<ResponseToken> responseEntity = restTemplate.exchange(tokenUrl, HttpMethod.POST, requestEntity, ResponseToken.class);
+            HttpEntity<TokenResponse> responseEntity = restTemplate.exchange(tokenUrl, HttpMethod.POST, requestEntity, TokenResponse.class);
 
-            return convert(username, responseEntity.getBody());
+            UserResponse userResponse = getUserInfo(responseEntity.getBody().getAccessToken());
+            
+            return convert(userResponse, responseEntity.getBody());
         } catch (Exception ex) {
             throw new InvalidCredentialsException(ex);
         }
     }
 
-    private IdentityUser convert(String username, ResponseToken responseToken) {
+    private IdentityUser convert(UserResponse userResponse, TokenResponse responseToken) {
         IdentityUser identityUser = new IdentityUser();
 
-        identityUser.setUsername(username);
+        identityUser.setUsername(userResponse.getEmail());
+        
+        if (userResponse.getRoles() != null) {
+            Set<String> roles = new HashSet<>();
+            
+            userResponse.getRoles().forEach((role) -> {
+                roles.add(role.getName());
+            });
+            
+            identityUser.setRoles(roles);
+        }
 
         Token token = new Token();
 
@@ -120,7 +139,25 @@ public class HorizonLoginServiceImpl implements LoginService {
 
     @Override
     public boolean invalidToken(String token) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            return getUserInfo(token) != null;
+        } catch (InvalidTokenException ex) {
+            LOGGER.debug("Invalid token", ex);
+            return false;
+        }
     }
-
+    
+    private UserResponse getUserInfo(String token) throws InvalidTokenException {
+        try {
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(userUrl)
+                    .queryParam("access_token", token);
+            
+            RestTemplate restTemplate = new RestTemplate();
+            
+            return restTemplate.getForObject(builder.build().encode().toUri(), UserResponse.class);
+        } catch (Exception ex) {
+            throw new InvalidTokenException(ex);
+        }
+    }
+    
 }

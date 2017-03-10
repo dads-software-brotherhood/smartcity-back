@@ -13,13 +13,13 @@ public class Response implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Token token;
+    private TokenResponse token;
 
-    public Token getToken() {
+    public TokenResponse getToken() {
         return token;
     }
 
-    public void setToken(Token token) {
+    public void setToken(TokenResponse token) {
         this.token = token;
     }
 }
