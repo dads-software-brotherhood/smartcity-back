@@ -9,5 +9,5 @@ Smart city SDK Banckend
 In a console, just use a maven's way:
 
 ```bash
-mvn spring-boot:run 
+mvn spring-boot:run -Drun.profiles=development
 ```
