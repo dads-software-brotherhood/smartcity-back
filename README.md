@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/dads-software-brotherhood/smartcity-back.svg?style=svg)](https://circleci.com/gh/dads-software-brotherhood/smartcity-back)
+
 # smartcity-back
 
 Smart city SDK Banckend
