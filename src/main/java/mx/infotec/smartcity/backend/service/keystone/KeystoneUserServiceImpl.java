@@ -25,6 +25,7 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.Group;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Project;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Response;
+import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.Users;
@@ -47,12 +48,14 @@ public class KeystoneUserServiceImpl implements UserService {
   private String              keystonUrl;
 
   private String              userUrl;
+  private String              changePasswordUrl;
 
   private String              DBLCUOTE         = "\"";
 
   @PostConstruct
   protected void init() {
     userUrl = keystonUrl + "/v3/users";
+    changePasswordUrl = userUrl + "/%s/password";
     LOGGER.info("user url: {}", userUrl);
   }
 
@@ -130,8 +133,6 @@ public class KeystoneUserServiceImpl implements UserService {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set("X-auth-token", authToken);
-    StringBuffer strbfr = new StringBuffer();
-
     HttpEntity<CreateUser> requestEntity = new HttpEntity(user, headers);
     HttpEntity<CreateUser> responseEntity =
         restTemplate.exchange(userUrl, HttpMethod.POST, requestEntity, CreateUser.class);
@@ -170,10 +171,24 @@ public class KeystoneUserServiceImpl implements UserService {
     return null;
   }
 
+
   @Override
-  public boolean changePassword(String idUser, String authToken, String password) {
-    // TODO Auto-generated method stub
-    return false;
+  public Object changePassword(String userid, ChangeUserPassword user, String authToken) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("X-auth-token", authToken);
+    HttpEntity<ChangeUserPassword> requestEntity = new HttpEntity(user, headers);
+    LOGGER.info("user url: {}", String.format(changePasswordUrl, userid));
+    HttpEntity<ChangeUserPassword> responseEntity =
+        restTemplate.exchange(String.format(changePasswordUrl, userid), HttpMethod.POST,
+            requestEntity, ChangeUserPassword.class);
+    return responseEntity.getBody();
+
+
   }
 
 }

@@ -1,21 +1,22 @@
 
 package mx.infotec.smartcity.backend.service.keystone.pojo.user;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+@JsonInclude(Include.NON_NULL)
 public class User {
 
-  private Object              username;
-  private String              name;
-  // private Links links;
-  private String              passwordChangedAt;
-  private Boolean             enabled;
-  private String              domainId;
-  private String              defaultProjectId;
-  private String              id;
-  private String              password;
-  private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  private Object  username;
+  private String  name;
+  private Links   links;
+  private String  passwordChangedAt;
+  private Boolean enabled;
+  private String  domainId;
+  private String  defaultProjectId;
+  private String  id;
+  private String  password;
+  private String  password_expires_at;
 
 
 
@@ -80,20 +81,28 @@ public class User {
     this.id = id;
   }
 
-  public Map<String, Object> getAdditionalProperties() {
-    return this.additionalProperties;
-  }
-
-  public void setAdditionalProperty(String name, Object value) {
-    this.additionalProperties.put(name, value);
-  }
-
   public String getPassword() {
     return password;
   }
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public Links getLinks() {
+    return links;
+  }
+
+  public void setLinks(Links links) {
+    this.links = links;
+  }
+
+  public String getPassword_expires_at() {
+    return password_expires_at;
+  }
+
+  public void setPassword_expires_at(String password_expires_at) {
+    this.password_expires_at = password_expires_at;
   }
 
 }

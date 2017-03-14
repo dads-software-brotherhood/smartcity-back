@@ -1,28 +1,23 @@
 
 package mx.infotec.smartcity.backend.service.keystone.pojo.user;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+@JsonInclude(Include.NON_NULL)
 public class Links {
 
-    private String self;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+  private String self;
+  // private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public String getSelf() {
-        return self;
-    }
+  public String getSelf() {
+    return self;
+  }
 
-    public void setSelf(String self) {
-        this.self = self;
-    }
+  public void setSelf(String self) {
+    this.self = self;
+  }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
 
 }

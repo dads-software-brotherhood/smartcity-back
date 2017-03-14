@@ -5,6 +5,7 @@ import java.util.List;
 
 import mx.infotec.smartcity.backend.service.keystone.pojo.Group;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Project;
+import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 
@@ -26,8 +27,8 @@ public interface UserService extends Serializable {
 
   Project getUserProjects(String idUser, String authToken);
 
-  boolean changePassword(String idUser, String authToken, String password);
-
   Group getUserGroups(String idUser, String authToken);
+
+  public Object changePassword(String userid, ChangeUserPassword user, String token);
 
 }
