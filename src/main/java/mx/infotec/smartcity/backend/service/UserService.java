@@ -21,7 +21,7 @@ public interface UserService extends Serializable {
 
   User getUser(String idUser, String authToken);
 
-  User updateUser(String idUser, String authToken);
+  CreateUser updateUser(String idUser, String authToken, CreateUser user);
 
   boolean deleteUser(String idUser, String authToken);
 

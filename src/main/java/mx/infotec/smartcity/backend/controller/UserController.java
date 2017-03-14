@@ -75,6 +75,19 @@ public class UserController {
     }
   }
 
+  @RequestMapping(method = RequestMethod.PATCH, value = "/users/{userid}",
+      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<?> updateUser(@PathVariable("userid") String userid,
+      @RequestHeader(value = "token-auth") String token, @RequestBody CreateUser user) {
+    try {
+
+      // return ResponseEntity.accepted().body(user);
+      return ResponseEntity.accepted().body(userService.updateUser(userid, token, user));
+    } catch (Exception ex) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+  }
+
 
 
 }

@@ -13,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -49,13 +50,15 @@ public class KeystoneUserServiceImpl implements UserService {
 
   private String              userUrl;
   private String              changePasswordUrl;
-
+  private String              updateUserUrl;
   private String              DBLCUOTE         = "\"";
+  private Integer             TIMEOUT          = 90000;
 
   @PostConstruct
   protected void init() {
     userUrl = keystonUrl + "/v3/users";
     changePasswordUrl = userUrl + "/%s/password";
+    updateUserUrl = userUrl + "/%s";
     LOGGER.info("user url: {}", userUrl);
   }
 
@@ -68,7 +71,7 @@ public class KeystoneUserServiceImpl implements UserService {
     HttpHeaders headers = new HttpHeaders();
     // headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set("X-auth-token", authToken);
-    HttpEntity<Request> requestEntity = new HttpEntity(request, headers);
+    HttpEntity<Request> requestEntity = new HttpEntity<Request>(request, headers);
     HttpEntity<Users> responseEntity =
         restTemplate.exchange(userUrl, HttpMethod.GET, requestEntity, Users.class);
 
@@ -133,7 +136,7 @@ public class KeystoneUserServiceImpl implements UserService {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set("X-auth-token", authToken);
-    HttpEntity<CreateUser> requestEntity = new HttpEntity(user, headers);
+    HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(user, headers);
     HttpEntity<CreateUser> responseEntity =
         restTemplate.exchange(userUrl, HttpMethod.POST, requestEntity, CreateUser.class);
     LOGGER.info("user url: en create user{}", userUrl);
@@ -148,9 +151,24 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
-  public User updateUser(String idUser, String authToken) {
-    // TODO Auto-generated method stub
-    return null;
+  public CreateUser updateUser(String idUser, String authToken, CreateUser user) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+    HttpComponentsClientHttpRequestFactory requestFactory =
+        new HttpComponentsClientHttpRequestFactory();
+    requestFactory.setConnectTimeout(TIMEOUT);
+    requestFactory.setReadTimeout(TIMEOUT);
+
+    restTemplate.setRequestFactory(requestFactory);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("X-auth-token", authToken);
+    HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(user, headers);
+    HttpEntity<CreateUser> responseEntity = restTemplate.exchange(
+        String.format(updateUserUrl, idUser), HttpMethod.PATCH, requestEntity, CreateUser.class);
+    return responseEntity.getBody();
+
   }
 
   @Override

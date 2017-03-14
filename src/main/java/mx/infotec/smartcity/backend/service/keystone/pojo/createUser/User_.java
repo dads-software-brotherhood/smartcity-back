@@ -3,6 +3,7 @@ package mx.infotec.smartcity.backend.service.keystone.pojo.createUser;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(Include.NON_NULL)
 public class User_ {
@@ -13,6 +14,8 @@ public class User_ {
   private String  password;
   private String  id;
   private String  username;
+  @JsonProperty("password_expires_at")
+  private String  passwordExpiresAt;
 
 
   public String getId() {
@@ -61,6 +64,16 @@ public class User_ {
 
   public void setLinks(Links links) {
     this.links = links;
+  }
+
+  @JsonProperty("password_expires_at")
+  public String getPasswordExpiresAt() {
+    return passwordExpiresAt;
+  }
+
+  @JsonProperty("password_expires_at")
+  public void setPasswordExpiresAt(String passwordExpiresAt) {
+    this.passwordExpiresAt = passwordExpiresAt;
   }
 
 
