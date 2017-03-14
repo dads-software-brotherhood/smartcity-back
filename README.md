@@ -11,10 +11,6 @@ In a console, just use a maven's way:
 ```bash
 mvn spring-boot:run -Drun.profiles=development
 ```
-to use in windows environment
-```
-mvn spring-boot:run -Drun.profiles=dev-windows
-```
 
 ## mongodb
 
