@@ -5,7 +5,8 @@ import java.util.List;
 
 import mx.infotec.smartcity.backend.service.keystone.pojo.Group;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Project;
-import mx.infotec.smartcity.backend.service.keystone.pojo.User;
+import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
+import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 
 /**
  *
@@ -13,20 +14,20 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.User;
  */
 public interface UserService extends Serializable {
 
-	public List<User> getAllUsers(String authToken);
+  public List<User> getAllUsers(String authToken);
 
-	public User createUser(User user, String authToken);
+  public CreateUser createUser(CreateUser user, String authToken);
 
-	User getUser(String idUser, String authToken);
+  User getUser(String idUser, String authToken);
 
-	User updateUser(String idUser, String authToken);
+  User updateUser(String idUser, String authToken);
 
-	boolean deleteUser(String idUser, String authToken);
+  boolean deleteUser(String idUser, String authToken);
 
-	Project getUserProjects(String idUser, String authToken);
+  Project getUserProjects(String idUser, String authToken);
 
-	boolean changePassword(String idUser, String authToken, String password);
+  boolean changePassword(String idUser, String authToken, String password);
 
-	Group getUserGroups(String idUser, String authToken);
+  Group getUserGroups(String idUser, String authToken);
 
 }
