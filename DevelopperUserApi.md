@@ -105,6 +105,7 @@ This operation conflicted with another operation on this resource.
   	  }
 	}
 
+### change password having original password###
 > POST /users/{user_id}/password
 
 #### HEADERS ####
@@ -125,7 +126,7 @@ This operation conflicted with another operation on this resource.
 Some content in the request was invalid.
 
 	401 - Unauthorized 	
-User must authenticate before making a request.
+User must authenticate before making a request or the original_password is incorrect.
 
 	403 - Forbidden 	
 Policy does not allow current user to do this operation.
@@ -135,4 +136,51 @@ The requested resource could not be found.
 
 	409 - Conflict 	
 This operation conflicted with another operation on this resource. 
+
+### UPDATE ###
+
+> PATCH /users/{userid}
+
+#### HEADERS ####
+	token-auth : token 
+	Content-Type: application/json
+#### JSON ####
+
+	{
+	 "user" :   {
+	        "enabled": true,
+	        "name": "James Doe",
+	        "username":"James Doe nombre",
+	        "password": "secretsecret"
+	    }
+	}
+
+#### ERROR ####
+
+	
+	400 - Bad Request
+ Some content in the request was invalid.
+
+	401 - Unauthorized
+User must authenticate before making a request.
+
+	403 - Forbidden
+Policy does not allow current user to do this operation.
+
+	409 - Conflict
+This operation conflicted with another operation on this resource.
+
+
+#### OK ####
+	{
+	  "user": {
+	    "enabled": true,
+	    "name": "James Doe",
+	    "links": {
+	      "self": "http://localhost:5000/v3/users/james-doe-nombre"
+	    },
+	    "id": "james-doe",
+	    "username": "James Doe nombre"
+  	  }
+	}
    
