@@ -1,12 +1,18 @@
 
 package mx.infotec.smartcity.backend.service.keystone.pojo.createUser;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class User_ {
 
   private Boolean enabled;
   private String  name;
+  private Links   links;
   private String  password;
   private String  id;
+  private String  username;
 
 
   public String getId() {
@@ -41,6 +47,21 @@ public class User_ {
     this.password = password;
   }
 
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public Links getLinks() {
+    return links;
+  }
+
+  public void setLinks(Links links) {
+    this.links = links;
+  }
 
 
 }

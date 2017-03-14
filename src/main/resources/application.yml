@@ -12,6 +12,7 @@ idm:
     servers:
         keystone: http://192.168.56.11:5000
         horizon: http://192.168.56.11:8000
+        orion: http://192.168.56.11:1026
     admin:
         username: idm
         password: idm
@@ -33,8 +34,33 @@ server:
 
 idm:
     servers:
+        keystone: http://192.168.56.11:5000
+        horizon: http://192.168.56.11:8000
+        orion: http://192.168.56.11:1026
+    admin:
+        username: idm
+        password: idm
+    oauth:
+        clientId: 71c1a6a1a7f24345946509f826cb445f
+        clientSecret: 11ee4954366940a08e3565b34dea61d6
+
+---
+spring:
+    profiles: dev-windows
+    application:
+        name: back-sdk
+    data:
+        mongodb:
+            database: smartcity
+server:
+    port: 9000
+    contextPath: /back-sdk
+
+idm:
+    servers:
         keystone: http://localhost:5000
         horizon: http://localhost:8000
+        orion: http://localhost:1026
     admin:
         username: idm
         password: idm
@@ -58,6 +84,7 @@ idm:
     servers:
         keystone: http://191.168.186.252:5000
         horizon: http://191.168.186.252:8000
+        orion: http://192.168.56.11:1026
     admin:
         username: idm
         password: idm
@@ -79,8 +106,9 @@ server:
 
 idm:
     servers:
-        keystone: http://localhost:5000
-        horizon: http://localhost:8000
+        keystone: http://192.168.56.11:5000
+        horizon: http://192.168.56.11:8000
+        orion: http://192.168.56.11:1026
     admin:
         username: idm
         password: idm
