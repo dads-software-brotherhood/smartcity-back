@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import mx.infotec.smartcity.backend.service.keystone.pojo.roles.Roles;
+
 @JsonInclude(Include.NON_NULL)
 public class User_ {
 
@@ -14,6 +16,8 @@ public class User_ {
   private String  password;
   private String  id;
   private String  username;
+  private Roles   role;
+
   @JsonProperty("password_expires_at")
   private String  passwordExpiresAt;
 

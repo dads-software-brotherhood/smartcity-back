@@ -1,5 +1,7 @@
 package mx.infotec.smartcity.backend.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import mx.infotec.smartcity.backend.service.RoleService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
@@ -25,18 +28,24 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 @RequestMapping("/user")
 public class UserController {
 
+
+  private static final Logger LOGGER                            =
+      LoggerFactory.getLogger(UserController.class);
+
+
   @Autowired
   @Qualifier("keystoneUserService")
-  private UserService userService;
+  private UserService         userService;
 
-  /*
-   * @RequestMapping(method = RequestMethod.POST, value = "/token", consumes =
-   * MediaType.APPLICATION_JSON_UTF8_VALUE) public ResponseEntity<?> getToken(@RequestBody
-   * TokenRequest tokenRequest) { try { return
-   * ResponseEntity.accepted().body(loginService.performLogin(tokenRequest.getUsername(),
-   * tokenRequest.getPassword())); } catch (Exception ex) { return
-   * ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password invalid"); } }
-   */
+  @Autowired
+  @Qualifier("keystoneRoleService")
+  private RoleService         roleService;
+
+  private String              END_USER                          = "End User";
+  private String              ADMINISTRATOR                     = "Administrator";
+  private String              ADMINISTRATOR_OF_PUBLIC_TRANSPORT =
+      "Administrator of public transport";
+
 
   @RequestMapping(method = RequestMethod.GET, value = "/users",
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -55,12 +64,26 @@ public class UserController {
       @RequestBody CreateUser user) {
     try {
 
-      // return ResponseEntity.accepted().body(user);
-      return ResponseEntity.accepted().body(userService.createUser(user, token));
+      CreateUser createdUser = userService.createUser(user, token);
+      // LOGGER.info(" usercontroller user url: en df create user {} ", createdUser.toString());
+      // return ResponseEntity.accepted().body(roleService.createRole(new SelfRole(END_USER),
+      // token));
+      roleService.assignRoleToUserOnDefaultDomain(
+          roleService.getRoleByName(END_USER, token).getRole().getId(),
+          createdUser.getUser().getId(), "default", token);
+      // if (roleService.getRoleByName(END_USER, token).toString() == null) {
+      // return ResponseEntity.accepted()
+      // .body(roleService.createRole(new SelfRole(END_USER), token));
+      // }
+      // return ResponseEntity.accepted().body(roleService.getRoleByName(END_USER, token));
+      // LOGGER.info("user depues usercontroller url: en df create user {} ", "testing");
+      return ResponseEntity.accepted().body(createdUser);
     } catch (Exception ex) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
   }
+
+
 
   @RequestMapping(method = RequestMethod.POST, value = "/users/{userid}/password",
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)

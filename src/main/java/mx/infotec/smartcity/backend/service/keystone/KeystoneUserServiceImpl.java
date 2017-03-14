@@ -1,8 +1,6 @@
 package mx.infotec.smartcity.backend.service.keystone;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -18,14 +16,10 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import mx.infotec.smartcity.backend.model.IdentityUser;
-import mx.infotec.smartcity.backend.model.Token;
-import mx.infotec.smartcity.backend.model.TokenType;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Group;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Project;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Response;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
@@ -78,54 +72,7 @@ public class KeystoneUserServiceImpl implements UserService {
     return responseEntity.getBody().getUsers();
   }
 
-  private List<User> convertUsers(HttpEntity<Users> responseEntity) {
-    Users users = responseEntity.getBody();
-    HttpHeaders headers = responseEntity.getHeaders();
 
-    return users.getUsers();
-  }
-
-  private IdentityUser convertUser(Response response, HttpHeaders headers) {
-    if (response.getToken() == null && response.getToken().getUser() == null) {
-      return null;
-    } else {
-      IdentityUser idmUser = new IdentityUser();
-
-      if (response.getToken().getRoles() != null) {
-        Set<String> roles = new HashSet<>();
-
-        response.getToken().getRoles().forEach((role) -> {
-          roles.add(role.getName());
-        });
-
-        idmUser.setRoles(roles);
-      }
-
-      Token token = new Token();
-
-      token.setTokenType(TokenType.OTHER);
-      token.setStart(response.getToken().getIssuedAt());
-      token.setEnd(response.getToken().getExpiresAt());
-
-      if (token.getStart() != null && token.getEnd() != null) {
-        long tmp = token.getEnd().getTime() - token.getStart().getTime();
-        token.setTime((int) tmp / 1000);
-      }
-
-      List<String> tmp = headers.get("x-subject-token");
-
-      if (!tmp.isEmpty()) {
-        token.setToken(tmp.get(0));
-      }
-
-      idmUser.setToken(token);
-
-      idmUser.setUsername(response.getToken().getUser().getName());
-
-      return idmUser;
-    }
-
-  }
 
   @Override
   public CreateUser createUser(CreateUser user, String authToken) {
@@ -139,7 +86,7 @@ public class KeystoneUserServiceImpl implements UserService {
     HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(user, headers);
     HttpEntity<CreateUser> responseEntity =
         restTemplate.exchange(userUrl, HttpMethod.POST, requestEntity, CreateUser.class);
-    LOGGER.info("user url: en create user{}", userUrl);
+    LOGGER.info("user url: en df create user {} ", userUrl);
     return responseEntity.getBody();
 
   }

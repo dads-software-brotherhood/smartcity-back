@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role;
+import mx.infotec.smartcity.backend.service.keystone.pojo.roles.Roles;
 import mx.infotec.smartcity.backend.service.keystone.pojo.roles.SelfRole;
 
 /**
@@ -23,6 +24,11 @@ public interface RoleService extends Serializable {
   SelfRole deleteRole(String roleid, String authToken);
 
   SelfRole updateRole(String roleid, String authToken, SelfRole role);
+
+  void assignRoleToUserOnDefaultDomain(String roleId, String userId, String domain,
+      String authToken);
+
+  Roles getRoleUser(String domainId, String userId, String authToken);
 
 
 }

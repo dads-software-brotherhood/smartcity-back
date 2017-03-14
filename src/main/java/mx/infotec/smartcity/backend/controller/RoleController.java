@@ -28,6 +28,8 @@ public class RoleController {
   @Qualifier("keystoneRoleService")
   private RoleService roleService;
 
+
+
   @RequestMapping(method = RequestMethod.GET, value = "/roles",
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> getUsers(@RequestHeader(value = "token-auth") String token) {
@@ -74,6 +76,17 @@ public class RoleController {
     }
   }
 
+  // TODO VALIDAR SI SE EXPONE ESTE SERVICIO O NO
+  /*
+   * @RequestMapping(method = RequestMethod.GET, value = "/roles/user/{userId}", consumes =
+   * MediaType.APPLICATION_JSON_UTF8_VALUE) public ResponseEntity<?>
+   * getRolesUser(@RequestHeader(value = "token-auth") String authToken,
+   * 
+   * @PathVariable("userId") String userId) { try { return
+   * ResponseEntity.accepted().body(roleService.getRoleUser("default", userId, authToken)); } catch
+   * (Exception ex) { return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage()); }
+   * }
+   */
   @RequestMapping(method = RequestMethod.DELETE, value = "/roles/{roleid}",
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> deleteRolePorId(@RequestHeader(value = "token-auth") String authToken,

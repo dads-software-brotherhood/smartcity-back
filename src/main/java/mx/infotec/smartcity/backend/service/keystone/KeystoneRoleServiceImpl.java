@@ -41,6 +41,8 @@ public class KeystoneRoleServiceImpl implements RoleService {
 
   private String              roleUrl;
   private String              getRoleUrl;
+  private String              userRoleDomainUrl;
+  private String              getUserRole;
 
   private String              DBLCUOTE         = "\"";
   private Integer             TIMEOUT          = 90000;
@@ -49,6 +51,8 @@ public class KeystoneRoleServiceImpl implements RoleService {
   protected void init() {
     roleUrl = keystoneUrl + "/v3/roles";
     getRoleUrl = roleUrl + "/%s";
+    userRoleDomainUrl = keystoneUrl + "/v3/domains/%s/users/%s/roles/%s";
+    getUserRole = keystoneUrl + "/v3/domains/%s/users/%s/roles";
   }
 
   @Override
@@ -84,10 +88,23 @@ public class KeystoneRoleServiceImpl implements RoleService {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set("X-auth-token", authToken);
-    LOGGER.info("user url: {}", String.format(getRoleUrl, idRole));
+    LOGGER.info("get role user : {}", String.format(getRoleUrl, idRole));
     HttpEntity<SelfRole> requestEntity = new HttpEntity<SelfRole>(headers);
     HttpEntity<SelfRole> responseEntity = restTemplate.exchange(String.format(getRoleUrl, idRole),
         HttpMethod.GET, requestEntity, SelfRole.class);
+    return responseEntity.getBody();
+  }
+
+  @Override
+  public Roles getRoleUser(String domainId, String userId, String authToken) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("X-auth-token", authToken);
+    HttpEntity<SelfRole> requestEntity = new HttpEntity<SelfRole>(headers);
+    HttpEntity<Roles> responseEntity = restTemplate.exchange(
+        String.format(getUserRole, domainId, userId), HttpMethod.GET, requestEntity, Roles.class);
     return responseEntity.getBody();
   }
 
@@ -135,6 +152,24 @@ public class KeystoneRoleServiceImpl implements RoleService {
     HttpEntity<SelfRole> responseEntity = restTemplate.exchange(String.format(getRoleUrl, roleid),
         HttpMethod.PATCH, requestEntity, SelfRole.class);
     return responseEntity.getBody();
+
+  }
+
+  @Override
+  public void assignRoleToUserOnDefaultDomain(String roleId, String userId, String domain,
+      String authToken) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("X-auth-token", authToken);
+
+    LOGGER.info("set role: {}", String.format(userRoleDomainUrl, domain, userId, roleId));
+    HttpEntity<Request> requestEntity = new HttpEntity<Request>(headers);
+    HttpEntity<Roles> responseEntity =
+        restTemplate.exchange(String.format(userRoleDomainUrl, domain, userId, roleId),
+            HttpMethod.PUT, requestEntity, Roles.class);
+    // return responseEntity.getBody().getRoles();
 
   }
 
