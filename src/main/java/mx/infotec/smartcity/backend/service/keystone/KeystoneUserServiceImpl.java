@@ -144,11 +144,6 @@ public class KeystoneUserServiceImpl implements UserService {
 
   }
 
-  @Override
-  public User getUser(String idUser, String authToken) {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
   @Override
   public CreateUser updateUser(String idUser, String authToken, CreateUser user) {
@@ -172,19 +167,28 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
-  public boolean deleteUser(String idUser, String authToken) {
-    // TODO Auto-generated method stub
-    return false;
+  public CreateUser deleteUser(String userId, String authToken) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("X-auth-token", authToken);
+    LOGGER.info("user url: {}", String.format(updateUserUrl, userId));
+    HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(headers);
+    HttpEntity<CreateUser> responseEntity = restTemplate.exchange(
+        String.format(updateUserUrl, userId), HttpMethod.GET, requestEntity, CreateUser.class);
+    return responseEntity.getBody();
+
   }
 
   @Override
-  public Group getUserGroups(String idUser, String authToken) {
+  public Group getUserGroups(String userId, String authToken) {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public Project getUserProjects(String idUser, String authToken) {
+  public Project getUserProjects(String userId, String authToken) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -207,6 +211,42 @@ public class KeystoneUserServiceImpl implements UserService {
     return responseEntity.getBody();
 
 
+  }
+
+  @Override
+  public CreateUser getUser(String userId, String authToken) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("X-auth-token", authToken);
+    LOGGER.info("user url: {}", String.format(updateUserUrl, userId));
+    HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(headers);
+    HttpEntity<CreateUser> responseEntity = restTemplate.exchange(
+        String.format(updateUserUrl, userId), HttpMethod.GET, requestEntity, CreateUser.class);
+    return responseEntity.getBody();
+  }
+
+  @Override
+  public CreateUser getUserByName(String name, String authToken) {
+    List<User> users = this.getAllUsers(authToken);
+    for (User user : users) {
+      if (user.getName().equals(name)) {
+        return getUser(user.getId(), authToken);
+      }
+    }
+    return new CreateUser();
+  }
+
+  @Override
+  public CreateUser getUserByUsername(String username, String authToken) {
+    List<User> users = this.getAllUsers(authToken);
+    for (User user : users) {
+      if (user.getName().equals(username)) {
+        return getUser(user.getId(), authToken);
+      }
+    }
+    return new CreateUser();
   }
 
 }

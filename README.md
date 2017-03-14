@@ -12,7 +12,7 @@ In a console, just use a maven's way:
 mvn spring-boot:run -Drun.profiles=development
 ```
 to use in windows environment
-```bash
+```
 mvn spring-boot:run -Drun.profiles=dev-windows
 ```
 
@@ -20,7 +20,7 @@ mvn spring-boot:run -Drun.profiles=dev-windows
 
 also you need to start your mongodb
 
-```bash
+```
 mongod --dbpath x
 ```
 x path to database

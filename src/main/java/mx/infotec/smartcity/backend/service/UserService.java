@@ -19,16 +19,20 @@ public interface UserService extends Serializable {
 
   public CreateUser createUser(CreateUser user, String authToken);
 
-  User getUser(String idUser, String authToken);
+  CreateUser getUser(String idUser, String authToken);
 
   CreateUser updateUser(String idUser, String authToken, CreateUser user);
 
-  boolean deleteUser(String idUser, String authToken);
+  CreateUser deleteUser(String idUser, String authToken);
 
   Project getUserProjects(String idUser, String authToken);
 
   Group getUserGroups(String idUser, String authToken);
 
   public Object changePassword(String userid, ChangeUserPassword user, String token);
+
+  CreateUser getUserByName(String name, String authToken);
+
+  CreateUser getUserByUsername(String username, String authToken);
 
 }

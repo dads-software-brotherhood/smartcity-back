@@ -88,6 +88,46 @@ public class UserController {
     }
   }
 
+  @RequestMapping(method = RequestMethod.GET, value = "/users/{userid}",
+      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<?> getUser(@PathVariable("userid") String userid,
+      @RequestHeader(value = "token-auth") String token) {
+    try {
+
+      // return ResponseEntity.accepted().body(user);
+      return ResponseEntity.accepted().body(userService.getUser(userid, token));
+    } catch (Exception ex) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+  }
+
+  @RequestMapping(method = RequestMethod.GET, value = "/users/{username}/byUsername",
+      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<?> getUserByUsername(@PathVariable("username") String username,
+      @RequestHeader(value = "token-auth") String token) {
+    try {
+
+      // return ResponseEntity.accepted().body(user);
+      return ResponseEntity.accepted().body(userService.getUserByUsername(username, token));
+    } catch (Exception ex) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+  }
+
+
+  @RequestMapping(method = RequestMethod.GET, value = "/users/{name}/byName",
+      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<?> getUserByName(@PathVariable("name") String name,
+      @RequestHeader(value = "token-auth") String token) {
+    try {
+
+      // return ResponseEntity.accepted().body(user);
+      return ResponseEntity.accepted().body(userService.getUserByName(name, token));
+    } catch (Exception ex) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+  }
+
 
 
 }
