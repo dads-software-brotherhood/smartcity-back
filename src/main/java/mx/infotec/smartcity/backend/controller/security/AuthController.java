@@ -1,4 +1,4 @@
-package mx.infotec.smartcity.backend.controller;
+package mx.infotec.smartcity.backend.controller.security;
 
 import java.util.Date;
 import mx.infotec.smartcity.backend.model.IdentityUser;
@@ -21,8 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
- * @author Erik Valdivieso
+ * Service used to perform user authentication operations
+ * 
+ * @author Infotec
  */
 @RestController
 @RequestMapping("/security")
@@ -32,7 +33,6 @@ public class AuthController {
 
     @Autowired
     @Qualifier("keystoneLoginService")
-//    @Qualifier("horizonLoginService")
     private LoginService loginService;
 
     /**
