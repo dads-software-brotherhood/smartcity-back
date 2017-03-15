@@ -192,7 +192,7 @@ public class KeystoneUserServiceImpl implements UserService {
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("X-auth-token", authToken);
+    headers.set("X-auth-token", tokenAdmin);
     headers.set("X-Subject-Token", authToken);
     HttpEntity<Token> requestEntity = new HttpEntity<Token>(headers);
     HttpEntity<Token> responseEntity =

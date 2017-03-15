@@ -139,20 +139,19 @@ public class UserController {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
   }
-
-  @RequestMapping(method = RequestMethod.GET, value = "/token/{authToken}",
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public ResponseEntity<?> getUserFromToken(@PathVariable("authToken") String authToken,
-      @RequestHeader(value = "token-auth") String tokenAdmin) {
-    try {
-
-      // return ResponseEntity.accepted().body(user);
-      return ResponseEntity.accepted().body(userService.getUserFromToken(tokenAdmin, authToken));
-    } catch (Exception ex) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
-    }
-  }
-
+  // TODO Check if token will be validate from front
+  /*
+   * @RequestMapping(method = RequestMethod.GET, value = "/token/{authToken}", consumes =
+   * MediaType.APPLICATION_JSON_UTF8_VALUE) public ResponseEntity<?>
+   * getUserFromToken(@PathVariable("authToken") String authToken,
+   * 
+   * @RequestHeader(value = "token-auth") String tokenAdmin) { try {
+   * 
+   * // return ResponseEntity.accepted().body(user); return
+   * ResponseEntity.accepted().body(userService.getUserFromToken(tokenAdmin, authToken)); } catch
+   * (Exception ex) { return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage()); }
+   * }
+   */
 
 
 }
