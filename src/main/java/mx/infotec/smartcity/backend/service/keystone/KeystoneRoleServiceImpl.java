@@ -156,7 +156,7 @@ public class KeystoneRoleServiceImpl implements RoleService {
   }
 
   @Override
-  public void assignRoleToUserOnDefaultDomain(String roleId, String userId, String domain,
+  public void assignRoleToUserOnDomain(String roleId, String userId, String domain,
       String authToken) {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -173,5 +173,22 @@ public class KeystoneRoleServiceImpl implements RoleService {
 
   }
 
+  @Override
+  public void deleteRoleFromUserOnDomain(String roleId, String userId, String domain,
+      String authToken) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("X-auth-token", authToken);
+
+    LOGGER.info("set role: {}", String.format(userRoleDomainUrl, domain, userId, roleId));
+    HttpEntity<Request> requestEntity = new HttpEntity<Request>(headers);
+    HttpEntity<Roles> responseEntity =
+        restTemplate.exchange(String.format(userRoleDomainUrl, domain, userId, roleId),
+            HttpMethod.DELETE, requestEntity, Roles.class);
+
+
+  }
 
 }
