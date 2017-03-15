@@ -60,23 +60,14 @@ public class UserController {
 
   @RequestMapping(method = RequestMethod.POST, value = "/users",
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public ResponseEntity<?> createUsers(@RequestHeader(value = "token-auth") String token,
-      @RequestBody CreateUser user) {
+  public ResponseEntity<?> createUsersWithDefaultRole(
+      @RequestHeader(value = "token-auth") String token, @RequestBody CreateUser user) {
     try {
 
       CreateUser createdUser = userService.createUser(user, token);
-      // LOGGER.info(" usercontroller user url: en df create user {} ", createdUser.toString());
-      // return ResponseEntity.accepted().body(roleService.createRole(new SelfRole(END_USER),
-      // token));
-      roleService.assignRoleToUserOnDefaultDomain(
+      roleService.assignRoleToUserOnDomain(
           roleService.getRoleByName(END_USER, token).getRole().getId(),
           createdUser.getUser().getId(), "default", token);
-      // if (roleService.getRoleByName(END_USER, token).toString() == null) {
-      // return ResponseEntity.accepted()
-      // .body(roleService.createRole(new SelfRole(END_USER), token));
-      // }
-      // return ResponseEntity.accepted().body(roleService.getRoleByName(END_USER, token));
-      // LOGGER.info("user depues usercontroller url: en df create user {} ", "testing");
       return ResponseEntity.accepted().body(createdUser);
     } catch (Exception ex) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
