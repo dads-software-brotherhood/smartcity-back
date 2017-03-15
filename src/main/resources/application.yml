@@ -19,7 +19,8 @@ idm:
     oauth:
         clientId: 71c1a6a1a7f24345946509f826cb445f
         clientSecret: 11ee4954366940a08e3565b34dea61d6
-
+    default:
+        domain: default
 ---
 spring:
     profiles: development
@@ -43,6 +44,8 @@ idm:
     oauth:
         clientId: 71c1a6a1a7f24345946509f826cb445f
         clientSecret: 11ee4954366940a08e3565b34dea61d6
+    default:
+        domain: default
 
 ---
 spring:
@@ -91,3 +94,5 @@ idm:
     oauth:
         clientId:
         clientSecret:
+    default:
+        domain: default        

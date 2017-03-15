@@ -17,11 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import mx.infotec.smartcity.backend.service.UserService;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Group;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Project;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
+import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.Users;
 
@@ -45,6 +44,7 @@ public class KeystoneUserServiceImpl implements UserService {
   private String              userUrl;
   private String              changePasswordUrl;
   private String              updateUserUrl;
+  private String              tokenUrl;
   private String              DBLCUOTE         = "\"";
   private Integer             TIMEOUT          = 90000;
 
@@ -53,6 +53,7 @@ public class KeystoneUserServiceImpl implements UserService {
     userUrl = keystonUrl + "/v3/users";
     changePasswordUrl = userUrl + "/%s/password";
     updateUserUrl = userUrl + "/%s";
+    tokenUrl = keystonUrl + "/v3/auth/tokens";
     LOGGER.info("user url: {}", userUrl);
   }
 
@@ -128,17 +129,6 @@ public class KeystoneUserServiceImpl implements UserService {
 
   }
 
-  @Override
-  public Group getUserGroups(String userId, String authToken) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Project getUserProjects(String userId, String authToken) {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
 
   @Override
@@ -194,6 +184,20 @@ public class KeystoneUserServiceImpl implements UserService {
       }
     }
     return new CreateUser();
+  }
+
+  @Override
+  public Token getUserFromToken(String tokenAdmin, String authToken) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("X-auth-token", authToken);
+    headers.set("X-Subject-Token", authToken);
+    HttpEntity<Token> requestEntity = new HttpEntity<Token>(headers);
+    HttpEntity<Token> responseEntity =
+        restTemplate.exchange(tokenUrl, HttpMethod.GET, requestEntity, Token.class);
+    return responseEntity.getBody();
   }
 
 }

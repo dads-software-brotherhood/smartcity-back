@@ -4,7 +4,7 @@ For now it works only with Fiware Kerock Api
 
 # User #
 
-http://server:9000/back-sdk/user
+http://server:9000/back-sdk
 
 ### Get Users ###
 
@@ -324,7 +324,7 @@ This operation conflicted with another operation on this resource.
 
 # User #
 
-http://server:9000/back-sdk/user
+http://server:9000/back-sdk
 
 ### Get roles ###
 

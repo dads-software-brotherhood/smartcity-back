@@ -41,5 +41,9 @@ public interface RoleService extends Serializable {
   // Delete Role of a user on domain
   void deleteRoleFromUserOnDomain(String roleId, String userId, String domain, String authToken);
 
+  void assignRoleToUserOnDefaultDomain(String roleId, String userId, String authToken);
+
+  void deleteRoleFromUserDefaultDomain(String roleId, String userId, String authToken);
+
 
 }

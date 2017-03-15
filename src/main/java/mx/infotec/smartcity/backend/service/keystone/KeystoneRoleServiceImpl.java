@@ -38,6 +38,8 @@ public class KeystoneRoleServiceImpl implements RoleService {
 
   @Value("${idm.servers.keystone}")
   private String              keystoneUrl;
+  @Value("${idm.default.domain}")
+  private String              defaultDomain;
 
   private String              roleUrl;
   private String              getRoleUrl;
@@ -174,6 +176,11 @@ public class KeystoneRoleServiceImpl implements RoleService {
   }
 
   @Override
+  public void assignRoleToUserOnDefaultDomain(String roleId, String userId, String authToken) {
+    this.assignRoleToUserOnDomain(roleId, userId, defaultDomain, authToken);
+  }
+
+  @Override
   public void deleteRoleFromUserOnDomain(String roleId, String userId, String domain,
       String authToken) {
     RestTemplate restTemplate = new RestTemplate();
@@ -190,5 +197,11 @@ public class KeystoneRoleServiceImpl implements RoleService {
 
 
   }
+
+  @Override
+  public void deleteRoleFromUserDefaultDomain(String roleId, String userId, String authToken) {
+    this.deleteRoleFromUserOnDomain(roleId, userId, defaultDomain, authToken);
+  }
+
 
 }
