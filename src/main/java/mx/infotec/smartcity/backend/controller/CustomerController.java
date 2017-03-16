@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -53,7 +54,7 @@ public class CustomerController {
             return ResponseEntity.accepted().body(null);
         } catch (Exception ex) {
             LOGGER.error("Error at delete", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
         }
     }
 
@@ -66,12 +67,13 @@ public class CustomerController {
                 return ResponseEntity.accepted().body(customerRepository.insert(customer));
             } catch (Exception ex) {
                 LOGGER.error("Error at insert", ex);
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
             }
         }
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<?> update(@RequestBody Customer customer, @PathVariable("id") String id) {
         try {
             if (customerRepository.exists(id)) {
@@ -81,14 +83,14 @@ public class CustomerController {
 
                 customer.setId(id);
                 customerRepository.save(customer);
-
-                return ResponseEntity.accepted().body(null);
+                
+                return ResponseEntity.accepted().body("updated");
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
             }
         } catch (Exception ex) {
             LOGGER.error("Error at update", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
         }
 
     }
