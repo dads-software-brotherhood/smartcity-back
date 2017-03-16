@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -73,7 +72,6 @@ public class CustomerController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<?> update(@RequestBody Customer customer, @PathVariable("id") String id) {
         try {
             if (customerRepository.exists(id)) {
