@@ -50,7 +50,7 @@ public class CustomerController {
     public ResponseEntity<?> deleteByID(@PathVariable String id) {
         try {
             customerRepository.delete(id);
-            return ResponseEntity.accepted().body(null);
+            return ResponseEntity.accepted().body("deleted");
         } catch (Exception ex) {
             LOGGER.error("Error at delete", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
