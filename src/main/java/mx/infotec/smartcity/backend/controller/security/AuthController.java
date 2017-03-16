@@ -7,6 +7,7 @@ import mx.infotec.smartcity.backend.model.TokenRequest;
 import mx.infotec.smartcity.backend.model.TokenType;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
+import mx.infotec.smartcity.backend.utils.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class AuthController {
     /**
      * Method used to perform the user authentication. 
      * 
+     * If the credentials are invalid, the event must be saved in the log.
+     * 
      * @param tokenRequest User information.
      * @return If the user is valid, IdentityUser object is returned. Otherwise an error code (HttpStatus.UNAUTHORIZED).
      * @see IdentityUser, HttpStatus
@@ -47,6 +50,8 @@ public class AuthController {
         try {
             return ResponseEntity.accepted().body(loginService.performLogin(tokenRequest.getUsername(), tokenRequest.getPassword()));
         } catch (InvalidCredentialsException ex) {
+            //TODO: Debe agregar el error a la bitacora (es un acceso erroneo)
+            
             LOGGER.error("Error at perform authentication", ex);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password invalid");
         }
@@ -59,7 +64,7 @@ public class AuthController {
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/logout")
     public void logout(@RequestHeader(value = "token-auth") String tokenAuth) {
-        
+        //TODO: Debe invalidar el token
     }
     
     /**
@@ -70,19 +75,25 @@ public class AuthController {
      * @see HttpStatus
      */
     @RequestMapping(method = RequestMethod.POST, value = "/valid-token")
-    public ResponseEntity<?> validToken(@RequestHeader(value = "token-auth") String tokenAuth) {
+    public ResponseEntity<?> validToken(@RequestHeader(value = Constants.AUTH_TOKEN_HEADER) String tokenAuth) {
+        //TODO: debe preguntar en el servicio si es valido y dat una respuesta en base a eso
+        
         return ResponseEntity.accepted().build();
     }
 
     /**
      * Method used to obtain a new token from the user's current token.
      * 
+     * If the token is invalid, the event must be saved in the log
+     * 
      * @param tokenAuth User's token
      * @return In case the token is valid and a new token can be generated, a Token object. Otherwise an error code (HttpStatus.UNAUTHORIZED)
      * @see Token HttpStatus
      */
     @RequestMapping(method = RequestMethod.POST, value = "/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestHeader(value = "token-auth") String tokenAuth) {
+    public ResponseEntity<?> refreshToken(@RequestHeader(value = Constants.AUTH_TOKEN_HEADER) String tokenAuth) {
+        //TODO: Debe regrescar el token por medio del servicio y devolverlo, si no es válido debe agregarlo a la bitácora
+        
         Token token = new Token();
         token.setToken(tokenAuth);
         token.setTokenType(TokenType.OTHER);

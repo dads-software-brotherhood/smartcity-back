@@ -59,6 +59,7 @@ server:
     port: 8080
     contextPath: /back-sdk
 
+# Rodrigo's cloud server
 idm:
     servers:
         keystone: http://191.168.186.252:5000
@@ -68,8 +69,8 @@ idm:
         username: idm
         password: idm
     oauth:
-        clientId:
-        clientSecret:
+        clientId: 3a78de79264b41698130f611c0c1036f
+        clientSecret: 43ed1b086e864dea895fb576ca1c90fb
 
 ---
 spring:
@@ -83,6 +84,7 @@ server:
     port: 8080
     contextPath: /back-sdk
 
+# Erik's cloud server
 idm:
     servers:
         keystone: http://192.168.56.11:5000
