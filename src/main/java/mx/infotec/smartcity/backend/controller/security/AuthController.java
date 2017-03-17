@@ -63,8 +63,12 @@ public class AuthController {
      * @param tokenAuth User's token
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/logout")
-    public void logout(@RequestHeader(value = "token-auth") String tokenAuth) {
-        //TODO: Debe invalidar el token
+    public ResponseEntity<?> logout(@RequestHeader(value = "token-auth") String tokenAuth) {
+      if (loginService.invalidToken(tokenAuth)) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("success");
+      }
+      
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error to invalid token");
     }
     
     /**
