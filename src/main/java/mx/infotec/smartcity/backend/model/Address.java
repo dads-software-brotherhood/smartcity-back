@@ -21,6 +21,7 @@ public class Address implements Serializable {
     private String addreddLocality;
     private String street;
     private String postalCode;
+    private AddressType addressType;
 
     public String getAddreddCountry() {
         return addreddCountry;
@@ -60,6 +61,14 @@ public class Address implements Serializable {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public AddressType getAddressType() {
+        return addressType;
+    }
+
+    public void setAddressType(AddressType addressType) {
+        this.addressType = addressType;
     }
     
 }
