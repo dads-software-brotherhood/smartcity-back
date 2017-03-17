@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import mx.infotec.smartcity.backend.model.IdentityUser;
-import mx.infotec.smartcity.backend.model.Token;
+import mx.infotec.smartcity.backend.model.TokenInfo;
 import mx.infotec.smartcity.backend.model.TokenType;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
@@ -63,7 +63,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
     }
 
     @Override
-    public Token refreshToken(String token) throws InvalidTokenException {
+    public TokenInfo refreshToken(String token) throws InvalidTokenException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -96,7 +96,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
                 idmUser.setRoles(roles);
             }
 
-            Token token = new Token();
+            TokenInfo token = new TokenInfo();
 
             token.setTokenType(TokenType.OTHER);
             token.setStart(response.getToken().getIssuedAt());

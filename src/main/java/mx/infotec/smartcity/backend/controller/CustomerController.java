@@ -1,7 +1,7 @@
 package mx.infotec.smartcity.backend.controller;
 
 import java.util.List;
-import mx.infotec.smartcity.backend.CustomerRepository;
+import mx.infotec.smartcity.backend.persistence.CustomerRepository;
 import mx.infotec.smartcity.backend.model.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

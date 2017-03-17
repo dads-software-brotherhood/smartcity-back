@@ -2,7 +2,7 @@ package mx.infotec.smartcity.backend.controller.security;
 
 import java.util.Date;
 import mx.infotec.smartcity.backend.model.IdentityUser;
-import mx.infotec.smartcity.backend.model.Token;
+import mx.infotec.smartcity.backend.model.TokenInfo;
 import mx.infotec.smartcity.backend.model.TokenRequest;
 import mx.infotec.smartcity.backend.model.TokenType;
 import mx.infotec.smartcity.backend.service.LoginService;
@@ -88,13 +88,13 @@ public class AuthController {
      * 
      * @param tokenAuth User's token
      * @return In case the token is valid and a new token can be generated, a Token object. Otherwise an error code (HttpStatus.UNAUTHORIZED)
-     * @see Token HttpStatus
+     * @see TokenInfo HttpStatus
      */
     @RequestMapping(method = RequestMethod.POST, value = "/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestHeader(value = Constants.AUTH_TOKEN_HEADER) String tokenAuth) {
         //TODO: Debe regrescar el token por medio del servicio y devolverlo, si no es válido debe agregarlo a la bitácora
         
-        Token token = new Token();
+        TokenInfo token = new TokenInfo();
         token.setToken(tokenAuth);
         token.setTokenType(TokenType.OTHER);
         token.setStart(new Date());
