@@ -14,14 +14,42 @@ public class Address implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Indexed
+    private int countryId;
+    @Indexed
+    private int regionId;
+    @Indexed
+    private int localityId;
+    
     private String addreddCountry;
-    @Indexed
     private String addreddRegion;
-    @Indexed
     private String addreddLocality;
     private String street;
     private String postalCode;
     private AddressType addressType;
+
+    public int getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
+    }
+
+    public int getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(int regionId) {
+        this.regionId = regionId;
+    }
+
+    public int getLocalityId() {
+        return localityId;
+    }
+
+    public void setLocalityId(int localityId) {
+        this.localityId = localityId;
+    }
 
     public String getAddreddCountry() {
         return addreddCountry;

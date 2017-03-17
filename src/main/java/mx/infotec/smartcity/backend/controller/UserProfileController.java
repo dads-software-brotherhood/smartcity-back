@@ -1,6 +1,7 @@
 package mx.infotec.smartcity.backend.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import mx.infotec.smartcity.backend.model.Address;
 import mx.infotec.smartcity.backend.model.HealthProfile;
@@ -234,6 +235,9 @@ public class UserProfileController {
                 userProfile.setVehicles(new ArrayList<>());
             }
             
+            vehicle.setDatecreated(new Date());
+            vehicle.setDateModified(new Date());
+            
             userProfile.getVehicles().add(vehicle);
             
             userProfileRepository.save(userProfile);
@@ -250,6 +254,7 @@ public class UserProfileController {
         UserProfile userProfile = userProfileRepository.findOne(id);
         
         if (userProfile != null && userProfile.getVehicles() != null && userProfile.getVehicles().size() > index) {
+            vehicle.setDateModified(new Date());
             userProfile.getVehicles().set(index, vehicle);
             userProfileRepository.save(userProfile);
             return ResponseEntity.accepted().body(userProfile.getVehicles()); 
