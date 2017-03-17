@@ -10,11 +10,16 @@ import javax.annotation.PostConstruct;
 import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.TokenInfo;
 import mx.infotec.smartcity.backend.model.TokenType;
+import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
+
+import org.apache.http.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +40,10 @@ public class KeystoneLoginServiceImpl implements LoginService {
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KeystoneLoginServiceImpl.class);
+    
+    @Autowired
+    @Qualifier("adminUtils")
+    private AdminUtilsService adminUtils;
 
     @Value("${idm.servers.keystone}")
     private String keystonUrl;
@@ -71,7 +80,27 @@ public class KeystoneLoginServiceImpl implements LoginService {
 
     @Override
     public boolean isValidToken(String token) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      String adminToken = adminUtils.getAdmintoken();
+      RestTemplate restTemplate = new RestTemplate();
+      restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+      HttpHeaders headers = new HttpHeaders();
+      headers.add("X-Auth-Token", adminToken);
+      headers.add("X-Subject-Token", token);
+      HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
+      try {
+        HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
+        IdentityUser user = convert(responseEntity);
+        if (user.getTokenInfo() != null && !user.getTokenInfo().getToken().isEmpty()) {
+          invalidToken(adminToken);
+          return true;
+        } else {
+          return false;
+        }   
+      } catch(RestClientException e) {
+        LOGGER.error("Error al validar el token, causa: ", e);
+      }
+      return false;
+        
     }
 
     @Override

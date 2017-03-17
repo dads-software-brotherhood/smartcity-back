@@ -78,11 +78,16 @@ public class AuthController {
      * @return If the token is valid, an accept code (HttpStatus.ACCEPTED); In another case an error code (HttpStatus.UNAUTHORIZED)
      * @see HttpStatus
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/valid-token")
+    @RequestMapping(method = RequestMethod.GET, value = "/valid-token")
     public ResponseEntity<?> validToken(@RequestHeader(value = Constants.AUTH_TOKEN_HEADER) String tokenAuth) {
-        //TODO: debe preguntar en el servicio si es valido y dat una respuesta en base a eso
         
-        return ResponseEntity.accepted().build();
+      if (loginService.isValidToken(tokenAuth)) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("success");
+      } else {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error or invalid token");
+      }
+        
+        
     }
 
     /**
