@@ -13,7 +13,6 @@ import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsExceptio
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
 import mx.infotec.smartcity.backend.service.horizon.pojo.TokenResponse;
 import mx.infotec.smartcity.backend.service.horizon.pojo.UserResponse;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -122,7 +121,7 @@ public class HorizonLoginServiceImpl implements LoginService {
 
         token.setEnd(cal.getTime());
 
-        identityUser.setToken(token);
+        identityUser.setTokenInfo(token);
 
         return identityUser;
     }

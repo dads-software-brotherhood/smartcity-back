@@ -113,7 +113,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
                 token.setToken(tmp.get(0));
             }
 
-            idmUser.setToken(token);
+            idmUser.setTokenInfo(token);
 
             idmUser.setUsername(response.getToken().getUser().getName());
 
