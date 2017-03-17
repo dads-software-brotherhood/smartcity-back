@@ -1,9 +1,12 @@
 package mx.infotec.smartcity.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  *
  * @author Erik Valdivieso
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TokenRequest {
 
     private String username;
