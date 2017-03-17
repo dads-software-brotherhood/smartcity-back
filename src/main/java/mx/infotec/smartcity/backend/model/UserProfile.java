@@ -1,5 +1,6 @@
 package mx.infotec.smartcity.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * @author Erik Valdivieso
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Document
 public class UserProfile implements Serializable {
 

@@ -1,5 +1,6 @@
 package mx.infotec.smartcity.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,6 +8,7 @@ import java.util.Date;
  *
  * @author Erik Valdivieso
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Vehicle implements Serializable {
     
     private static final long serialVersionUID = 1L;

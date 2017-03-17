@@ -1,17 +1,23 @@
 package mx.infotec.smartcity.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
  *
  * @author Erik Valdivieso
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
+    @Indexed
     private String addreddCountry;
+    @Indexed
     private String addreddRegion;
+    @Indexed
     private String addreddLocality;
     private String street;
     private String postalCode;
