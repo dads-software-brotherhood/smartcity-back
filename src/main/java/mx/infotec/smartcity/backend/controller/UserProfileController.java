@@ -2,7 +2,6 @@ package mx.infotec.smartcity.backend.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import mx.infotec.smartcity.backend.model.Address;
 import mx.infotec.smartcity.backend.model.HealthProfile;
 import mx.infotec.smartcity.backend.model.UserProfile;
@@ -97,15 +96,21 @@ public class UserProfileController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/health-profile")
-    public List<HealthProfile> getHeathProfile(@PathVariable("id") String id) {
-        //TODO: Agregar validaciones y bloques de try/catch
+    public ResponseEntity<?> getHeathProfile(@PathVariable("id") String id) {
+        UserProfile userProfile = null;
         
-        UserProfile userProfile = userProfileRepository.findOne(id);
+        try {
+            userProfile = userProfileRepository.findOne(id);
+        } catch (Exception ex) {
+            LOGGER.error("Error al retrieve userProfile", ex);
+        }
 
         if (userProfile == null) {
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+        } else if(userProfile.getHealthProfiles() == null) {
+            return ResponseEntity.accepted().body(new ArrayList<>(0));
         } else {
-            return userProfile.getHealthProfiles();
+            return ResponseEntity.accepted().body(userProfile.getHealthProfiles());
         }
     }    
     
@@ -158,15 +163,21 @@ public class UserProfileController {
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/address")
-    public List<Address> getAddress(@PathVariable("id") String id) {
-        //TODO: Agregar validaciones y bloques de try/catch
+    public ResponseEntity<?> getAddress(@PathVariable("id") String id) {
+        UserProfile userProfile = null;
         
-        UserProfile userProfile = userProfileRepository.findOne(id);
+        try {
+            userProfile = userProfileRepository.findOne(id);
+        } catch (Exception ex) {
+            LOGGER.error("Error al retrieve userProfile", ex);
+        }
 
         if (userProfile == null) {
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+        } else if(userProfile.getAddresses() == null) {
+            return ResponseEntity.accepted().body(new ArrayList<>(0));
         } else {
-            return userProfile.getAddresses();
+            return ResponseEntity.accepted().body(userProfile.getAddresses());
         }
     }    
     
@@ -219,15 +230,21 @@ public class UserProfileController {
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/vehicle")
-    public List<Vehicle> getVehicle(@PathVariable("id") String id) {
-        //TODO: Agregar validaciones y bloques de try/catch
+    public ResponseEntity<?> getVehicle(@PathVariable("id") String id) {
+        UserProfile userProfile = null;
         
-        UserProfile userProfile = userProfileRepository.findOne(id);
+        try {
+            userProfile = userProfileRepository.findOne(id);
+        } catch (Exception ex) {
+            LOGGER.error("Error al retrieve userProfile", ex);
+        }
 
         if (userProfile == null) {
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+        } else if(userProfile.getVehicles() == null) {
+            return ResponseEntity.accepted().body(new ArrayList<>(0));
         } else {
-            return userProfile.getVehicles();
+            return ResponseEntity.accepted().body(userProfile.getVehicles());
         }
     }    
     
