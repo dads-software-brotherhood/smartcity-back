@@ -143,7 +143,7 @@ public class UserProfileController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/{id}/health-profile/{index}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}/health-profile/{index}")
     public ResponseEntity<?> deleteHeathProfile(@PathVariable("id") String id, @PathVariable("index") int index) {
         //TODO: Agregar validaciones y bloques de try/catch
         UserProfile userProfile = userProfileRepository.findOne(id);
@@ -204,7 +204,7 @@ public class UserProfileController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/{id}/address/{index}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}/address/{index}")
     public ResponseEntity<?> deleteAddress(@PathVariable("id") String id, @PathVariable("index") int index) {
         //TODO: Agregar validaciones y bloques de try/catch
         UserProfile userProfile = userProfileRepository.findOne(id);
@@ -269,7 +269,7 @@ public class UserProfileController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/{id}/vehicle/{index}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}/vehicle/{index}")
     public ResponseEntity<?> deleteVehicle(@PathVariable("id") String id, @PathVariable("index") int index) {
         //TODO: Agregar validaciones y bloques de try/catch
         UserProfile userProfile = userProfileRepository.findOne(id);
