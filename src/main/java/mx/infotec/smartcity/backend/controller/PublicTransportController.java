@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -91,9 +92,30 @@ public class PublicTransportController {
     try {
       Pageable pageable = new PageRequest(page, SIZE);
 
-      return ResponseEntity.accepted().body(this.publicTransportRepository
-          .findAllById(getListaIdPublicTransportIterator(id), pageable));
+      Iterable<PublicTransport> ipt =
+          this.publicTransportRepository.findAll(getListaIdPublicTransportIterator(id));
+      List<PublicTransport> lpt = new ArrayList<PublicTransport>();
+      ipt.forEach(lpt::add);
+      return ResponseEntity.accepted()
+          .body(new PageImpl<PublicTransport>(lpt, pageable, lpt.size()));
+    } catch (Exception ex) {
+      LOGGER.error("Error at update", ex);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+    }
+  }
 
+  @RequestMapping(method = RequestMethod.GET, value = "/profile/{id}/page/{page}/size/{size}")
+  public ResponseEntity<?> getPublicTransportWithProfileId(@PathVariable("id") String id,
+      @PathVariable("page") int page, @PathVariable("size") int size) {
+    try {
+      Pageable pageable = new PageRequest(page, size);
+
+      Iterable<PublicTransport> ipt =
+          this.publicTransportRepository.findAll(getListaIdPublicTransportIterator(id));
+      List<PublicTransport> lpt = new ArrayList<PublicTransport>();
+      ipt.forEach(lpt::add);
+      return ResponseEntity.accepted()
+          .body(new PageImpl<PublicTransport>(lpt, pageable, lpt.size()));
     } catch (Exception ex) {
       LOGGER.error("Error at update", ex);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
