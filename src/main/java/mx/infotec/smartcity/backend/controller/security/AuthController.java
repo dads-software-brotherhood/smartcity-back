@@ -5,6 +5,8 @@ import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.TokenInfo;
 import mx.infotec.smartcity.backend.model.TokenRequest;
 import mx.infotec.smartcity.backend.model.TokenType;
+import mx.infotec.smartcity.backend.model.UserProfile;
+import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
 import mx.infotec.smartcity.backend.utils.Constants;
@@ -36,6 +38,9 @@ public class AuthController {
     @Qualifier("keystoneLoginService")
     private LoginService loginService;
 
+    @Autowired
+    private UserProfileRepository profileRepository;
+    
     /**
      * Method used to perform the user authentication. 
      * 
@@ -48,7 +53,22 @@ public class AuthController {
     @RequestMapping(method = RequestMethod.POST, value = "/login", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> login(@RequestBody TokenRequest tokenRequest) {
         try {
-            return ResponseEntity.accepted().body(loginService.performLogin(tokenRequest.getUsername(), tokenRequest.getPassword()));
+            IdentityUser identityUser = loginService.performLogin(tokenRequest.getUsername(), tokenRequest.getPassword());
+            
+            UserProfile userProfile = profileRepository.findByEmail(tokenRequest.getUsername());
+            
+            if (userProfile == null) {
+                LOGGER.warn("Local user don't  found");
+                identityUser.setName(tokenRequest.getUsername());
+            } else {
+                StringBuilder sb = new StringBuilder();
+                sb.append(userProfile.getName()).append(' ').append(userProfile.getFamilyName());
+                
+                identityUser.setId(userProfile.getId());
+                identityUser.setName(sb.toString());
+            }
+            
+            return ResponseEntity.accepted().body(identityUser);
         } catch (InvalidCredentialsException ex) {
             //TODO: Debe agregar el error a la bitacora (es un acceso erroneo)
             

@@ -35,8 +35,14 @@ public class UserProfileController {
     private UserProfileRepository userProfileRepository;
 
     @RequestMapping(method = RequestMethod.GET)
-    public UserProfile getByEmail(@RequestParam("email") String email) {
-        return userProfileRepository.findByEmail(email);
+    public ResponseEntity<?> getByEmail(@RequestParam("email") String email) {
+        UserProfile userProfile = userProfileRepository.findByEmail(email);
+        
+        if (userProfile != null) {
+            return ResponseEntity.accepted().body(userProfile);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not found");
+        }
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
