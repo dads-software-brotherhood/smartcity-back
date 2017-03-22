@@ -13,7 +13,6 @@ public class Vehicle implements Serializable {
     
     private static final long serialVersionUID = 1L;
     
-    private String id;
     private String name;
     private String description;
     private VehicleType vehicleType;
@@ -21,17 +20,11 @@ public class Vehicle implements Serializable {
     private String modelName;
     private Date vehicleModelDate;
     private FuelType fuelType;
+    private Float fuelConsumption;
     private String vehiclPlateIdentifier;
     private Date dateModified;
     private Date datecreated = new Date();
     
-    public String getId() {
-      return id;
-    }
-
-    public void setId(String id) {
-      this.id = id;
-    }
     
     public String getName() {
         return name;
@@ -111,6 +104,14 @@ public class Vehicle implements Serializable {
 
     public void setDatecreated(Date datecreated) {
         this.datecreated = datecreated;
+    }
+
+    public Float getFuelConsumption() {
+      return fuelConsumption;
+    }
+
+    public void setFuelConsumption(Float fuelConsumption) {
+      this.fuelConsumption = fuelConsumption;
     }
     
 }
