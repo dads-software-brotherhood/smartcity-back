@@ -1,4 +1,5 @@
-sudo: false
+sudo: required
+services: mongodb
 language: java
 jdk:
   - oraclejdk8
