@@ -57,16 +57,26 @@ public class AuthController {
             
             UserProfile userProfile = profileRepository.findByEmail(tokenRequest.getUsername());
             
+            //TODO: Pasar al servicio del user profile
             if (userProfile == null) {
-                LOGGER.warn("Local user don't  found");
-                identityUser.setName(tokenRequest.getUsername());
-            } else {
-                StringBuilder sb = new StringBuilder();
-                sb.append(userProfile.getName()).append(' ').append(userProfile.getFamilyName());
+                LOGGER.warn("Local user don't  found. It will be create a new one");
+                userProfile = new UserProfile();
+                userProfile.setEmail(tokenRequest.getUsername());
+                userProfile.setName(tokenRequest.getUsername());
+                userProfile.setRegisterDate(new Date());
                 
-                identityUser.setId(userProfile.getId());
-                identityUser.setName(sb.toString());
+                profileRepository.insert(userProfile);
             }
+            
+            StringBuilder sb = new StringBuilder();
+            sb.append(userProfile.getName());
+            
+            if (userProfile.getFamilyName() != null) {
+                sb.append(' ').append(userProfile.getFamilyName());
+            }
+
+            identityUser.setId(userProfile.getId());
+            identityUser.setName(sb.toString());
             
             return ResponseEntity.accepted().body(identityUser);
         } catch (InvalidCredentialsException ex) {
@@ -81,14 +91,17 @@ public class AuthController {
      * Method used to logout the user (invalidates the user's token).
      * 
      * @param tokenAuth User's token
+     * @return Accept response.
      */
     @RequestMapping(method = RequestMethod.DELETE, value = "/logout")
-    public ResponseEntity<?> logout(@RequestHeader(value = "token-auth") String tokenAuth) {
-      if (loginService.invalidToken(tokenAuth)) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("success");
-      }
-      
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error to invalid token");
+    public ResponseEntity<?> logout(@RequestHeader(name = Constants.AUTH_TOKEN_HEADER) String tokenAuth) {
+        if (!loginService.invalidToken(tokenAuth)) {
+            LOGGER.warn("Invalid token: {}", tokenAuth);
+        } else {
+            LOGGER.info("Deleted token: {}", tokenAuth);
+        }
+        
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
     
     /**
@@ -99,7 +112,7 @@ public class AuthController {
      * @see HttpStatus
      */
     @RequestMapping(method = RequestMethod.GET, value = "/valid-token")
-    public ResponseEntity<?> validToken(@RequestHeader(value = Constants.AUTH_TOKEN_HEADER) String tokenAuth) {
+    public ResponseEntity<?> validToken(@RequestHeader(name = Constants.AUTH_TOKEN_HEADER) String tokenAuth) {
         
       if (loginService.isValidToken(tokenAuth)) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("success");
@@ -120,7 +133,7 @@ public class AuthController {
      * @see TokenInfo HttpStatus
      */
     @RequestMapping(method = RequestMethod.POST, value = "/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestHeader(value = Constants.AUTH_TOKEN_HEADER) String tokenAuth) {
+    public ResponseEntity<?> refreshToken(@RequestHeader(name = Constants.AUTH_TOKEN_HEADER) String tokenAuth) {
         //TODO: Debe regrescar el token por medio del servicio y devolverlo, si no es válido debe agregarlo a la bitácora
         
         TokenInfo token = new TokenInfo();
