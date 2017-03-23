@@ -97,7 +97,7 @@ public class UserProfileController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/health-profile")
-    public List<HealthProfile> getHeathProfile(@PathVariable("id") String id) {
+    public HealthProfile getHeathProfile(@PathVariable("id") String id) {
         //TODO: Agregar validaciones y bloques de try/catch
         
         UserProfile userProfile = userProfileRepository.findOne(id);
@@ -105,7 +105,7 @@ public class UserProfileController {
         if (userProfile == null) {
             return null;
         } else {
-            return userProfile.getHealthProfiles();
+            return userProfile.getHealthProfile();
         }
     }    
     
@@ -115,43 +115,41 @@ public class UserProfileController {
         UserProfile userProfile = userProfileRepository.findOne(id);
         
         if (userProfile != null) {
-            if (userProfile.getHealthProfiles() == null) {
-                userProfile.setHealthProfiles(new ArrayList<>());
-            }
+
             
-            userProfile.getHealthProfiles().add(healthProfile);
+            userProfile.setHealthProfile(healthProfile);
             
             userProfileRepository.save(userProfile);
             
-            return ResponseEntity.accepted().body(userProfile.getHealthProfiles()); 
+            return ResponseEntity.accepted().body(userProfile.getHealthProfile()); 
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
         }
     }
     
-    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/health-profile/{index}")
-    public ResponseEntity<?> updateHeathProfile(@RequestBody HealthProfile healthProfile, @PathVariable("id") String id, @PathVariable("index") int index) {
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/health-profile")
+    public ResponseEntity<?> updateHeathProfile(@RequestBody HealthProfile healthProfile, @PathVariable("id") String id) {
         //TODO: Agregar validaciones y bloques de try/catch
         UserProfile userProfile = userProfileRepository.findOne(id);
         
-        if (userProfile != null && userProfile.getHealthProfiles() != null && userProfile.getHealthProfiles().size() > index) {
-            userProfile.getHealthProfiles().set(index, healthProfile);
+        if (userProfile != null) {
+            userProfile.setHealthProfile(healthProfile);
             userProfileRepository.save(userProfile);
-            return ResponseEntity.accepted().body(userProfile.getHealthProfiles()); 
+            return ResponseEntity.accepted().body(userProfile.getHealthProfile()); 
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
         }
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/health-profile/{index}")
-    public ResponseEntity<?> deleteHeathProfile(@PathVariable("id") String id, @PathVariable("index") int index) {
+    public ResponseEntity<?> deleteHeathProfile(@PathVariable("id") String id) {
         //TODO: Agregar validaciones y bloques de try/catch
         UserProfile userProfile = userProfileRepository.findOne(id);
         
-        if (userProfile != null && userProfile.getHealthProfiles() != null && userProfile.getHealthProfiles().size() > index) {
-            userProfile.getHealthProfiles().remove(index);
+        if (userProfile != null) {
+            userProfile.setHealthProfile(null);
             userProfileRepository.save(userProfile);
-            return ResponseEntity.accepted().body(userProfile.getHealthProfiles()); 
+            return ResponseEntity.accepted().body(userProfile.getHealthProfile()); 
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
         }

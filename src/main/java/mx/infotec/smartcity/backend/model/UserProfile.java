@@ -35,7 +35,7 @@ public class UserProfile implements Serializable {
     private Date lastEntry;
     private Date lastProfileUpdate;
     
-    private List<HealthProfile> healthProfiles;
+    private HealthProfile healthProfile;
     private List<Address> addresses;
     private List<Vehicle> vehicles;
 
@@ -135,12 +135,12 @@ public class UserProfile implements Serializable {
         this.lastProfileUpdate = lastProfileUpdate;
     }
 
-    public List<HealthProfile> getHealthProfiles() {
-        return healthProfiles;
+    public HealthProfile getHealthProfile() {
+        return healthProfile;
     }
 
-    public void setHealthProfiles(List<HealthProfile> healthProfiles) {
-        this.healthProfiles = healthProfiles;
+    public void setHealthProfile(HealthProfile healthProfiles) {
+        this.healthProfile = healthProfiles;
     }
 
     public List<Address> getAddresses() {

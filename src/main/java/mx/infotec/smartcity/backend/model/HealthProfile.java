@@ -2,7 +2,6 @@ package mx.infotec.smartcity.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
-import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
  *
@@ -14,11 +13,8 @@ public class HealthProfile implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private String healthState;
-    @Indexed
-    private String idDisease;
-    private String description;
-    private String symptoms;
-    private String treatment;
+    private String[] allergySymptoms;
+    private Integer asthmaLevel;
 
     public String getHealthState() {
         return healthState;
@@ -28,36 +24,19 @@ public class HealthProfile implements Serializable {
         this.healthState = healthState;
     }
 
-    public String getIdDisease() {
-        return idDisease;
+    public String[] getAllergySymptoms() {
+        return allergySymptoms;
     }
 
-    public void setIdDisease(String idDisease) {
-        this.idDisease = idDisease;
+    public void setAllergySymptoms(String[] allergySymptoms) {
+        this.allergySymptoms = allergySymptoms;
     }
 
-    public String getDescription() {
-        return description;
+    public Integer getAsthmaLevel() {
+        return asthmaLevel;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setAsthmaLevel(Integer asthmaLevel) {
+        this.asthmaLevel = asthmaLevel;
     }
-
-    public String getSymptoms() {
-        return symptoms;
-    }
-
-    public void setSymptoms(String symptoms) {
-        this.symptoms = symptoms;
-    }
-
-    public String getTreatment() {
-        return treatment;
-    }
-
-    public void setTreatment(String treatment) {
-        this.treatment = treatment;
-    }
-    
 }
