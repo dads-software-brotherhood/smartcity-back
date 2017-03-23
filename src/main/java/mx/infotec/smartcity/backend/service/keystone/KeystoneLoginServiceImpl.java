@@ -2,7 +2,13 @@ package mx.infotec.smartcity.backend.service.keystone;
 
 import mx.infotec.smartcity.backend.service.keystone.pojo.Response;
 import mx.infotec.smartcity.backend.service.keystone.pojo.User;
+import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token_;
+import mx.infotec.smartcity.backend.utils.Constants;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Auth;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Identity;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,7 +21,6 @@ import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
 
-import org.apache.http.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +69,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
             Request request = new Request(new User(username, new String(password)));
-            HttpEntity<Request> requestEntity = new HttpEntity(request);
+            HttpEntity<Request> requestEntity = new HttpEntity<>(request);
             HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity, Response.class);
 
             return convert(responseEntity);
@@ -75,7 +80,31 @@ public class KeystoneLoginServiceImpl implements LoginService {
 
     @Override
     public TokenInfo refreshToken(String token) throws InvalidTokenException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      
+      RestTemplate restTemplate = new RestTemplate();
+      restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+      Identity identity = new Identity();
+      Token_ tokenRequest = new Token_();
+      Auth auth = new Auth();
+      List<String> methods = new ArrayList<>();
+      methods.add("token");
+      tokenRequest.setId(token);
+      identity.setToken(tokenRequest);
+      identity.setMethods(methods);
+      auth.setIdentity(identity);
+      Request request = new Request();
+      request.setAuth(auth);
+      try {
+        HttpEntity<Request> requestEntity = new HttpEntity<>(request);
+        HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity, Response.class);
+        IdentityUser user = convert(responseEntity);
+        return user.getTokenInfo();
+      } catch (RestClientException e) {
+        LOGGER.error("Error al hacer la peticion a keystone, casua: ", e);
+        throw new InvalidTokenException("Error al generar la petición de para nuevo token: ", e);
+      }
+     
+        
     }
 
     @Override
@@ -84,8 +113,8 @@ public class KeystoneLoginServiceImpl implements LoginService {
       RestTemplate restTemplate = new RestTemplate();
       restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
       HttpHeaders headers = new HttpHeaders();
-      headers.add("X-Auth-Token", adminToken);
-      headers.add("X-Subject-Token", token);
+      headers.add(Constants.AUTH_TOKEN_HEADER, adminToken);
+      headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
       HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
       try {
         HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
@@ -108,8 +137,8 @@ public class KeystoneLoginServiceImpl implements LoginService {
       RestTemplate restTemplate = new RestTemplate();
       restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
       HttpHeaders headers = new HttpHeaders();
-      headers.add("X-Auth-Token", token);
-      headers.add("X-Subject-Token", token);
+      headers.add(Constants.AUTH_TOKEN_HEADER, token);
+      headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
       HttpEntity<String> requestEntity = new HttpEntity<>(headers);
       try {
           HttpEntity<String> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.DELETE, requestEntity, String.class);
@@ -154,7 +183,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
                 token.setTime((int) tmp / 1000);
             }
 
-            List<String> tmp = headers.get("x-subject-token");
+            List<String> tmp = headers.get(Constants.SUBJECT_TOKEN_HEADER);
 
             if (!tmp.isEmpty()) {
                 token.setToken(tmp.get(0));
