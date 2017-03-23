@@ -9,6 +9,7 @@ import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
+import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
 import mx.infotec.smartcity.backend.utils.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,14 +137,13 @@ public class AuthController {
     public ResponseEntity<?> refreshToken(@RequestHeader(name = Constants.AUTH_TOKEN_HEADER) String tokenAuth) {
         //TODO: Debe regrescar el token por medio del servicio y devolverlo, si no es válido debe agregarlo a la bitácora
         
-        TokenInfo token = new TokenInfo();
-        token.setToken(tokenAuth);
-        token.setTokenType(TokenType.OTHER);
-        token.setStart(new Date());
-        token.setEnd(new Date(System.currentTimeMillis() * 3600 * 1000 ));
-        token.setTime(3600);
-        
-        return ResponseEntity.accepted().body(token);
+        TokenInfo token;
+        try {
+          token = loginService.refreshToken(tokenAuth);
+          return ResponseEntity.status(HttpStatus.ACCEPTED).body(token);
+        } catch (InvalidTokenException e) {
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error or invalid token");
+        }
     }
     
 }

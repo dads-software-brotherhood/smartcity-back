@@ -17,6 +17,8 @@ public class Token_ implements Serializable {
   private Project           project;
   private Extras            extras;
   private User              user;
+  //RNM
+  private String            id;
 
   @JsonProperty("audit_id")
   private List<String>      auditIds         = null;
@@ -92,4 +94,13 @@ public class Token_ implements Serializable {
     this.issuedAt = issuedAt;
   }
 
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  
 }
