@@ -1,5 +1,6 @@
 package mx.infotec.smartcity.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -9,6 +10,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
  * @author Erik Valdivieso
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 1L;

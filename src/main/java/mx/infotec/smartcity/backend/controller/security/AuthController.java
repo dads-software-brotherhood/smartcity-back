@@ -102,7 +102,7 @@ public class AuthController {
             LOGGER.info("Deleted token: {}", tokenAuth);
         }
         
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("loggout");
     }
     
     /**
