@@ -22,9 +22,9 @@ public class Address implements Serializable {
     @Indexed
     private int localityId;
     
-    private String addreddCountry;
-    private String addreddRegion;
-    private String addreddLocality;
+    private String addressCountry;
+    private String addressRegion;
+    private String addressLocality;
     private String street;
     private String postalCode;
     private AddressType addressType;
@@ -53,28 +53,28 @@ public class Address implements Serializable {
         this.localityId = localityId;
     }
 
-    public String getAddreddCountry() {
-        return addreddCountry;
+    public String getAddressCountry() {
+        return addressCountry;
     }
 
-    public void setAddreddCountry(String addreddCountry) {
-        this.addreddCountry = addreddCountry;
+    public void setAddressCountry(String addressCountry) {
+        this.addressCountry = addressCountry;
     }
 
-    public String getAddreddRegion() {
-        return addreddRegion;
+    public String getAddressRegion() {
+        return addressRegion;
     }
 
-    public void setAddreddRegion(String addreddRegion) {
-        this.addreddRegion = addreddRegion;
+    public void setAddressRegion(String addressRegion) {
+        this.addressRegion = addressRegion;
     }
 
-    public String getAddreddLocality() {
-        return addreddLocality;
+    public String getAddressLocality() {
+        return addressLocality;
     }
 
-    public void setAddreddLocality(String addreddLocality) {
-        this.addreddLocality = addreddLocality;
+    public void setAddressLocality(String addressLocality) {
+        this.addressLocality = addressLocality;
     }
 
     public String getStreet() {
