@@ -23,6 +23,7 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.Users;
+import mx.infotec.smartcity.backend.utils.Constants;
 
 
 /**
@@ -47,6 +48,7 @@ public class KeystoneUserServiceImpl implements UserService {
   private String              tokenUrl;
   private String              DBLCUOTE         = "\"";
   private Integer             TIMEOUT          = 90000;
+  private String              paramName;
 
   @PostConstruct
   protected void init() {
@@ -54,6 +56,7 @@ public class KeystoneUserServiceImpl implements UserService {
     changePasswordUrl = userUrl + "/%s/password";
     updateUserUrl = userUrl + "/%s";
     tokenUrl = keystonUrl + "/v3/auth/tokens";
+    paramName = userUrl + "?name=%s";
     LOGGER.info("user url: {}", userUrl);
   }
 
@@ -165,14 +168,21 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
-  public CreateUser getUserByName(String name, String authToken) {
-    List<User> users = this.getAllUsers(authToken);
-    for (User user : users) {
-      if (user.getName().equals(name)) {
-        return getUser(user.getId(), authToken);
-      }
+  public User getUserByName(String name, String authToken) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    Request request = new Request();
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(Constants.AUTH_TOKEN_HEADER, authToken);
+    HttpEntity<Request> requestEntity = new HttpEntity<Request>(request, headers);
+    HttpEntity<Users> responseEntity = restTemplate.exchange(String.format(paramName, name),
+        HttpMethod.GET, requestEntity, Users.class);
+    if (!responseEntity.getBody().getUsers().isEmpty()) {
+      return responseEntity.getBody().getUsers().get(0);
+    } else {
+      return null;
     }
-    return new CreateUser();
+   
   }
 
   @Override

@@ -1,7 +1,7 @@
 package mx.infotec.smartcity.backend.model;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 

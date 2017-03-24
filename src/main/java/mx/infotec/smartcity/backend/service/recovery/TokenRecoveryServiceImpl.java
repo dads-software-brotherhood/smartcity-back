@@ -1,6 +1,6 @@
 package mx.infotec.smartcity.backend.service.recovery;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Calendar;
 
 import org.slf4j.Logger;
@@ -18,6 +18,7 @@ import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
+import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 import mx.infotec.smartcity.backend.service.mail.MailService;
 
 
@@ -63,7 +64,7 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(compareDate);
       calendar.add(Calendar.DATE, 1);
-      compareDate = (Date) calendar.getTime();
+      compareDate = calendar.getTime();
       return recovery.getRegisterDate().before(compareDate);
 
     } catch (Exception e) {
@@ -77,9 +78,13 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
 
     String adminToken = adminUtils.getAdmintoken();
     try {
-      CreateUser user = userService.getUserByName(email, adminToken);
-      TokenRecovery recovery = generateTocken(email, user.getUser().getId());
-      mailService.sendMail(email, null);
+      User user = userService.getUserByName(email, adminToken);
+      if (user == null) {
+        return false;
+      }
+      TokenRecovery recovery = generateTocken(email, user.getId());
+      LOG.info("TokenRecovery:  " +  recovery.getId());
+      //mailService.sendMail(email, null);
       return true;
     } catch (Exception e) {
       LOG.error("Error trying to recovery password, cause: ", e);

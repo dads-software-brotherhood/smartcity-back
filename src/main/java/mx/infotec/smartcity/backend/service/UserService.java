@@ -33,7 +33,7 @@ public interface UserService extends Serializable {
   public Object changePassword(String userid, ChangeUserPassword user, String token);
 
   // Search user with name
-  CreateUser getUserByName(String name, String authToken);
+  User getUserByName(String name, String authToken);
 
   // Search user with username
   CreateUser getUserByUsername(String username, String authToken);
