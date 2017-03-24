@@ -93,6 +93,11 @@ public class HorizonLoginServiceImpl implements LoginService {
         }
     }
 
+    @Override
+    public IdentityUser findUserByValidToken(String token) throws InvalidTokenException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     private IdentityUser convert(UserResponse userResponse, TokenResponse responseToken) {
         IdentityUser identityUser = new IdentityUser();
 
@@ -158,5 +163,5 @@ public class HorizonLoginServiceImpl implements LoginService {
             throw new InvalidTokenException(ex);
         }
     }
-    
+
 }

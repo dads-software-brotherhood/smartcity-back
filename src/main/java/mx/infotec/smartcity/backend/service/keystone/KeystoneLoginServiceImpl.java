@@ -79,6 +79,11 @@ public class KeystoneLoginServiceImpl implements LoginService {
     }
 
     @Override
+    public IdentityUser findUserByValidToken(String token) throws InvalidTokenException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
     public TokenInfo refreshToken(String token) throws InvalidTokenException {
       
       RestTemplate restTemplate = new RestTemplate();

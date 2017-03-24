@@ -24,6 +24,8 @@ public interface LoginService extends Serializable {
      */
     IdentityUser performLogin(String username, char[] password) throws InvalidCredentialsException;
 
+    IdentityUser findUserByValidToken(String token) throws InvalidTokenException;
+    
     TokenInfo refreshToken(String token) throws InvalidTokenException;
 
     boolean isValidToken(String token);
