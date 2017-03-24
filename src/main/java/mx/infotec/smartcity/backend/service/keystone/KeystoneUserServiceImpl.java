@@ -138,15 +138,13 @@ public class KeystoneUserServiceImpl implements UserService {
   public Object changePassword(String userid, ChangeUserPassword user, String authToken) {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
-
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set("X-auth-token", authToken);
-    HttpEntity<ChangeUserPassword> requestEntity = new HttpEntity(user, headers);
+    HttpEntity<ChangeUserPassword> requestEntity = new HttpEntity<>(user, headers);
     LOGGER.info("user url: {}", String.format(changePasswordUrl, userid));
     HttpEntity<ChangeUserPassword> responseEntity =
-        restTemplate.exchange(String.format(changePasswordUrl, userid), HttpMethod.POST,
+        restTemplate.exchange(String.format(changePasswordUrl, userid), HttpMethod.PATCH,
             requestEntity, ChangeUserPassword.class);
     return responseEntity.getBody();
 
