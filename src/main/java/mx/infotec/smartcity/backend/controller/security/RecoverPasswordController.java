@@ -1,8 +1,13 @@
 package mx.infotec.smartcity.backend.controller.security;
 
 import mx.infotec.smartcity.backend.model.TokenRequest;
+import mx.infotec.smartcity.backend.service.exception.ServiceException;
+import mx.infotec.smartcity.backend.service.recovery.TokenRecoveryService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class RecoverPasswordController {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(RecoverPasswordController.class);
+    
+    @Autowired
+    TokenRecoveryService recoveryService;
 
     /**
      * Method used to start password recovery.
@@ -25,7 +33,7 @@ public class RecoverPasswordController {
      * @param email User email
      */
     @RequestMapping(method = RequestMethod.POST, value = "/forgot-password/{email}")
-    public void forgotPassword(String email) {
+    public ResponseEntity<?> forgotPassword(String email) {
         //TODO: Debe crear un "token" en la entidad de Token (el token es en realidad el ID),
         // en la entidad debe guardarse el email del solicitante y su id de usaurio (del IDM)
         // asi como la fecha en que se creo.
@@ -35,8 +43,12 @@ public class RecoverPasswordController {
         // donde {token} es el ID del token generado.
         //
         // Debe validar que el correo existe en la tabla de usuarios y agregar a la bitacora en caso de que no exista
-        
-        throw new UnsupportedOperationException();
+      try {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(recoveryService.recoveryPassword(email));
+      } catch (ServiceException e) {
+        LOGGER.error("forgotPassword error, cause: ", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getCause());
+      }
     }
     
     /**
@@ -51,7 +63,16 @@ public class RecoverPasswordController {
         // de existir, deberá validar la fecha no mayor a 24 horas (o en caso de definiarlo como un parámetro, el tiempo máximo permitido);
         // de ser valido, regresar un codigo de aceptado en otro caso un codigo de error como el de no autorizado.
         
-        throw new UnsupportedOperationException();
+        try {
+          if (recoveryService.validateTokenRecovery(recoveryToken)) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("success");
+          } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
+          }
+        } catch (ServiceException e) {
+          LOGGER.error("validToken error, cause: ", e);
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getCause());
+        }
     }
     
     /**
@@ -60,7 +81,7 @@ public class RecoverPasswordController {
      * @param tokenRequest
      * @return 
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/forgot-password", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/forgot-password", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> restorePassword(@RequestHeader(value = "recovery-token") String recoveryToken, @RequestBody TokenRequest tokenRequest) {
         //TODO: Debe validar el token (fecha y que exista), en el caso deberá actualizar la contraseña del usuario con la proporcionada por el toeknRequest
         // en caso de que todo sea correcto, se deberá eliminar el token en la entidad Token y enviar un correo de aceptación.

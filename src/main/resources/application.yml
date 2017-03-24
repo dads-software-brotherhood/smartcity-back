@@ -29,6 +29,13 @@ spring:
     data:
         mongodb:
             database: smartcity
+    mail:
+        host: http://localhost
+        port: 25
+        protocol: smtp
+        from: dif.test@geekearte.com
+        username: dif.test@geekearte.com
+        password: dif2015
 server:
     port: 9000
     contextPath: /back-sdk
