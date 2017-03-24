@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
+import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token_;
+
 /**
  *
  * @author Erik Valdivieso
@@ -14,7 +16,9 @@ public class Identity implements Serializable {
 
     private List<String> methods;
     private Password password;
-
+    //RNM
+    private Token_ token;
+    
     public Identity() {
     }
 
@@ -38,4 +42,14 @@ public class Identity implements Serializable {
     public void setPassword(Password password) {
         this.password = password;
     }
+
+    public Token_ getToken() {
+      return token;
+    }
+
+    public void setToken(Token_ token) {
+      this.token = token;
+    }
+    
+    
 }

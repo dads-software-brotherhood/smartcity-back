@@ -6,14 +6,13 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import mx.infotec.smartcity.backend.model.IdentityUser;
-import mx.infotec.smartcity.backend.model.Token;
+import mx.infotec.smartcity.backend.model.TokenInfo;
 import mx.infotec.smartcity.backend.model.TokenType;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
 import mx.infotec.smartcity.backend.service.horizon.pojo.TokenResponse;
 import mx.infotec.smartcity.backend.service.horizon.pojo.UserResponse;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -109,7 +108,7 @@ public class HorizonLoginServiceImpl implements LoginService {
             identityUser.setRoles(roles);
         }
 
-        Token token = new Token();
+        TokenInfo token = new TokenInfo();
 
         token.setTokenType(TokenType.OAUTH);
         token.setToken(responseToken.getAccessToken());
@@ -122,13 +121,13 @@ public class HorizonLoginServiceImpl implements LoginService {
 
         token.setEnd(cal.getTime());
 
-        identityUser.setToken(token);
+        identityUser.setTokenInfo(token);
 
         return identityUser;
     }
 
     @Override
-    public Token refreshToken(String token) throws InvalidTokenException {
+    public TokenInfo refreshToken(String token) throws InvalidTokenException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

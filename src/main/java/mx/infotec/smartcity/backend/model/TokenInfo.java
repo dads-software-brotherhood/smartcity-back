@@ -6,7 +6,7 @@ import java.util.Date;
  *
  * @author Erik Valdivieso
  */
-public class Token {
+public class TokenInfo {
 
     private String token;
     private String refreshToken;

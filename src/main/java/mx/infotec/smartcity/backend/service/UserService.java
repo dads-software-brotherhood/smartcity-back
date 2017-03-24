@@ -3,9 +3,10 @@ package mx.infotec.smartcity.backend.service;
 import java.io.Serializable;
 import java.util.List;
 
-import mx.infotec.smartcity.backend.service.keystone.pojo.Group;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Project;
-import mx.infotec.smartcity.backend.service.keystone.pojo.User;
+import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
+import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
+import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token;
+import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 
 /**
  *
@@ -13,20 +14,37 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.User;
  */
 public interface UserService extends Serializable {
 
-	public List<User> getAllUsers(String authToken);
+  // Get All users
+  public List<User> getAllUsers(String authToken);
 
-	public User createUser(User user, String authToken);
+  // Create a user
+  public CreateUser createUser(CreateUser user, String authToken);
 
-	User getUser(String idUser, String authToken);
+  // Lookup user with id
+  CreateUser getUser(String idUser, String authToken);
 
-	User updateUser(String idUser, String authToken);
+  // Update user
+  CreateUser updateUser(String idUser, String authToken, CreateUser user);
 
-	boolean deleteUser(String idUser, String authToken);
+  // Delete a user with id
+  CreateUser deleteUser(String idUser, String authToken);
 
-	Project getUserProjects(String idUser, String authToken);
+  // Change password of user having the original password
+  public Object changePassword(String userid, ChangeUserPassword user, String token);
 
-	boolean changePassword(String idUser, String authToken, String password);
+  // Search user with name
+  CreateUser getUserByName(String name, String authToken);
 
-	Group getUserGroups(String idUser, String authToken);
+  // Search user with username
+  CreateUser getUserByUsername(String username, String authToken);
+
+  /**
+   * Method to look up the user who is in the to authToken with a admin token
+   * 
+   * @param tokenAdmin
+   * @param authToken
+   * @return JsonToken
+   */
+  Token getUserFromToken(String tokenAdmin, String authToken);
 
 }

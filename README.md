@@ -18,7 +18,7 @@ mvn spring-boot:run -Drun.profiles=development
 
 also you need to start your mongodb
 
-```bash
+```
 mongod --dbpath x
 ```
 x path to database

@@ -1,17 +1,15 @@
 package mx.infotec.smartcity.backend.controller;
 
 import java.util.List;
-import mx.infotec.smartcity.backend.CustomerRepository;
+import mx.infotec.smartcity.backend.persistence.CustomerRepository;
 import mx.infotec.smartcity.backend.model.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,9 +33,7 @@ public class CustomerController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Customer> getAll(@RequestHeader HttpHeaders headers) {
-        LOGGER.debug("Headers: {}", headers);
-
+    public List<Customer> getAll() {
         return customerRepository.findAll();
     }
 
@@ -50,10 +46,10 @@ public class CustomerController {
     public ResponseEntity<?> deleteByID(@PathVariable String id) {
         try {
             customerRepository.delete(id);
-            return ResponseEntity.accepted().body(null);
+            return ResponseEntity.accepted().body("deleted");
         } catch (Exception ex) {
             LOGGER.error("Error at delete", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
         }
     }
 
@@ -66,7 +62,7 @@ public class CustomerController {
                 return ResponseEntity.accepted().body(customerRepository.insert(customer));
             } catch (Exception ex) {
                 LOGGER.error("Error at insert", ex);
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
             }
         }
     }
@@ -81,15 +77,14 @@ public class CustomerController {
 
                 customer.setId(id);
                 customerRepository.save(customer);
-
-                return ResponseEntity.accepted().body(null);
+                
+                return ResponseEntity.accepted().body("updated");
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
             }
         } catch (Exception ex) {
             LOGGER.error("Error at update", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
         }
-
     }
 }

@@ -8,9 +8,27 @@ import java.util.Set;
  */
 public class IdentityUser {
 
+    private String id;
+    private String name;
     private String username;
-    private Token token;
+    private TokenInfo tokenInfo;
     private Set<String> roles;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getUsername() {
         return username;
@@ -20,12 +38,12 @@ public class IdentityUser {
         this.username = username;
     }
 
-    public Token getToken() {
-        return token;
+    public TokenInfo getTokenInfo() {
+        return tokenInfo;
     }
 
-    public void setToken(Token token) {
-        this.token = token;
+    public void setTokenInfo(TokenInfo tokenInfo) {
+        this.tokenInfo = tokenInfo;
     }
 
     public Set<String> getRoles() {
