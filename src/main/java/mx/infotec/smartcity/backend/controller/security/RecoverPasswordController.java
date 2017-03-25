@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -35,8 +36,8 @@ public class RecoverPasswordController {
    * 
    * @param email User email
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/forgot-password/{email}")
-  public ResponseEntity<?> forgotPassword(@PathVariable(value="email") String email) {
+  @RequestMapping(method = RequestMethod.POST, value = "/forgot-password")
+  public ResponseEntity<?> forgotPassword(@RequestParam("email") String email) {
     // TODO: Debe crear un "token" en la entidad de Token (el token es en realidad el ID),
     // en la entidad debe guardarse el email del solicitante y su id de usaurio (del IDM)
     // asi como la fecha en que se creo.
@@ -90,7 +91,7 @@ public class RecoverPasswordController {
    * @param tokenRequest
    * @return
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/forgot-password",
+  @RequestMapping(method = RequestMethod.POST, value = "/restore-password",
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> restorePassword(
       @RequestHeader(value = "recovery-token") String recoveryToken,

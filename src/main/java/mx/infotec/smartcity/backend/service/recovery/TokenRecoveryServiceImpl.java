@@ -13,6 +13,7 @@ import mx.infotec.smartcity.backend.model.TokenRecovery;
 import mx.infotec.smartcity.backend.model.TokenRequest;
 import mx.infotec.smartcity.backend.persistence.TokenRecoveryRepository;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
+import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
@@ -39,6 +40,10 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
 
   @Autowired
   MailService                 mailService;
+  
+  @Autowired
+  @Qualifier("keystoneLoginService")
+  private LoginService loginService;
 
   @Override
   public TokenRecovery generateTocken(String email, String idUser) throws ServiceException {
@@ -76,8 +81,9 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
   @Override
   public boolean recoveryPassword(String email) throws ServiceException {
 
-    String adminToken = adminUtils.getAdmintoken();
+    String adminToken = null;
     try {
+      adminToken = adminUtils.getAdmintoken();
       User user = userService.getUserByName(email, adminToken);
       if (user == null) {
         return false;
@@ -89,16 +95,20 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
     } catch (Exception e) {
       LOG.error("Error trying to recovery password, cause: ", e);
       throw new ServiceException(e);
+    } finally {
+      if(adminToken != null)
+        loginService.invalidToken(adminToken);
     }
   }
 
   @Override
   public boolean updatePassword(String tokenRecovery, TokenRequest request)
       throws ServiceException {
+    String adminToken = null;
     try {
       if (validateTokenRecovery(tokenRecovery)) {
         TokenRecovery recovery = tokenRepository.findById(tokenRecovery);
-        String adminToken = adminUtils.getAdmintoken();
+        adminToken = adminUtils.getAdmintoken();
         CreateUser createUser = userService.getUser(recovery.getIdUser(), adminToken);
         createUser.getUser().setPassword(new String(request.getPassword()));
         createUser = userService.updateUser(recovery.getIdUser(), adminToken, createUser);
@@ -109,6 +119,9 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
       LOG.error("Error trying to update password recovery, cause: ", e);
       throw new ServiceException(e);
 
+    } finally {
+      if(adminToken != null)
+        loginService.invalidToken(adminToken);
     }
 
   }
