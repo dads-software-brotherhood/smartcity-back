@@ -21,6 +21,7 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 import mx.infotec.smartcity.backend.service.mail.MailService;
+import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 
 
 @Service("recoveryService")
@@ -90,7 +91,7 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
       }
       TokenRecovery recovery = generateTocken(email, user.getId());
       LOG.info("TokenRecovery:  " +  recovery.getId());
-      //mailService.sendMail(email, null);
+      mailService.sendMail(email, TemplatesEnum.MAIL_SAMPLE);
       return true;
     } catch (Exception e) {
       LOG.error("Error trying to recovery password, cause: ", e);

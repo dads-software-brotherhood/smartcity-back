@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.Headers;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -42,164 +43,187 @@ import org.springframework.web.client.RestTemplate;
 @Service("keystoneLoginService")
 public class KeystoneLoginServiceImpl implements LoginService {
 
-    private static final long serialVersionUID = 1L;
+  private static final long   serialVersionUID = 1L;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KeystoneLoginServiceImpl.class);
-    
-    @Autowired
-    @Qualifier("adminUtils")
-    private AdminUtilsService adminUtils;
+  private static final Logger LOGGER           =
+      LoggerFactory.getLogger(KeystoneLoginServiceImpl.class);
 
-    @Value("${idm.servers.keystone}")
-    private String keystonUrl;
+  @Autowired
+  @Qualifier("adminUtils")
+  private AdminUtilsService   adminUtils;
 
-    private String tokenRequestUrl;
+  @Value("${idm.servers.keystone}")
+  private String              keystonUrl;
 
-    @PostConstruct
-    protected void init() {
-        tokenRequestUrl = keystonUrl + "/v3/auth/tokens";
+  private String              tokenRequestUrl;
 
-        LOGGER.info("Token url: {}", tokenRequestUrl);
-    }
+  @PostConstruct
+  protected void init() {
+    tokenRequestUrl = keystonUrl + "/v3/auth/tokens";
 
-    @Override
-    public IdentityUser performLogin(String username, char[] password) throws InvalidCredentialsException {
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    LOGGER.info("Token url: {}", tokenRequestUrl);
+  }
 
-            Request request = new Request(new User(username, new String(password)));
-            HttpEntity<Request> requestEntity = new HttpEntity<>(request);
-            HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity, Response.class);
-
-            return convert(responseEntity);
-        } catch (Exception ex) {
-            throw new InvalidCredentialsException(ex);
-        }
-    }
-
-    @Override
-    public IdentityUser findUserByValidToken(String token) throws InvalidTokenException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public TokenInfo refreshToken(String token) throws InvalidTokenException {
-      
+  @Override
+  public IdentityUser performLogin(String username, char[] password)
+      throws InvalidCredentialsException {
+    try {
       RestTemplate restTemplate = new RestTemplate();
       restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-      Identity identity = new Identity();
-      Token_ tokenRequest = new Token_();
-      Auth auth = new Auth();
-      List<String> methods = new ArrayList<>();
-      methods.add("token");
-      tokenRequest.setId(token);
-      identity.setToken(tokenRequest);
-      identity.setMethods(methods);
-      auth.setIdentity(identity);
-      Request request = new Request();
-      request.setAuth(auth);
-      try {
-        HttpEntity<Request> requestEntity = new HttpEntity<>(request);
-        HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity, Response.class);
-        IdentityUser user = convert(responseEntity);
-        return user.getTokenInfo();
-      } catch (RestClientException e) {
-        LOGGER.error("Error al hacer la peticion a keystone, casua: ", e);
-        throw new InvalidTokenException("Error al generar la petición de para nuevo token: ", e);
-      }
-     
-        
-    }
 
-    @Override
-    public boolean isValidToken(String token) {
-      String adminToken = adminUtils.getAdmintoken();
-      RestTemplate restTemplate = new RestTemplate();
-      restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-      HttpHeaders headers = new HttpHeaders();
-      headers.add(Constants.AUTH_TOKEN_HEADER, adminToken);
-      headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
-      HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
-      try {
-        HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
-        IdentityUser user = convert(responseEntity);
-        if (user.getTokenInfo() != null && !user.getTokenInfo().getToken().isEmpty()) {
-          invalidToken(adminToken);
-          return true;
-        } else {
-          return false;
-        }   
-      } catch(RestClientException e) {
-        LOGGER.error("Error al validar el token, causa: ", e);
-      }
-      return false;
-        
-    }
+      Request request = new Request(new User(username, new String(password)));
+      HttpEntity<Request> requestEntity = new HttpEntity<>(request);
+      HttpEntity<Response> responseEntity =
+          restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity, Response.class);
 
-    @Override
-    public boolean invalidToken(String token) {
-      RestTemplate restTemplate = new RestTemplate();
-      restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+      return convert(responseEntity);
+    } catch (Exception ex) {
+      throw new InvalidCredentialsException(ex);
+    }
+  }
+
+  @Override
+  public IdentityUser findUserByValidToken(String token) throws InvalidTokenException {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    if (isValidToken(token)) {
       HttpHeaders headers = new HttpHeaders();
       headers.add(Constants.AUTH_TOKEN_HEADER, token);
       headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
-      HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+      HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
       try {
-          HttpEntity<String> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.DELETE, requestEntity, String.class);
-          if(responseEntity.toString().contains(HttpStatus.NO_CONTENT.toString())) {
-            return true; 
-          }
-          
-          return false;
+        HttpEntity<Response> responseEntity =
+            restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
+        return convert(responseEntity);
       } catch (RestClientException e) {
+        LOGGER.error("Error al buscar la inforación del token, causa: ", e);
+        throw new RestClientException("Error al buscar la inforación del token, causa: ", e);
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public TokenInfo refreshToken(String token) throws InvalidTokenException {
+
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    Identity identity = new Identity();
+    Token_ tokenRequest = new Token_();
+    Auth auth = new Auth();
+    List<String> methods = new ArrayList<>();
+    methods.add("token");
+    tokenRequest.setId(token);
+    identity.setToken(tokenRequest);
+    identity.setMethods(methods);
+    auth.setIdentity(identity);
+    Request request = new Request();
+    request.setAuth(auth);
+    try {
+      HttpEntity<Request> requestEntity = new HttpEntity<>(request);
+      HttpEntity<Response> responseEntity =
+          restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity, Response.class);
+      IdentityUser user = convert(responseEntity);
+      return user.getTokenInfo();
+    } catch (RestClientException e) {
+      LOGGER.error("Error al hacer la peticion a keystone, casua: ", e);
+      throw new InvalidTokenException("Error al generar la petición de para nuevo token: ", e);
+    }
+
+
+  }
+
+  @Override
+  public boolean isValidToken(String token) {
+    String adminToken = adminUtils.getAdmintoken();
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(Constants.AUTH_TOKEN_HEADER, adminToken);
+    headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
+    HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
+    try {
+      HttpEntity<Response> responseEntity =
+          restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
+      IdentityUser user = convert(responseEntity);
+      if (user.getTokenInfo() != null && !user.getTokenInfo().getToken().isEmpty()) {
+        invalidToken(adminToken);
+        return true;
+      } else {
         return false;
       }
+    } catch (RestClientException e) {
+      LOGGER.error("Error al validar el token, causa: ", e);
+    }
+    return false;
 
+  }
+
+  @Override
+  public boolean invalidToken(String token) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(Constants.AUTH_TOKEN_HEADER, token);
+    headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
+    HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+    try {
+      HttpEntity<String> responseEntity =
+          restTemplate.exchange(tokenRequestUrl, HttpMethod.DELETE, requestEntity, String.class);
+      if (responseEntity.toString().contains(HttpStatus.NO_CONTENT.toString())) {
+        return true;
+      }
+
+      return false;
+    } catch (RestClientException e) {
+      return false;
     }
 
-    private IdentityUser convert(HttpEntity<Response> responseEntity) {
-        Response response = responseEntity.getBody();
-        HttpHeaders headers = responseEntity.getHeaders();
+  }
 
-        if (response.getToken() == null && response.getToken().getUser() == null) {
-            return null;
-        } else {
-            IdentityUser idmUser = new IdentityUser();
+  private IdentityUser convert(HttpEntity<Response> responseEntity) {
+    Response response = responseEntity.getBody();
+    HttpHeaders headers = responseEntity.getHeaders();
 
-            if (response.getToken().getRoles() != null) {
-                Set<String> roles = new HashSet<>();
+    if (response.getToken() == null && response.getToken().getUser() == null) {
+      return null;
+    } else {
+      IdentityUser idmUser = new IdentityUser();
 
-                response.getToken().getRoles().forEach((role) -> {
-                    roles.add(role.getName());
-                });
+      if (response.getToken().getRoles() != null) {
+        Set<String> roles = new HashSet<>();
 
-                idmUser.setRoles(roles);
-            }
+        response.getToken().getRoles().forEach((role) -> {
+          roles.add(role.getName());
+        });
 
-            TokenInfo token = new TokenInfo();
+        idmUser.setRoles(roles);
+      }
 
-            token.setTokenType(TokenType.OTHER);
-            token.setStart(response.getToken().getIssuedAt());
-            token.setEnd(response.getToken().getExpiresAt());
+      TokenInfo token = new TokenInfo();
 
-            if (token.getStart() != null && token.getEnd() != null) {
-                long tmp = token.getEnd().getTime() - token.getStart().getTime();
-                token.setTime((int) tmp / 1000);
-            }
+      token.setTokenType(TokenType.OTHER);
+      token.setStart(response.getToken().getIssuedAt());
+      token.setEnd(response.getToken().getExpiresAt());
 
-            List<String> tmp = headers.get(Constants.SUBJECT_TOKEN_HEADER);
+      if (token.getStart() != null && token.getEnd() != null) {
+        long tmp = token.getEnd().getTime() - token.getStart().getTime();
+        token.setTime((int) tmp / 1000);
+      }
 
-            if (!tmp.isEmpty()) {
-                token.setToken(tmp.get(0));
-            }
+      List<String> tmp = headers.get(Constants.SUBJECT_TOKEN_HEADER);
 
-            idmUser.setTokenInfo(token);
+      if (!tmp.isEmpty()) {
+        token.setToken(tmp.get(0));
+      }
 
-            idmUser.setUsername(response.getToken().getUser().getName());
+      idmUser.setTokenInfo(token);
 
-            return idmUser;
-        }
+      idmUser.setUsername(response.getToken().getUser().getName());
+
+      return idmUser;
     }
+  }
 
 }

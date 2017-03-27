@@ -11,11 +11,15 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.service.LoginService;
+import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
 import mx.infotec.smartcity.backend.utils.Constants;
 
 /**
@@ -28,6 +32,8 @@ public class LoggedUserFilter implements Filter {
   @Autowired
   @Qualifier("keystoneLoginService")
   private LoginService loginService;
+  
+  static final Logger LOG = LoggerFactory.getLogger(LoggedUserFilter.class);
 
   @Override
   public void init(FilterConfig fc) throws ServletException {
@@ -46,8 +52,13 @@ public class LoggedUserFilter implements Filter {
       response.sendError(403);
     } else {
       // TODO: implementar método para recuperar Usuario en loginService
-      // loginService.findUserByValidToken(token);
-      servletRequest.setAttribute("userId", "idm");
+      try {
+        IdentityUser user =  loginService.findUserByValidToken(token);
+        servletRequest.setAttribute("userId", user.getName());
+      } catch (InvalidTokenException e) {
+        response.sendError(403);
+        LOG.error("Error to validate token, cause: ", e);
+      }
       filterChain.doFilter(servletRequest, servletResponse);
     }
   }

@@ -4,6 +4,14 @@ spring:
     data:
         mongodb:
             database: smartcity
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        protocol: smtp
+        from: dynamic@geekearte.com
+        username: gitlab.infotec@gmail.com
+        password: gitlab2015.
+    
 server:
     port: 9000
     contextPath: /back-sdk
@@ -30,12 +38,12 @@ spring:
         mongodb:
             database: smartcity
     mail:
-        host: http://localhost
-        port: 25
+        host: smtp.gmail.com
+        port: 587
         protocol: smtp
-        from: dif.test@geekearte.com
-        username: dif.test@geekearte.com
-        password: dif2015
+        from: dynamic@geekearte.com
+        username: gitlab.infotec@gmail.com
+        password: gitlab2015.
 server:
     port: 9000
     contextPath: /back-sdk

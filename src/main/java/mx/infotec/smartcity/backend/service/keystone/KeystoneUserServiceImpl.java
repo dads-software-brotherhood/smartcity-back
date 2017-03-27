@@ -173,6 +173,7 @@ public class KeystoneUserServiceImpl implements UserService {
     HttpHeaders headers = new HttpHeaders();
     headers.add(Constants.AUTH_TOKEN_HEADER, authToken);
     HttpEntity<Request> requestEntity = new HttpEntity<Request>(request, headers);
+    System.out.println(String.format(paramName, name));
     HttpEntity<Users> responseEntity = restTemplate.exchange(String.format(paramName, name),
         HttpMethod.GET, requestEntity, Users.class);
     if (!responseEntity.getBody().getUsers().isEmpty()) {
