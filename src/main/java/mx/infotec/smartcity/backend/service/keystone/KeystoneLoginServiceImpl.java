@@ -20,6 +20,7 @@ import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
+import mx.infotec.smartcity.backend.service.exception.ServiceException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,14 +137,15 @@ public class KeystoneLoginServiceImpl implements LoginService {
 
   @Override
   public boolean isValidToken(String token) {
-    String adminToken = adminUtils.getAdmintoken();
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(Constants.AUTH_TOKEN_HEADER, adminToken);
-    headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
-    HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
+
     try {
+      String adminToken = adminUtils.getAdmintoken();
+      HttpHeaders headers = new HttpHeaders();
+      headers.add(Constants.AUTH_TOKEN_HEADER, adminToken);
+      headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
+      HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
       HttpEntity<Response> responseEntity =
           restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
       IdentityUser user = convert(responseEntity);
@@ -153,7 +155,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
       } else {
         return false;
       }
-    } catch (RestClientException e) {
+    } catch (RestClientException | ServiceException e) {
       LOGGER.error("Error al validar el token, causa: ", e);
     }
     return false;
