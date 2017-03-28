@@ -29,7 +29,7 @@ public class Application extends SpringBootServletInitializer {
     return new WebMvcConfigurerAdapter() {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").maxAge(3600);
+        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*").allowCredentials(true).maxAge(3600);
       }
     };
   }
@@ -58,7 +58,7 @@ public class Application extends SpringBootServletInitializer {
 
     FilterRegistrationBean registration = new FilterRegistrationBean();
     registration.setFilter(loggedUserFilter());
-    registration.addUrlPatterns("/customers/*");
+    registration.addUrlPatterns("/customers/*",  "/user_profile/*", "/countries/*", "/regions/*", "/localities/*");
     // registration.addInitParameter("paramName", "paramValue");
     registration.setName("loggedUserFilter");
 
