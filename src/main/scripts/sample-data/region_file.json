@@ -1,0 +1,33 @@
+{"_id":1,"name":"AGUASCALIENTES","countryId":117.0,"regionCode":"AGS."}
+{"_id":2,"name":"BAJA CALIFORNIA","countryId":117.0,"regionCode":"BC"}
+{"_id":3,"name":"BAJA CALIFORNIA SUR","countryId":117.0,"regionCode":"BCS"}
+{"_id":4,"name":"CAMPECHE","countryId":117.0,"regionCode":"CAMP."}
+{"_id":5,"name":"COAHUILA","countryId":117.0,"regionCode":"COAH."}
+{"_id":6,"name":"COLIMA","countryId":117.0,"regionCode":"COL."}
+{"_id":7,"name":"CHIAPAS","countryId":117.0,"regionCode":"CHIS."}
+{"_id":8,"name":"CHIHUAHUA","countryId":117.0,"regionCode":"CHIH."}
+{"_id":9,"name":"CIUDAD DE MÉXICO","countryId":117.0,"regionCode":"CDMX"}
+{"_id":10,"name":"DURANGO","countryId":117.0,"regionCode":"DGO."}
+{"_id":11,"name":"GUANAJUATO","countryId":117.0,"regionCode":"GTO."}
+{"_id":12,"name":"GUERRERO","countryId":117.0,"regionCode":"GRO."}
+{"_id":13,"name":"HIDALGO","countryId":117.0,"regionCode":"HGO."}
+{"_id":14,"name":"JALISCO","countryId":117.0,"regionCode":"JAL."}
+{"_id":15,"name":"MÉXICO","countryId":117.0,"regionCode":"MEX."}
+{"_id":16,"name":"MICHOACÁN","countryId":117.0,"regionCode":"MICH."}
+{"_id":17,"name":"MORELOS","countryId":117.0,"regionCode":"MOR."}
+{"_id":18,"name":"NAYARIT","countryId":117.0,"regionCode":"NAY."}
+{"_id":19,"name":"NUEVO LEÓN","countryId":117.0,"regionCode":"NL"}
+{"_id":20,"name":"OAXACA","countryId":117.0,"regionCode":"OAX."}
+{"_id":21,"name":"PUEBLA","countryId":117.0,"regionCode":"PUE"}
+{"_id":22,"name":"QUERETARO","countryId":117.0,"regionCode":"QRO."}
+{"_id":23,"name":"QUINTANA ROO ","countryId":117.0,"regionCode":"Q. ROO"}
+{"_id":24,"name":"SAN LUIS POTOSÍ","countryId":117.0,"regionCode":"SLP"}
+{"_id":25,"name":"SINALOA","countryId":117.0,"regionCode":"SIN."}
+{"_id":26,"name":"SONORA","countryId":117.0,"regionCode":"SON."}
+{"_id":27,"name":"TABASCO","countryId":117.0,"regionCode":"TAB."}
+{"_id":28,"name":"TAMAULIPAS","countryId":117.0,"regionCode":"TAMPS."}
+{"_id":29,"name":"TLAXCALA","countryId":117.0,"regionCode":"TLAX."}
+{"_id":30,"name":"VERACRUZ","countryId":117.0,"regionCode":"VER."}
+{"_id":31,"name":"YUCATÁN","countryId":117.0,"regionCode":"YUC."}
+{"_id":32,"name":"ZACATECAS","countryId":117.0,"regionCode":"ZAC."}
+
