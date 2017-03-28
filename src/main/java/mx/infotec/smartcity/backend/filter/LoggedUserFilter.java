@@ -49,12 +49,12 @@ public class LoggedUserFilter implements Filter {
     String token = request.getHeader(Constants.AUTH_TOKEN_HEADER);
 
     if (token == null || !loginService.isValidToken(token)) {
-      response.sendError(403, "Invalid user");
+      response.sendError(403, "Auth required");
     } else {
       // TODO: implementar método para recuperar Usuario en loginService
       try {
         IdentityUser user =  loginService.findUserByValidToken(token);
-        servletRequest.setAttribute("userId", user.getName());
+        servletRequest.setAttribute(Constants.USER_REQUES_KEY, user);
         
         filterChain.doFilter(servletRequest, servletResponse);
       } catch (InvalidTokenException e) {
