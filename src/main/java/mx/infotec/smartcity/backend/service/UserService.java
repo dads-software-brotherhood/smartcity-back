@@ -8,6 +8,7 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeU
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
+import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 
 /**
  *
@@ -49,5 +50,7 @@ public interface UserService extends Serializable {
   Token getUserFromToken(String tokenAdmin, String authToken) throws ServiceException;
   
   boolean isRegisteredUser(String name) throws ServiceException;
+  
+  boolean createUserAndSendMail(CreateUser user, TemplatesEnum template ) throws ServiceException;
 
 }

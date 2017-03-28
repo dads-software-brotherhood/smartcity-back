@@ -17,7 +17,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
@@ -29,6 +28,7 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.Users;
 import mx.infotec.smartcity.backend.service.mail.MailService;
 import mx.infotec.smartcity.backend.utils.Constants;
+import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 
 
 /**
@@ -227,7 +227,7 @@ public class KeystoneUserServiceImpl implements UserService {
     try {
       String tokenAdmin = adminUtils.getAdmintoken();
       User registeredUser = getUserByName(name, tokenAdmin);
-      if (registeredUser.getName().equals(name)) {
+      if (registeredUser != null && registeredUser.getName().equals(name)) {
         return true;
       }
       return false;
@@ -236,6 +236,19 @@ public class KeystoneUserServiceImpl implements UserService {
       throw new ServiceException(e);
     }
     
+  }
+
+  @Override
+  public boolean createUserAndSendMail(CreateUser user, TemplatesEnum template) throws ServiceException {
+    try {
+      createUser(user);
+      mailService.sendMail(user.getUser().getName(), TemplatesEnum.MAIL_SAMPLE);
+      return true;
+    } catch (Exception e) {
+      LOGGER.error("Error to create user and send notificartion, cause: ",e);
+    }
+    
+    return false;
   }
 
 }

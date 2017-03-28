@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import mx.infotec.smartcity.backend.model.TokenRequest;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
@@ -22,6 +21,7 @@ public class RegisterControler {
   @Autowired
   private UserService keystoneUserService;
   
+  
   @RequestMapping(value="/register", method = RequestMethod.POST, 
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> userRegistration(@RequestBody TokenRequest request) {
@@ -32,6 +32,7 @@ public class RegisterControler {
       CreateUser createUser = new CreateUser(user);
       if (!keystoneUserService.isRegisteredUser(user.getName()) &&
           keystoneUserService.createUser(createUser)) {
+        
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
       }
       return ResponseEntity.status(HttpStatus.CONFLICT).body("Registered User");
