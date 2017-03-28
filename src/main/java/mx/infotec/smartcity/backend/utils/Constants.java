@@ -11,4 +11,6 @@ public interface Constants {
     
     public static final String ENCODING = "UTF-8";
     public static final String FORTMAT_TEXT_HTML = "html";
+    
+    public static final String ADMIN_ROLE = "admin";
 }

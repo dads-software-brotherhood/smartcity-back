@@ -62,11 +62,12 @@ public class UserController {
       @RequestHeader(value = "token-auth") String token, @RequestBody CreateUser user) {
     try {
 
-      CreateUser createdUser = userService.createUser(user, token);
-      roleService.assignRoleToUserOnDefaultDomain(
-          roleService.getRoleByName(END_USER, token).getRole().getId(),
-          createdUser.getUser().getId(), token);
-      return ResponseEntity.accepted().body(createdUser);
+//      CreateUser createdUser = userService.createUser(user);
+//      roleService.assignRoleToUserOnDefaultDomain(
+//          roleService.getRoleByName(END_USER, token).getRole().getId(),
+//          createdUser.getUser().getId(), token);
+//      return ResponseEntity.accepted().body(createdUser);
+      return null;
     } catch (Exception ex) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }

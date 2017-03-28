@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,13 +17,17 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.UserService;
+import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.Users;
+import mx.infotec.smartcity.backend.service.mail.MailService;
 import mx.infotec.smartcity.backend.utils.Constants;
 
 
@@ -37,6 +42,12 @@ public class KeystoneUserServiceImpl implements UserService {
 
   private static final Logger LOGGER           =
       LoggerFactory.getLogger(KeystoneUserServiceImpl.class);
+
+  @Autowired
+  private AdminUtilsService   adminUtils;
+
+  @Autowired
+  MailService                 mailService;
 
 
   @Value("${idm.servers.keystone}")
@@ -61,7 +72,7 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
-  public List<User> getAllUsers(String authToken) {
+  public List<User> getAllUsers(String authToken) throws ServiceException {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
@@ -79,25 +90,27 @@ public class KeystoneUserServiceImpl implements UserService {
 
 
   @Override
-  public CreateUser createUser(CreateUser user, String authToken) {
+  public boolean createUser(CreateUser user) throws ServiceException {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
-
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("X-auth-token", authToken);
-    HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(user, headers);
-    HttpEntity<CreateUser> responseEntity =
-        restTemplate.exchange(userUrl, HttpMethod.POST, requestEntity, CreateUser.class);
-    LOGGER.info("user url: en df create user {} ", userUrl);
-    return responseEntity.getBody();
-
+    try {
+      String tokenAdmin = adminUtils.getAdmintoken();
+      headers.set(Constants.AUTH_TOKEN_HEADER, tokenAdmin);
+      HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(user, headers);
+      restTemplate.exchange(userUrl, HttpMethod.POST, requestEntity, CreateUser.class);
+      return  true;
+    } catch (Exception e) {
+      LOGGER.error("Error to create user, cause: ", e);
+      throw new ServiceException(e);
+    }
   }
 
 
   @Override
-  public CreateUser updateUser(String idUser, String authToken, CreateUser user) {
+  public CreateUser updateUser(String idUser, String authToken, CreateUser user)
+      throws ServiceException {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
@@ -118,7 +131,7 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
-  public CreateUser deleteUser(String userId, String authToken) {
+  public CreateUser deleteUser(String userId, String authToken) throws ServiceException {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
     HttpHeaders headers = new HttpHeaders();
@@ -135,7 +148,8 @@ public class KeystoneUserServiceImpl implements UserService {
 
 
   @Override
-  public Object changePassword(String userid, ChangeUserPassword user, String authToken) {
+  public Object changePassword(String userid, ChangeUserPassword user, String authToken)
+      throws ServiceException {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
     HttpHeaders headers = new HttpHeaders();
@@ -152,7 +166,7 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
-  public CreateUser getUser(String userId, String authToken) {
+  public CreateUser getUser(String userId, String authToken) throws ServiceException {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
     HttpHeaders headers = new HttpHeaders();
@@ -166,14 +180,13 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
-  public User getUserByName(String name, String authToken) {
+  public User getUserByName(String name, String authToken) throws ServiceException {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
     Request request = new Request();
     HttpHeaders headers = new HttpHeaders();
     headers.add(Constants.AUTH_TOKEN_HEADER, authToken);
     HttpEntity<Request> requestEntity = new HttpEntity<Request>(request, headers);
-    System.out.println(String.format(paramName, name));
     HttpEntity<Users> responseEntity = restTemplate.exchange(String.format(paramName, name),
         HttpMethod.GET, requestEntity, Users.class);
     if (!responseEntity.getBody().getUsers().isEmpty()) {
@@ -181,11 +194,11 @@ public class KeystoneUserServiceImpl implements UserService {
     } else {
       return null;
     }
-   
+
   }
 
   @Override
-  public CreateUser getUserByUsername(String username, String authToken) {
+  public CreateUser getUserByUsername(String username, String authToken) throws ServiceException {
     List<User> users = this.getAllUsers(authToken);
     for (User user : users) {
       if (user.getName().equals(username)) {
@@ -196,7 +209,7 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
-  public Token getUserFromToken(String tokenAdmin, String authToken) {
+  public Token getUserFromToken(String tokenAdmin, String authToken) throws ServiceException {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
     HttpHeaders headers = new HttpHeaders();
@@ -207,6 +220,22 @@ public class KeystoneUserServiceImpl implements UserService {
     HttpEntity<Token> responseEntity =
         restTemplate.exchange(tokenUrl, HttpMethod.GET, requestEntity, Token.class);
     return responseEntity.getBody();
+  }
+
+  @Override
+  public boolean isRegisteredUser(String name) throws ServiceException {
+    try {
+      String tokenAdmin = adminUtils.getAdmintoken();
+      User registeredUser = getUserByName(name, tokenAdmin);
+      if (registeredUser.getName().equals(name)) {
+        return true;
+      }
+      return false;
+    } catch (Exception e) {
+      LOGGER.error("Error until validate a registered user, cause: " ,e);
+      throw new ServiceException(e);
+    }
+    
   }
 
 }

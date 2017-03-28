@@ -11,6 +11,9 @@ import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
+import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
+import mx.infotec.smartcity.backend.service.exception.ServiceException;
+import mx.infotec.smartcity.backend.utils.Constants;
 
 @Service
 @Qualifier("adminUtils")
@@ -33,7 +36,7 @@ public class KeystoneAdminUtilsServiceImpl implements AdminUtilsService{
   private LoginService loginService;
   
   @Override
-  public String getAdmintoken() {
+  public String getAdmintoken() throws ServiceException{
     try {
       IdentityUser adminUser = loginService.performLogin(idmUser, idmPassword);
       return adminUser.getTokenInfo().getToken();
@@ -41,6 +44,24 @@ public class KeystoneAdminUtilsServiceImpl implements AdminUtilsService{
       LOGGER.error("No se pudo validar el usuario admin, causa: " , e);
     }
     return null;
+  }
+
+  @Override
+  public boolean isAdmin(String token) throws ServiceException {
+    try {
+      IdentityUser userInfo = loginService.findUserByValidToken(token);
+      for (String role : userInfo.getRoles()) {
+        
+        if (role.equals(Constants.ADMIN_ROLE)) {
+          return true;
+        } 
+      }
+    } catch (InvalidTokenException e) {
+      LOGGER.error("Error to validate if token roles equals to admin");
+      throw new ServiceException(e);
+    }
+    
+    return false;
   }
 
 }
