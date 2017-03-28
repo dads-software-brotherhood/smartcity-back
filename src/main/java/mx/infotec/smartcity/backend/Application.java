@@ -2,8 +2,6 @@ package mx.infotec.smartcity.backend;
 
 import javax.servlet.Filter;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -18,9 +16,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import mx.infotec.smartcity.backend.filter.LoggedUserFilter;
-import mx.infotec.smartcity.backend.service.AdminUtilsService;
-import mx.infotec.smartcity.backend.service.LoginService;
-import mx.infotec.smartcity.backend.service.RoleService;
 
 /**
  *
@@ -29,24 +24,13 @@ import mx.infotec.smartcity.backend.service.RoleService;
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
-  @Autowired
-  @Qualifier("adminUtils")
-  private AdminUtilsService adminUtils;
-
-  @Autowired
-  @Qualifier("keystoneLoginService")
-  private LoginService      loginService;
-
-  @Autowired
-  @Qualifier("keystoneRoleService")
-  private RoleService       roleService;
-
   @Bean
   public WebMvcConfigurer corsConfigurer() {
     return new WebMvcConfigurerAdapter() {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").maxAge(3600);
+        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").allowedHeaders("*")
+            .allowCredentials(true).maxAge(3600);
       }
     };
   }
@@ -93,6 +77,4 @@ public class Application extends SpringBootServletInitializer {
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
   }
-
-
 }
