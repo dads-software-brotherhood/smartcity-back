@@ -45,5 +45,7 @@ public interface RoleService extends Serializable {
 
   void deleteRoleFromUserDefaultDomain(String roleId, String userId, String authToken);
 
+  Roles getAllRolesLikeRoles(String authToken);
+
 
 }

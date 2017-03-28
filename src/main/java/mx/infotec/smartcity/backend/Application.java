@@ -2,6 +2,8 @@ package mx.infotec.smartcity.backend;
 
 import javax.servlet.Filter;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -16,6 +18,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import mx.infotec.smartcity.backend.filter.LoggedUserFilter;
+import mx.infotec.smartcity.backend.service.AdminUtilsService;
+import mx.infotec.smartcity.backend.service.LoginService;
+import mx.infotec.smartcity.backend.service.RoleService;
 
 /**
  *
@@ -23,6 +28,18 @@ import mx.infotec.smartcity.backend.filter.LoggedUserFilter;
  */
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
+
+  @Autowired
+  @Qualifier("adminUtils")
+  private AdminUtilsService adminUtils;
+
+  @Autowired
+  @Qualifier("keystoneLoginService")
+  private LoginService      loginService;
+
+  @Autowired
+  @Qualifier("keystoneRoleService")
+  private RoleService       roleService;
 
   @Bean
   public WebMvcConfigurer corsConfigurer() {
@@ -58,7 +75,8 @@ public class Application extends SpringBootServletInitializer {
 
     FilterRegistrationBean registration = new FilterRegistrationBean();
     registration.setFilter(loggedUserFilter());
-    registration.addUrlPatterns("/customers/*");
+    registration.addUrlPatterns("/customers/*", "/user_profile/*", "/countries/*", "/regions/*",
+        "/localities/*");
     // registration.addInitParameter("paramName", "paramValue");
     registration.setName("loggedUserFilter");
 
@@ -75,4 +93,6 @@ public class Application extends SpringBootServletInitializer {
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
   }
+
+
 }

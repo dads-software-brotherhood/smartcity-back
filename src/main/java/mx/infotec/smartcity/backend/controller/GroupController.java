@@ -1,6 +1,9 @@
 package mx.infotec.smartcity.backend.controller;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,11 +81,13 @@ public class GroupController {
   }
 
   @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public ResponseEntity<?> add(@RequestBody Group group) {
+  public ResponseEntity<?> add(@Valid @RequestBody Group group) {
     if (group.getId() != null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID must be null");
     } else {
       try {
+        group.setDateCreated(new Date());
+        group.setDateModified(new Date());
         Group GroupRepro = groupRepository.insert(group);
         return ResponseEntity.accepted().body(GroupRepro);
       } catch (Exception ex) {
@@ -100,7 +105,7 @@ public class GroupController {
         if (group.getId() != null) {
           LOGGER.warn("ID from object is ignored");
         }
-
+        group.setDateModified(new Date());
         group.setId(id);
         groupRepository.save(group);
 
