@@ -47,7 +47,7 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
   private LoginService loginService;
 
   @Override
-  public TokenRecovery generateTocken(String email, String idUser) throws ServiceException {
+  public TokenRecovery generateToken(String email, String idUser) throws ServiceException {
     TokenRecovery recovery = new TokenRecovery();
     recovery.setIdUser(idUser);
     recovery.setEmail(email);
@@ -89,7 +89,7 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
       if (user == null) {
         return false;
       }
-      TokenRecovery recovery = generateTocken(email, user.getId());
+      TokenRecovery recovery = generateToken(email, user.getId());
       LOG.info("TokenRecovery:  " +  recovery.getId());
       mailService.sendMail(email, TemplatesEnum.MAIL_SAMPLE);
       return true;
@@ -125,6 +125,17 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
         loginService.invalidToken(adminToken);
     }
 
+  }
+
+  @Override
+  public TokenRecovery getTokenById(String token) throws ServiceException {
+    try {
+      return tokenRepository.findById(token);
+      
+    } catch(Exception e) {
+      LOG.error("Error trying to get TokenRecovery, cause: ", e);
+      throw new ServiceException(e);
+    }
   }
 
 }

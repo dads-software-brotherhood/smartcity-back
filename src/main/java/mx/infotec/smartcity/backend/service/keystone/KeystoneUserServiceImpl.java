@@ -17,6 +17,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import mx.infotec.smartcity.backend.model.TokenRecovery;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
@@ -27,6 +28,7 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.Users;
 import mx.infotec.smartcity.backend.service.mail.MailService;
+import mx.infotec.smartcity.backend.service.recovery.TokenRecoveryService;
 import mx.infotec.smartcity.backend.utils.Constants;
 import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 
@@ -38,28 +40,31 @@ import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 @Service("keystoneUserService")
 public class KeystoneUserServiceImpl implements UserService {
 
-  private static final long   serialVersionUID = 1L;
+  private static final long    serialVersionUID = 1L;
 
-  private static final Logger LOGGER           =
+  private static final Logger  LOGGER           =
       LoggerFactory.getLogger(KeystoneUserServiceImpl.class);
 
   @Autowired
-  private AdminUtilsService   adminUtils;
+  private AdminUtilsService    adminUtils;
 
   @Autowired
-  MailService                 mailService;
+  private MailService          mailService;
+
+  @Autowired
+  private TokenRecoveryService recoveryService;
 
 
   @Value("${idm.servers.keystone}")
-  private String              keystonUrl;
+  private String               keystonUrl;
 
-  private String              userUrl;
-  private String              changePasswordUrl;
-  private String              updateUserUrl;
-  private String              tokenUrl;
-  private String              DBLCUOTE         = "\"";
-  private Integer             TIMEOUT          = 90000;
-  private String              paramName;
+  private String               userUrl;
+  private String               changePasswordUrl;
+  private String               updateUserUrl;
+  private String               tokenUrl;
+  private String               DBLCUOTE         = "\"";
+  private Integer              TIMEOUT          = 90000;
+  private String               paramName;
 
   @PostConstruct
   protected void init() {
@@ -100,7 +105,7 @@ public class KeystoneUserServiceImpl implements UserService {
       headers.set(Constants.AUTH_TOKEN_HEADER, tokenAdmin);
       HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(user, headers);
       restTemplate.exchange(userUrl, HttpMethod.POST, requestEntity, CreateUser.class);
-      return  true;
+      return true;
     } catch (Exception e) {
       LOGGER.error("Error to create user, cause: ", e);
       throw new ServiceException(e);
@@ -122,7 +127,7 @@ public class KeystoneUserServiceImpl implements UserService {
     restTemplate.setRequestFactory(requestFactory);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("X-auth-token", authToken);
+    headers.set(Constants.AUTH_TOKEN_HEADER, authToken);
     HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(user, headers);
     HttpEntity<CreateUser> responseEntity = restTemplate.exchange(
         String.format(updateUserUrl, idUser), HttpMethod.PATCH, requestEntity, CreateUser.class);
@@ -232,22 +237,25 @@ public class KeystoneUserServiceImpl implements UserService {
       }
       return false;
     } catch (Exception e) {
-      LOGGER.error("Error until validate a registered user, cause: " ,e);
+      LOGGER.error("Error until validate a registered user, cause: ", e);
       throw new ServiceException(e);
     }
-    
+
   }
 
   @Override
-  public boolean createUserAndSendMail(CreateUser user, TemplatesEnum template) throws ServiceException {
+  public boolean createUserAndSendMail(CreateUser user, TemplatesEnum template)
+      throws ServiceException {
     try {
       createUser(user);
+      TokenRecovery recovery = recoveryService.generateToken(user.getUser().getName(), user.getUser().getId());
+      LOGGER.info("Create User token: "+ recovery.getId());
       mailService.sendMail(user.getUser().getName(), TemplatesEnum.MAIL_SAMPLE);
       return true;
     } catch (Exception e) {
-      LOGGER.error("Error to create user and send notificartion, cause: ",e);
+      LOGGER.error("Error to create user and send notificartion, cause: ", e);
     }
-    
+
     return false;
   }
 
