@@ -49,17 +49,18 @@ public class LoggedUserFilter implements Filter {
     String token = request.getHeader(Constants.AUTH_TOKEN_HEADER);
 
     if (token == null || !loginService.isValidToken(token)) {
-      response.sendError(403);
+      response.sendError(403, "Invalid user");
     } else {
       // TODO: implementar método para recuperar Usuario en loginService
       try {
         IdentityUser user =  loginService.findUserByValidToken(token);
         servletRequest.setAttribute("userId", user.getName());
+        
+        filterChain.doFilter(servletRequest, servletResponse);
       } catch (InvalidTokenException e) {
-        response.sendError(403);
+        response.sendError(403, "Invalkd user");
         LOG.error("Error to validate token, cause: ", e);
       }
-      filterChain.doFilter(servletRequest, servletResponse);
     }
   }
 
