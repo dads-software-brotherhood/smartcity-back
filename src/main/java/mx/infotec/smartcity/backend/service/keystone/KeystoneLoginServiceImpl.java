@@ -246,7 +246,17 @@ public class KeystoneLoginServiceImpl implements LoginService {
       if (!tmp.isEmpty()) {
         token.setToken(tmp.get(0));
       }
-
+      if (idmUser.getRoles() == null) {
+        String adminToken;
+        try {
+          adminToken = this.adminUtils.getAdmintoken();
+          idmUser.setRoles(this.userService
+              .getUserFromTokenToIdentityUser(adminToken, token.getToken()).getRoles());
+          this.invalidToken(adminToken);
+        } catch (ServiceException e) {
+          LOGGER.debug("error creando el adminToken en KeystoneLoginService");
+        }
+      }
       idmUser.setTokenInfo(token);
 
       idmUser.setUsername(response.getToken().getUser().getName());
