@@ -11,6 +11,8 @@ public interface Constants {
     
     String USER_REQUES_KEY = "identityUser";
     
+    String RECOVERY_TOKEN = "recovery-token";
+    
     public static final String ENCODING = "UTF-8";
     public static final String FORTMAT_TEXT_HTML = "html";
     
