@@ -47,7 +47,9 @@ public class MailServiceImpl implements MailService {
   @Value(value = "${spring.mail.from}")
   private String     from;
   
-
+  @Value(value = "${front.url}")
+  private String frontUrl;
+  
   @Override
   public boolean sendMail(TemplatesEnum templateId, Email email) {
     
@@ -56,7 +58,7 @@ public class MailServiceImpl implements MailService {
       @Override
       public void prepare(MimeMessage mimeMessage) throws Exception {
         mimeMessage.setSubject("notification");
-        mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress("rodrigo.nievez@geekearte.com"));
+        mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(email.getTo()));
         mimeMessage.setFrom(new InternetAddress(from));
         mimeMessage.setText(getTemplate(templateId, email), Constants.ENCODING, Constants.FORTMAT_TEXT_HTML);
         
@@ -66,7 +68,7 @@ public class MailServiceImpl implements MailService {
       this.mailSender.send(preparator);
       return true;
     } catch (Exception e) {
-      e.getStackTrace();
+      e.printStackTrace();
     }
     
     return false;
@@ -77,13 +79,22 @@ public class MailServiceImpl implements MailService {
   private String getTemplate(TemplatesEnum templateEnum, Email email) throws ServiceException{
     email.setFrom(from);
     Map<String, Object> values = new HashMap<>();
+    String url ="";
     try {
       Template template = freemarkerConfiguration.getTemplate(templateEnum.value(), Constants.ENCODING);
       switch (templateEnum) {
         case MAIL_SAMPLE:
+          url = String.format("%s%s%s", frontUrl, Constants.RECOVERY_PASSWORD_URL, email.getMessage());
           values.put("from", email.getFrom());
           values.put("to", email.getTo());
-          values.put("message", email.getMessage());
+          values.put("message", url);
+          
+          break;
+        case MAIL_SAMPLE2:
+          url = String.format("%s%s%s", frontUrl, Constants.VALIDATE_ACCOUNT_URL, email.getMessage());
+          values.put("from", email.getFrom());
+          values.put("to", email.getTo());
+          values.put("message", url);
           
           break;
 
