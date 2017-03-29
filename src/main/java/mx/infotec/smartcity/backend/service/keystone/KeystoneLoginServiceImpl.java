@@ -28,6 +28,7 @@ import mx.infotec.smartcity.backend.model.TokenType;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.RoleService;
+import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
@@ -59,6 +60,9 @@ public class KeystoneLoginServiceImpl implements LoginService {
   @Autowired
   @Qualifier("keystoneRoleService")
   private RoleService         roleService;
+  @Autowired
+  @Qualifier("keystoneUserService")
+  private UserService         userService;
 
   @Value("${idm.servers.keystone}")
   private String              keystonUrl;
@@ -94,25 +98,35 @@ public class KeystoneLoginServiceImpl implements LoginService {
   }
 
   @Override
-  public IdentityUser findUserByValidToken(String token) throws InvalidTokenException {
-    RestTemplate restTemplate = new RestTemplate();
-    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+  public IdentityUser findUserByValidToken(String token)
+      throws InvalidTokenException, ServiceException {
     if (isValidToken(token)) {
-      HttpHeaders headers = new HttpHeaders();
-      headers.add(Constants.AUTH_TOKEN_HEADER, token);
-      headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
-      HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
-      try {
-        HttpEntity<Response> responseEntity =
-            restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
-        return convert(responseEntity);
-      } catch (RestClientException e) {
-        LOGGER.error("Error al buscar la inforación del token, causa: ", e);
-        throw new RestClientException("Error al buscar la inforación del token, causa: ", e);
-      }
+      String tokenAdmin = adminUtils.getAdmintoken();
+      IdentityUser idu = userService.getUserFromTokenToIdentityUser(tokenAdmin, token);
+      this.invalidToken(tokenAdmin);
+      return idu;
     } else {
       return null;
     }
+
+    // RestTemplate restTemplate = new RestTemplate();
+    // restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    // if (isValidToken(token)) {
+    // HttpHeaders headers = new HttpHeaders();
+    // headers.add(Constants.AUTH_TOKEN_HEADER, token);
+    // headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
+    // HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
+    // try {
+    // HttpEntity<Response> responseEntity =
+    // restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
+    // return convert(responseEntity);
+    // } catch (RestClientException e) {
+    // LOGGER.error("Error al buscar la inforación del token, causa: ", e);
+    // throw new RestClientException("Error al buscar la inforación del token, causa: ", e);
+    // }
+    // } else {
+    // return null;
+    // }
   }
 
   @Override
@@ -212,17 +226,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
             roles.add(roleKey);
           }
         });
-        if (roles.size() == 0) {
-          try {
-            String adminToken = adminUtils.getAdmintoken();
-            this.roleService.getRoleUser(defaultDomain, response.getToken().getUser().getId(),
-                adminToken);
-            invalidToken(adminToken);
-          } catch (ServiceException e) {
-            LOGGER.info(e.getMessage());
 
-          }
-        }
         idmUser.setRoles(roles);
       }
 

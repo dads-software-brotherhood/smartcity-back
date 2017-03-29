@@ -123,6 +123,21 @@ public class KeystoneRoleServiceImpl implements RoleService {
     return responseEntity.getBody();
   }
 
+
+  @Override
+  public Roles getRoleUserDefaultDomain(String userId, String authToken) {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("X-auth-token", authToken);
+    HttpEntity<SelfRole> requestEntity = new HttpEntity<SelfRole>(headers);
+    HttpEntity<Roles> responseEntity =
+        restTemplate.exchange(String.format(getUserRole, defaultDomain, userId), HttpMethod.GET,
+            requestEntity, Roles.class);
+    return responseEntity.getBody();
+  }
+
   @Override
   public SelfRole getRoleByName(String name, String authToken) {
     List<Role> roles = this.getAllRoles(authToken);

@@ -2,6 +2,7 @@
 package mx.infotec.smartcity.backend.service.keystone.pojo.token;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,17 +14,17 @@ public class Token_ implements Serializable {
 
   private List<String>      methods          = null;
   private List<Role>        roles            = null;
-  private String            expiresAt;
+  private Date              expiresAt;
   private Project           project;
   private Extras            extras;
   private User              user;
-  //RNM
+  // RNM
   private String            id;
 
   @JsonProperty("audit_id")
   private List<String>      auditIds         = null;
   @JsonProperty("issued_at")
-  private String            issuedAt;
+  private Date              issuedAt;
   private final static long serialVersionUID = 5568623456871918791L;
 
   public List<String> getMethods() {
@@ -42,11 +43,11 @@ public class Token_ implements Serializable {
     this.roles = roles;
   }
 
-  public String getExpiresAt() {
+  public Date getExpiresAt() {
     return expiresAt;
   }
 
-  public void setExpiresAt(String expiresAt) {
+  public void setExpiresAt(Date expiresAt) {
     this.expiresAt = expiresAt;
   }
 
@@ -85,12 +86,12 @@ public class Token_ implements Serializable {
   }
 
   @JsonProperty("issued_at")
-  public String getIssuedAt() {
+  public Date getIssuedAt() {
     return issuedAt;
   }
 
   @JsonProperty("issued_at")
-  public void setIssuedAt(String issuedAt) {
+  public void setIssuedAt(Date issuedAt) {
     this.issuedAt = issuedAt;
   }
 
@@ -102,5 +103,5 @@ public class Token_ implements Serializable {
     this.id = id;
   }
 
-  
+
 }

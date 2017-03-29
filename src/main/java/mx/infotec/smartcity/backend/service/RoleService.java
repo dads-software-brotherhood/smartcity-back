@@ -47,5 +47,7 @@ public interface RoleService extends Serializable {
 
   Roles getAllRolesLikeRoles(String authToken);
 
+  Roles getRoleUserDefaultDomain(String userId, String authToken);
+
 
 }

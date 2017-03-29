@@ -1,12 +1,15 @@
 package mx.infotec.smartcity.backend.service.keystone;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,19 +20,26 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.Role;
+import mx.infotec.smartcity.backend.model.TokenInfo;
 import mx.infotec.smartcity.backend.model.TokenRecovery;
+import mx.infotec.smartcity.backend.model.TokenType;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
+import mx.infotec.smartcity.backend.service.RoleService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token;
+import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token_;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.Users;
 import mx.infotec.smartcity.backend.service.mail.MailService;
 import mx.infotec.smartcity.backend.service.recovery.TokenRecoveryService;
 import mx.infotec.smartcity.backend.utils.Constants;
+import mx.infotec.smartcity.backend.utils.RoleUtil;
 import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 
 
@@ -53,6 +63,10 @@ public class KeystoneUserServiceImpl implements UserService {
 
   @Autowired
   private TokenRecoveryService recoveryService;
+
+  @Autowired
+  @Qualifier("keystoneRoleService")
+  private RoleService          roleService;
 
 
   @Value("${idm.servers.keystone}")
@@ -228,6 +242,83 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
+  public IdentityUser getUserFromTokenToIdentityUser(String tokenAdmin, String authToken)
+      throws ServiceException {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("X-auth-token", tokenAdmin);
+    headers.set("X-Subject-Token", authToken);
+    HttpEntity<Token> requestEntity = new HttpEntity<Token>(headers);
+    HttpEntity<Token> responseEntity =
+        restTemplate.exchange(tokenUrl, HttpMethod.GET, requestEntity, Token.class);
+    Token token = responseEntity.getBody();
+
+    return convertTokenToIdentity(token, tokenAdmin, authToken);
+  }
+
+  private IdentityUser convertTokenToIdentity(Token tokenM, String tokenAdmin, String authToken) {
+    IdentityUser idu = new IdentityUser();
+    TokenInfo tokenInfo = new TokenInfo();
+    if (tokenM.getToken() != null) {
+      Token_ token = tokenM.getToken();
+      if (token.getUser() != null) {
+        // idu.setName(token.getUser().getName());
+        idu.setId(token.getUser().getId());
+        idu.setUsername(token.getUser().getName());
+
+      }
+      tokenInfo.setStart(token.getIssuedAt());
+      tokenInfo.setEnd(token.getExpiresAt());
+      // tokenInfo.setEnd(ISO8601DateParser.parse(token.getExpiresAt()));
+      // tokenInfo.setStart(ISO8601DateParser.parse(token.getIssuedAt()));
+      tokenInfo.setTokenType(TokenType.OTHER);
+      tokenInfo.setToken(authToken);
+
+
+      Set<Role> rolesEnum = new HashSet<>();
+      if (token.getRoles() != null && token.getRoles().size() > 0) {
+        Set<Role> roles = convertRoles(token.getRoles());
+        rolesEnum.addAll(roles);
+      }
+      Set<Role> roles2 = convertRolesFromRoles(
+          this.roleService.getRoleUserDefaultDomain(idu.getId(), tokenAdmin).getRoles());
+
+      rolesEnum.addAll(roles2);
+      idu.setRoles(rolesEnum);
+      idu.setTokenInfo(tokenInfo);
+    }
+    return idu;
+  }
+
+  private Set<Role> convertRolesFromRoles(
+      List<mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role> roles) {
+    Set<Role> rolesEnum = new HashSet<>();
+    // rolesEnum.add(Role.ADMIN);
+    for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role role : roles) {
+      Role roleEnum = RoleUtil.validateRole(role.getName());
+      if (roleEnum != null) {
+        rolesEnum.add(roleEnum);
+      }
+    }
+    return rolesEnum;
+
+  }
+
+  private Set<Role> convertRoles(
+      List<mx.infotec.smartcity.backend.service.keystone.pojo.token.Role> roles) {
+    Set<Role> rolesEnum = new HashSet<>();
+    for (mx.infotec.smartcity.backend.service.keystone.pojo.token.Role role : roles) {
+      Role roleEnum = RoleUtil.validateRole(role.getName());
+      if (roleEnum != null) {
+        rolesEnum.add(roleEnum);
+      }
+    }
+    return rolesEnum;
+  }
+
+  @Override
   public boolean isRegisteredUser(String name) throws ServiceException {
     try {
       String tokenAdmin = adminUtils.getAdmintoken();
@@ -248,8 +339,9 @@ public class KeystoneUserServiceImpl implements UserService {
       throws ServiceException {
     try {
       createUser(user);
-      TokenRecovery recovery = recoveryService.generateToken(user.getUser().getName(), user.getUser().getId());
-      LOGGER.info("Create User token: "+ recovery.getId());
+      TokenRecovery recovery =
+          recoveryService.generateToken(user.getUser().getName(), user.getUser().getId());
+      LOGGER.info("Create User token: " + recovery.getId());
       mailService.sendMail(user.getUser().getName(), TemplatesEnum.MAIL_SAMPLE);
       return true;
     } catch (Exception e) {
