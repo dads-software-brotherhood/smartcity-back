@@ -49,16 +49,16 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
 
         }
         if (create) {
+          LOGGER.debug("It will be create the role {}", role.name());
           SelfRole newRole = new SelfRole(role.name());
           roleService.createRole(newRole, adminToken);
         }
       }
 
     } catch (ServiceException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      LOGGER.error("Error at roles creation", e);
     } finally {
-      if (adminToken != "") {
+      if (adminToken != null && !adminToken.equals("")) {
         loginService.invalidToken(adminToken);
       }
     }
