@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.utils.Constants;
 import mx.infotec.smartcity.backend.utils.TemplatesEnum;
@@ -48,7 +49,7 @@ public class MailServiceImpl implements MailService {
   
 
   @Override
-  public boolean sendMail(String email, TemplatesEnum templateId) {
+  public boolean sendMail(TemplatesEnum templateId, Email email) {
     
     MimeMessagePreparator preparator = new MimeMessagePreparator() {
       
@@ -57,7 +58,7 @@ public class MailServiceImpl implements MailService {
         mimeMessage.setSubject("notification");
         mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress("rodrigo.nievez@geekearte.com"));
         mimeMessage.setFrom(new InternetAddress(from));
-        mimeMessage.setText(getTemplate(templateId), Constants.ENCODING, Constants.FORTMAT_TEXT_HTML);
+        mimeMessage.setText(getTemplate(templateId, email), Constants.ENCODING, Constants.FORTMAT_TEXT_HTML);
         
       }
     };
@@ -73,15 +74,16 @@ public class MailServiceImpl implements MailService {
   
 
   @GetMapping("/")
-  private String getTemplate(TemplatesEnum templateEnum) throws ServiceException{
+  private String getTemplate(TemplatesEnum templateEnum, Email email) throws ServiceException{
+    email.setFrom(from);
     Map<String, Object> values = new HashMap<>();
     try {
       Template template = freemarkerConfiguration.getTemplate(templateEnum.value(), Constants.ENCODING);
       switch (templateEnum) {
         case MAIL_SAMPLE:
-          values.put("from", "test");
-          values.put("to", "email.test");
-          values.put("message", "messageTest");
+          values.put("from", email.getFrom());
+          values.put("to", email.getTo());
+          values.put("message", email.getMessage());
           
           break;
 

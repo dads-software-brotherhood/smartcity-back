@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.TokenRecovery;
 import mx.infotec.smartcity.backend.model.TokenRequest;
 import mx.infotec.smartcity.backend.persistence.TokenRecoveryRepository;
@@ -84,7 +85,7 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
 
   @Override
   public boolean recoveryPassword(String email) throws ServiceException {
-
+    Email emailObj = new Email();
     String adminToken = null;
     try {
       adminToken = adminUtils.getAdmintoken();
@@ -93,8 +94,10 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
         return false;
       }
       TokenRecovery recovery = generateToken(email, user.getId());
+      emailObj.setTo(email);
+      emailObj.setMessage(recovery.getId());
       LOG.info("TokenRecovery:  " +  recovery.getId());
-      mailService.sendMail(email, TemplatesEnum.MAIL_SAMPLE);
+      mailService.sendMail(TemplatesEnum.MAIL_SAMPLE, emailObj);
       return true;
     } catch (Exception e) {
       LOG.error("Error trying to recovery password, cause: ", e);

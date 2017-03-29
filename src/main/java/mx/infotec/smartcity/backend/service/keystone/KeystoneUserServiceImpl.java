@@ -20,6 +20,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.TokenInfo;
@@ -342,7 +343,10 @@ public class KeystoneUserServiceImpl implements UserService {
       TokenRecovery recovery =
           recoveryService.generateToken(user.getUser().getName(), user.getUser().getId());
       LOGGER.info("Create User token: " + recovery.getId());
-      mailService.sendMail(user.getUser().getName(), TemplatesEnum.MAIL_SAMPLE);
+      Email email = new Email();
+      email.setTo(user.getUser().getName());
+      email.setMessage(recovery.getId());
+      mailService.sendMail(TemplatesEnum.MAIL_SAMPLE, email);
       return true;
     } catch (Exception e) {
       LOGGER.error("Error to create user and send notificartion, cause: ", e);
