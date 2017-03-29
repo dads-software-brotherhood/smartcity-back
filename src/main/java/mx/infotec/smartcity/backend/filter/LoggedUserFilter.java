@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
+import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.utils.Constants;
 
 /**
@@ -32,8 +33,8 @@ public class LoggedUserFilter implements Filter {
   @Autowired
   @Qualifier("keystoneLoginService")
   private LoginService loginService;
-  
-  static final Logger LOG = LoggerFactory.getLogger(LoggedUserFilter.class);
+
+  static final Logger  LOG = LoggerFactory.getLogger(LoggedUserFilter.class);
 
   @Override
   public void init(FilterConfig fc) throws ServletException {
@@ -53,13 +54,16 @@ public class LoggedUserFilter implements Filter {
     } else {
       // TODO: implementar método para recuperar Usuario en loginService
       try {
-        IdentityUser user =  loginService.findUserByValidToken(token);
+        IdentityUser user = loginService.findUserByValidToken(token);
         servletRequest.setAttribute(Constants.USER_REQUES_KEY, user);
-        
+
         filterChain.doFilter(servletRequest, servletResponse);
       } catch (InvalidTokenException e) {
-        response.sendError(403, "Invalkd user");
+        response.sendError(403, "Invalid user");
         LOG.error("Error to validate token, cause: ", e);
+      } catch (ServiceException e) {
+        response.sendError(403, "Invalid user");
+        LOG.error("Error to validate token, casue:", e);
       }
     }
   }
