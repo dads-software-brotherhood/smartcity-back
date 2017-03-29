@@ -1,33 +1,17 @@
 package mx.infotec.smartcity.backend.service.keystone;
 
-import mx.infotec.smartcity.backend.service.keystone.pojo.Response;
-import mx.infotec.smartcity.backend.service.keystone.pojo.User;
-import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token_;
-import mx.infotec.smartcity.backend.utils.Constants;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Auth;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Identity;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.annotation.PostConstruct;
-import mx.infotec.smartcity.backend.model.IdentityUser;
-import mx.infotec.smartcity.backend.model.TokenInfo;
-import mx.infotec.smartcity.backend.model.TokenType;
-import mx.infotec.smartcity.backend.service.AdminUtilsService;
-import mx.infotec.smartcity.backend.service.LoginService;
-import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
-import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
-import mx.infotec.smartcity.backend.service.exception.ServiceException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.Headers;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,6 +20,25 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.Role;
+import mx.infotec.smartcity.backend.model.TokenInfo;
+import mx.infotec.smartcity.backend.model.TokenType;
+import mx.infotec.smartcity.backend.service.AdminUtilsService;
+import mx.infotec.smartcity.backend.service.LoginService;
+import mx.infotec.smartcity.backend.service.RoleService;
+import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
+import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
+import mx.infotec.smartcity.backend.service.exception.ServiceException;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Auth;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Identity;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Response;
+import mx.infotec.smartcity.backend.service.keystone.pojo.User;
+import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token_;
+import mx.infotec.smartcity.backend.utils.Constants;
+import mx.infotec.smartcity.backend.utils.RoleUtil;
 
 /**
  *
@@ -53,8 +56,15 @@ public class KeystoneLoginServiceImpl implements LoginService {
   @Qualifier("adminUtils")
   private AdminUtilsService   adminUtils;
 
+  @Autowired
+  @Qualifier("keystoneRoleService")
+  private RoleService         roleService;
+
   @Value("${idm.servers.keystone}")
   private String              keystonUrl;
+
+  @Value("${idm.default.domain}")
+  private String              defaultDomain;
 
   private String              tokenRequestUrl;
 
@@ -194,12 +204,25 @@ public class KeystoneLoginServiceImpl implements LoginService {
       IdentityUser idmUser = new IdentityUser();
 
       if (response.getToken().getRoles() != null) {
-        Set<String> roles = new HashSet<>();
+        Set<Role> roles = new HashSet<>();
 
         response.getToken().getRoles().forEach((role) -> {
-          roles.add(role.getName());
+          Role roleKey = RoleUtil.validateRole(role.getName());
+          if (roleKey != null) {
+            roles.add(roleKey);
+          }
         });
+        if (roles.size() == 0) {
+          try {
+            String adminToken = adminUtils.getAdmintoken();
+            this.roleService.getRoleUser(defaultDomain, response.getToken().getUser().getId(),
+                adminToken);
+            invalidToken(adminToken);
+          } catch (ServiceException e) {
+            LOGGER.info(e.getMessage());
 
+          }
+        }
         idmUser.setRoles(roles);
       }
 

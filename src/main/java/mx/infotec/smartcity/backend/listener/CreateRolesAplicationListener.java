@@ -73,7 +73,6 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
    */
   @Override
   public void onApplicationEvent(ApplicationReadyEvent arg0) {
-    // TODO Auto-generated method stub
     createRoles();
 
   }
