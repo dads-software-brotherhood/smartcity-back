@@ -66,6 +66,9 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
   public boolean validateTokenRecovery(String tokenRecovery) throws ServiceException {
     try {
       TokenRecovery recovery = tokenRepository.findById(tokenRecovery);
+      if (recovery == null) {
+        return false;
+      }
       Date compareDate = new Date(recovery.getRegisterDate().getTime());
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(compareDate);
