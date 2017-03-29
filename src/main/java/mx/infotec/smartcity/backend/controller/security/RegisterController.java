@@ -22,7 +22,7 @@ import mx.infotec.smartcity.backend.service.recovery.TokenRecoveryService;
 import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 
 @RestController
-public class RegisterControler {
+public class RegisterController {
 
   @Autowired
   private UserService          keystoneUserService;
