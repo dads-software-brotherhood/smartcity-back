@@ -70,6 +70,9 @@ public class KeystoneLoginServiceImpl implements LoginService {
   @Value("${idm.default.domain}")
   private String              defaultDomain;
 
+  @Value("${idm.admin.username}")
+  private String              adminUser;
+
   private String              tokenRequestUrl;
 
   @PostConstruct
@@ -217,11 +220,12 @@ public class KeystoneLoginServiceImpl implements LoginService {
     } else {
       IdentityUser idmUser = new IdentityUser();
 
-      if (response.getToken().getRoles() != null) {
+      if (response.getToken().getRoles() != null
+          && !response.getToken().getUser().getName().equals(adminUser)) {
         Set<Role> roles = new HashSet<>();
 
         response.getToken().getRoles().forEach((role) -> {
-          Role roleKey = RoleUtil.validateRole(role.getName());
+          Role roleKey = RoleUtil.getInstance().validateRole(role.getName());
           if (roleKey != null) {
             roles.add(roleKey);
           }
@@ -240,13 +244,16 @@ public class KeystoneLoginServiceImpl implements LoginService {
         long tmp = token.getEnd().getTime() - token.getStart().getTime();
         token.setTime((int) tmp / 1000);
       }
+      idmUser.setTokenInfo(token);
 
       List<String> tmp = headers.get(Constants.SUBJECT_TOKEN_HEADER);
 
       if (!tmp.isEmpty()) {
         token.setToken(tmp.get(0));
       }
-      if (idmUser.getRoles() == null) {
+      // LOGGER.error("" + response.getToken().getUser().getName() + " idmUSer " + adminUser);
+      if (idmUser.getRoles() == null
+          && !response.getToken().getUser().getName().equals(adminUser)) {
         String adminToken;
         try {
           adminToken = this.adminUtils.getAdmintoken();
@@ -257,7 +264,6 @@ public class KeystoneLoginServiceImpl implements LoginService {
           LOGGER.debug("error creando el adminToken en KeystoneLoginService");
         }
       }
-      idmUser.setTokenInfo(token);
 
       idmUser.setUsername(response.getToken().getUser().getName());
 

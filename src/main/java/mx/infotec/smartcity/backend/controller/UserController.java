@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.RoleService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
+import mx.infotec.smartcity.backend.utils.RoleUtil;
 
 
 /**
@@ -65,17 +67,22 @@ public class UserController {
   }
 
 
-  @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  @RequestMapping(method = RequestMethod.POST, value = "/role/{role}",
+      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> createUsersWithDefaultRole(
-      @RequestHeader(value = "token-auth") String token, @RequestBody CreateUser user) {
+      @RequestHeader(value = "token-auth") String token, @RequestBody CreateUser user,
+      @PathVariable("role") String role) {
     try {
 
-      // CreateUser createdUser = userService.createUser(user);
-      // roleService.assignRoleToUserOnDefaultDomain(
-      // roleService.getRoleByName(END_USER, token).getRole().getId(),
+
       // createdUser.getUser().getId(), token);
       // return ResponseEntity.accepted().body(createdUser);
-      return null;
+      Role roleEnum = RoleUtil.validateRole(role);
+      if (roleEnum == null) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body("The role of the user is incorrect");
+      }
+      return ResponseEntity.accepted().body(userService.createUserWithRole(user, roleEnum));
     } catch (Exception ex) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }

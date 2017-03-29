@@ -127,6 +127,30 @@ public class KeystoneUserServiceImpl implements UserService {
     }
   }
 
+  @Override
+  public boolean createUserWithRole(CreateUser user, Role role) throws ServiceException {
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    try {
+      String tokenAdmin = adminUtils.getAdmintoken();
+      headers.set(Constants.AUTH_TOKEN_HEADER, tokenAdmin);
+      HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(user, headers);
+      HttpEntity<CreateUser> httpCreatedUser =
+          restTemplate.exchange(userUrl, HttpMethod.POST, requestEntity, CreateUser.class);
+      CreateUser createdUser = httpCreatedUser.getBody();
+      String userId = createdUser.getUser().getId();
+      String adminToken = this.adminUtils.getAdmintoken();
+      roleService.assignRoleToUserOnDefaultDomain(RoleUtil.getInstance().getIdRole(role), userId,
+          adminToken);
+      return true;
+    } catch (Exception e) {
+      LOGGER.error("Error to create user, cause: ", e);
+      throw new ServiceException(e);
+    }
+  }
+
 
   @Override
   public CreateUser updateUser(String idUser, String authToken, CreateUser user)
@@ -298,7 +322,7 @@ public class KeystoneUserServiceImpl implements UserService {
     Set<Role> rolesEnum = new HashSet<>();
     // rolesEnum.add(Role.ADMIN);
     for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role role : roles) {
-      Role roleEnum = RoleUtil.validateRole(role.getName());
+      Role roleEnum = RoleUtil.getInstance().validateRole(role.getName());
       if (roleEnum != null) {
         rolesEnum.add(roleEnum);
       }
@@ -311,7 +335,7 @@ public class KeystoneUserServiceImpl implements UserService {
       List<mx.infotec.smartcity.backend.service.keystone.pojo.token.Role> roles) {
     Set<Role> rolesEnum = new HashSet<>();
     for (mx.infotec.smartcity.backend.service.keystone.pojo.token.Role role : roles) {
-      Role roleEnum = RoleUtil.validateRole(role.getName());
+      Role roleEnum = RoleUtil.getInstance().validateRole(role.getName());
       if (roleEnum != null) {
         rolesEnum.add(roleEnum);
       }
