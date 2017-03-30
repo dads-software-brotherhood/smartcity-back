@@ -1,5 +1,7 @@
 package mx.infotec.smartcity.backend.service.keystone;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +28,9 @@ import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.TokenInfo;
 import mx.infotec.smartcity.backend.model.TokenRecovery;
 import mx.infotec.smartcity.backend.model.TokenType;
+import mx.infotec.smartcity.backend.model.UserModel;
 import mx.infotec.smartcity.backend.model.UserProfile;
+import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.RoleService;
 import mx.infotec.smartcity.backend.service.UserService;
@@ -70,6 +74,9 @@ public class KeystoneUserServiceImpl implements UserService {
   @Autowired
   @Qualifier("keystoneRoleService")
   private RoleService          roleService;
+  
+  @Autowired
+  private UserProfileRepository userRepository;
 
 
   @Value("${idm.servers.keystone}")
@@ -382,17 +389,54 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
-  public boolean createUserByAdmin(CreateUser user) throws ServiceException {
-    createUser(user);
-    UserProfile userProfile = new UserProfile();
-    TokenRecovery recovery =
-        recoveryService.generateToken(user.getUser().getName(), user.getUser().getId());
-    Email email = new Email();
-    email.setTo(user.getUser().getName());
-    email.setMessage(recovery.getId());
-    mailService.sendMail(TemplatesEnum.MAIL_SAMPLE, email);
+  public boolean createUserByAdmin(UserModel userModel) throws ServiceException {
+    User_ user = new User_();
+    user.setName(userModel.getEmail());
+    user.setPassword("");
+    CreateUser createUser = new CreateUser(user);
+    try {
+      createUser(createUser);
+      UserProfile userProfile = new UserProfile();
+      userProfile.setEmail(createUser.getUser().getName());
+      userProfile.setName(userModel.getName());
+      userProfile.setFamilyName(userModel.getFamilyName());
+      userProfile.setRegisterDate(new Date());
+      userRepository.save(userProfile);
+      TokenRecovery recovery =
+          recoveryService.generateToken(createUser.getUser().getName(), createUser.getUser().getId());
+      Email email = new Email();
+      email.setTo(createUser.getUser().getName());
+      email.setMessage(recovery.getId());
+      mailService.sendMail(TemplatesEnum.MAIL_SAMPLE, email);
+      return true;
+    } catch (Exception e) {
+      LOGGER.error("Error trying to create user by admin, cause: ", e);
+    }
     
     return false;
+  }
+
+  @Override
+  public List<UserModel> getUserModelList() throws ServiceException {
+    try {
+      List<UserProfile> usersProfileList = userRepository.findAll();
+      if (usersProfileList != null && !usersProfileList.isEmpty()) {
+        List<UserModel> usersModelList = new ArrayList<>();
+        for (UserProfile item : usersProfileList) {
+         UserModel model = new UserModel();
+         model.setEmail(item.getEmail());
+         model.setFamilyName(item.getFamilyName());
+         model.setName(item.getName());
+         usersModelList.add(model);
+        }
+        return usersModelList;
+      }
+      return null;
+    } catch (Exception e) {
+      LOGGER.error("Error on usersProfile recovery, cause: ",e);
+      throw new ServiceException(e);
+    }
+ 
   }
 
 }
