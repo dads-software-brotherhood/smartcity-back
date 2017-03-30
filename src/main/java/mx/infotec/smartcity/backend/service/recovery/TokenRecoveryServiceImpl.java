@@ -118,6 +118,7 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
         adminToken = adminUtils.getAdmintoken();
         CreateUser createUser = userService.getUser(recovery.getIdUser(), adminToken);
         createUser.getUser().setPassword(new String(request.getPassword()));
+        createUser.getUser().setEnabled(true);
         createUser = userService.updateUser(recovery.getIdUser(), adminToken, createUser);
         return true;
       }

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,17 +33,18 @@ public class RecoverPasswordController {
   /**
    * Method used to start password recovery.
    * 
-   * @param email User email
+   * @param tokenRequest Object with user's email
+   * @return Response
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/forgot-password/{email:.+}")
-  public ResponseEntity<?> forgotPassword(@PathVariable("email") String email) {
+  @RequestMapping(method = RequestMethod.POST, value = "/forgot-password")
+  public ResponseEntity<?> forgotPassword(@RequestBody TokenRequest tokenRequest) {
     try {
-      return ResponseEntity.status(HttpStatus.ACCEPTED)
-          .body(recoveryService.recoveryPassword(email));
+      recoveryService.recoveryPassword(tokenRequest.getUsername());
     } catch (ServiceException e) {
       LOGGER.error("forgotPassword error, cause: ", e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getCause());
     }
+    
+    return ResponseEntity.status(HttpStatus.ACCEPTED).body("success");
   }
 
   /**
