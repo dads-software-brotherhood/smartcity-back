@@ -439,4 +439,18 @@ public class KeystoneUserServiceImpl implements UserService {
  
   }
 
+  @Override
+  public boolean deleteUserByAdmin(String email) throws ServiceException {
+    try {
+      String adminToken = adminUtils.getAdmintoken();
+      User usr = getUserByName(email, adminToken);
+      deleteUser(usr.getId(), adminToken);
+      userRepository.delete(userRepository.findByEmail(email));
+      return true;
+    } catch (Exception e) {
+      LOGGER.error("Error trying delete user, cause: ",e);
+      throw new ServiceException(e);
+    }
+  }
+
 }

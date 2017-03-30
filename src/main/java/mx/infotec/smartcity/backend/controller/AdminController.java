@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,6 +37,22 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
       }
       return ResponseEntity.status(HttpStatus.CONFLICT).body("Registered User");
+    } catch (ServiceException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+    }
+  }
+  
+  @RequestMapping(value = "/user/delete/{email:.}", method = RequestMethod.GET)
+  public ResponseEntity<?> deleteUser(@PathVariable("email") String email) {
+    try {
+      if (!keystoneUserService.isRegisteredUser(email)){
+
+        if (keystoneUserService.deleteUserByAdmin(email)) {
+          return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
+        }
+
+      }
+      return ResponseEntity.status(HttpStatus.CONFLICT).body("User Not Fond");
     } catch (ServiceException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
     }
