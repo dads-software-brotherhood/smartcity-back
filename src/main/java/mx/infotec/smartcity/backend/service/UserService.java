@@ -68,6 +68,6 @@ public interface UserService extends Serializable {
   
   List<UserModel> getUserModelList() throws ServiceException;
   
-  boolean deleteUserByAdmin(String email) throws ServiceException;
+  boolean deleteUserByAdmin(UserModel model) throws ServiceException;
 
 }

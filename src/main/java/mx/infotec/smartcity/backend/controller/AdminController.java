@@ -42,12 +42,12 @@ public class AdminController {
     }
   }
   
-  @RequestMapping(value = "/user/delete/{email:.}", method = RequestMethod.GET)
-  public ResponseEntity<?> deleteUser(@PathVariable("email") String email) {
+  @RequestMapping(value = "/user/delete", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<?> deleteUser(@RequestBody UserModel model) {
     try {
-      if (!keystoneUserService.isRegisteredUser(email)){
+      if (keystoneUserService.isRegisteredUser(model.getEmail())){
 
-        if (keystoneUserService.deleteUserByAdmin(email)) {
+        if (keystoneUserService.deleteUserByAdmin(model)) {
           return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
         }
 

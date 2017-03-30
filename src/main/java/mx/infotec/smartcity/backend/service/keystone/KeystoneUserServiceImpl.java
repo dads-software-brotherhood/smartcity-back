@@ -404,6 +404,7 @@ public class KeystoneUserServiceImpl implements UserService {
       userRepository.save(userProfile);
       TokenRecovery recovery =
           recoveryService.generateToken(createUser.getUser().getName(), createUser.getUser().getId());
+      LOGGER.info("Token recovery: " + recovery.getId());
       Email email = new Email();
       email.setTo(createUser.getUser().getName());
       email.setMessage(recovery.getId());
@@ -440,12 +441,12 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
-  public boolean deleteUserByAdmin(String email) throws ServiceException {
+  public boolean deleteUserByAdmin(UserModel model) throws ServiceException {
     try {
       String adminToken = adminUtils.getAdmintoken();
-      User usr = getUserByName(email, adminToken);
+      User usr = getUserByName(model.getEmail(), adminToken);
       deleteUser(usr.getId(), adminToken);
-      userRepository.delete(userRepository.findByEmail(email));
+      userRepository.delete(userRepository.findByEmail(model.getEmail()));
       return true;
     } catch (Exception e) {
       LOGGER.error("Error trying delete user, cause: ",e);
