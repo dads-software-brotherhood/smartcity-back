@@ -60,7 +60,8 @@ public interface UserService extends Serializable {
       throws ServiceException;
 
 
-
   boolean createUserWithRole(CreateUser user, Role role) throws ServiceException;
+  
+  boolean createUserByAdmin(CreateUser user) throws ServiceException;
 
 }

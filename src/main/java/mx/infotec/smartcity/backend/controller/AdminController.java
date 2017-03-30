@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import mx.infotec.smartcity.backend.model.TokenRequest;
+import mx.infotec.smartcity.backend.model.UserModel;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
@@ -25,11 +25,11 @@ public class AdminController {
 
   @RequestMapping(value = "/user/register", method = RequestMethod.POST,
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public ResponseEntity<?> userRegistration(@RequestBody TokenRequest request) {
+  public ResponseEntity<?> userRegistration(@RequestBody UserModel model) {
     try {
       User_ user = new User_();
-      user.setPassword(new String(request.getPassword()));
-      user.setName(request.getUsername());
+      user.setPassword("");
+      user.setName(model.getEmail());
       CreateUser createUser = new CreateUser(user);
       if (!keystoneUserService.isRegisteredUser(user.getName())
           && keystoneUserService.createUserAndSendMail(createUser, TemplatesEnum.MAIL_SAMPLE)) {

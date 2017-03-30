@@ -38,40 +38,40 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
   private RoleService         roleService;
 
   public void createRoles() {
-    String adminToken = "";
-    LOGGER.info("Starting the aplication event");
-
-    try {
-      adminToken = adminUtils.getAdmintoken();
-      Roles roles = roleService.getAllRolesLikeRoles(adminToken);
-      Set<RoleId> rolesId = new HashSet<RoleId>();
-      for (Role role : Role.values()) {
-        Boolean create = true;
-        for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role roleKey : roles
-            .getRoles()) {
-          if (roleKey.getName().equals(role.name())) {
-            create = false;
-
-            rolesId.add(new RoleId(role, roleKey.getId()));
-          }
-
-        }
-        if (create) {
-          LOGGER.debug("It will be create the role {}", role.name());
-          SelfRole newRole = new SelfRole(role.name());
-          newRole = roleService.createRole(newRole, adminToken);
-          rolesId.add(new RoleId(role, newRole.getRole().getId()));
-        }
-      }
-      RoleUtil.init(rolesId);
-
-    } catch (ServiceException e) {
-      LOGGER.error("Error at roles creation", e);
-    } finally {
-      if (adminToken != null && !adminToken.equals("")) {
-        loginService.invalidToken(adminToken);
-      }
-    }
+//    String adminToken = "";
+//    LOGGER.info("Starting the aplication event");
+//
+//    try {
+//      adminToken = adminUtils.getAdmintoken();
+//      Roles roles = roleService.getAllRolesLikeRoles(adminToken);
+//      Set<RoleId> rolesId = new HashSet<RoleId>();
+//      for (Role role : Role.values()) {
+//        Boolean create = true;
+//        for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role roleKey : roles
+//            .getRoles()) {
+//          if (roleKey.getName().equals(role.name())) {
+//            create = false;
+//
+//            rolesId.add(new RoleId(role, roleKey.getId()));
+//          }
+//
+//        }
+//        if (create) {
+//          LOGGER.debug("It will be create the role {}", role.name());
+//          SelfRole newRole = new SelfRole(role.name());
+//          newRole = roleService.createRole(newRole, adminToken);
+//          rolesId.add(new RoleId(role, newRole.getRole().getId()));
+//        }
+//      }
+//      RoleUtil.init(rolesId);
+//
+//    } catch (ServiceException e) {
+//      LOGGER.error("Error at roles creation", e);
+//    } finally {
+//      if (adminToken != null && !adminToken.equals("")) {
+//        loginService.invalidToken(adminToken);
+//      }
+//    }
 
 
   }
