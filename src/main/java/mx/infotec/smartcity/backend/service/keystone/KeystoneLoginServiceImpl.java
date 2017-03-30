@@ -1,33 +1,17 @@
 package mx.infotec.smartcity.backend.service.keystone;
 
-import mx.infotec.smartcity.backend.service.keystone.pojo.Response;
-import mx.infotec.smartcity.backend.service.keystone.pojo.User;
-import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token_;
-import mx.infotec.smartcity.backend.utils.Constants;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Auth;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Identity;
-import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.annotation.PostConstruct;
-import mx.infotec.smartcity.backend.model.IdentityUser;
-import mx.infotec.smartcity.backend.model.TokenInfo;
-import mx.infotec.smartcity.backend.model.TokenType;
-import mx.infotec.smartcity.backend.service.AdminUtilsService;
-import mx.infotec.smartcity.backend.service.LoginService;
-import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
-import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
-import mx.infotec.smartcity.backend.service.exception.ServiceException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.Headers;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,6 +20,26 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+
+import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.Role;
+import mx.infotec.smartcity.backend.model.TokenInfo;
+import mx.infotec.smartcity.backend.model.TokenType;
+import mx.infotec.smartcity.backend.service.AdminUtilsService;
+import mx.infotec.smartcity.backend.service.LoginService;
+import mx.infotec.smartcity.backend.service.RoleService;
+import mx.infotec.smartcity.backend.service.UserService;
+import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
+import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
+import mx.infotec.smartcity.backend.service.exception.ServiceException;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Auth;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Identity;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
+import mx.infotec.smartcity.backend.service.keystone.pojo.Response;
+import mx.infotec.smartcity.backend.service.keystone.pojo.User;
+import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token_;
+import mx.infotec.smartcity.backend.utils.Constants;
+import mx.infotec.smartcity.backend.utils.RoleUtil;
 
 /**
  *
@@ -53,8 +57,21 @@ public class KeystoneLoginServiceImpl implements LoginService {
   @Qualifier("adminUtils")
   private AdminUtilsService   adminUtils;
 
+  @Autowired
+  @Qualifier("keystoneRoleService")
+  private RoleService         roleService;
+  @Autowired
+  @Qualifier("keystoneUserService")
+  private UserService         userService;
+
   @Value("${idm.servers.keystone}")
   private String              keystonUrl;
+
+  @Value("${idm.default.domain}")
+  private String              defaultDomain;
+
+  @Value("${idm.admin.username}")
+  private String              adminUser;
 
   private String              tokenRequestUrl;
 
@@ -84,25 +101,35 @@ public class KeystoneLoginServiceImpl implements LoginService {
   }
 
   @Override
-  public IdentityUser findUserByValidToken(String token) throws InvalidTokenException {
-    RestTemplate restTemplate = new RestTemplate();
-    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+  public IdentityUser findUserByValidToken(String token)
+      throws InvalidTokenException, ServiceException {
     if (isValidToken(token)) {
-      HttpHeaders headers = new HttpHeaders();
-      headers.add(Constants.AUTH_TOKEN_HEADER, token);
-      headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
-      HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
-      try {
-        HttpEntity<Response> responseEntity =
-            restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
-        return convert(responseEntity);
-      } catch (RestClientException e) {
-        LOGGER.error("Error al buscar la inforación del token, causa: ", e);
-        throw new RestClientException("Error al buscar la inforación del token, causa: ", e);
-      }
+      String tokenAdmin = adminUtils.getAdmintoken();
+      IdentityUser idu = userService.getUserFromTokenToIdentityUser(tokenAdmin, token);
+      this.invalidToken(tokenAdmin);
+      return idu;
     } else {
       return null;
     }
+
+    // RestTemplate restTemplate = new RestTemplate();
+    // restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    // if (isValidToken(token)) {
+    // HttpHeaders headers = new HttpHeaders();
+    // headers.add(Constants.AUTH_TOKEN_HEADER, token);
+    // headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
+    // HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
+    // try {
+    // HttpEntity<Response> responseEntity =
+    // restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
+    // return convert(responseEntity);
+    // } catch (RestClientException e) {
+    // LOGGER.error("Error al buscar la inforación del token, causa: ", e);
+    // throw new RestClientException("Error al buscar la inforación del token, causa: ", e);
+    // }
+    // } else {
+    // return null;
+    // }
   }
 
   @Override
@@ -193,11 +220,15 @@ public class KeystoneLoginServiceImpl implements LoginService {
     } else {
       IdentityUser idmUser = new IdentityUser();
 
-      if (response.getToken().getRoles() != null) {
-        Set<String> roles = new HashSet<>();
+      if (response.getToken().getRoles() != null
+          && !response.getToken().getUser().getName().equals(adminUser)) {
+        Set<Role> roles = new HashSet<>();
 
         response.getToken().getRoles().forEach((role) -> {
-          roles.add(role.getName());
+          Role roleKey = RoleUtil.getInstance().validateRole(role.getName());
+          if (roleKey != null) {
+            roles.add(roleKey);
+          }
         });
 
         idmUser.setRoles(roles);
@@ -213,14 +244,26 @@ public class KeystoneLoginServiceImpl implements LoginService {
         long tmp = token.getEnd().getTime() - token.getStart().getTime();
         token.setTime((int) tmp / 1000);
       }
+      idmUser.setTokenInfo(token);
 
       List<String> tmp = headers.get(Constants.SUBJECT_TOKEN_HEADER);
 
       if (!tmp.isEmpty()) {
         token.setToken(tmp.get(0));
       }
-
-      idmUser.setTokenInfo(token);
+      // LOGGER.error("" + response.getToken().getUser().getName() + " idmUSer " + adminUser);
+      if (idmUser.getRoles() == null
+          && !response.getToken().getUser().getName().equals(adminUser)) {
+        String adminToken;
+        try {
+          adminToken = this.adminUtils.getAdmintoken();
+          idmUser.setRoles(this.userService
+              .getUserFromTokenToIdentityUser(adminToken, token.getToken()).getRoles());
+          this.invalidToken(adminToken);
+        } catch (ServiceException e) {
+          LOGGER.debug("error creando el adminToken en KeystoneLoginService");
+        }
+      }
 
       idmUser.setUsername(response.getToken().getUser().getName());
 

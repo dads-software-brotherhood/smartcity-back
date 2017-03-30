@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.TokenRecovery;
 import mx.infotec.smartcity.backend.model.TokenRequest;
 import mx.infotec.smartcity.backend.persistence.TokenRecoveryRepository;
@@ -47,7 +48,7 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
   private LoginService loginService;
 
   @Override
-  public TokenRecovery generateTocken(String email, String idUser) throws ServiceException {
+  public TokenRecovery generateToken(String email, String idUser) throws ServiceException {
     TokenRecovery recovery = new TokenRecovery();
     recovery.setIdUser(idUser);
     recovery.setEmail(email);
@@ -66,6 +67,9 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
   public boolean validateTokenRecovery(String tokenRecovery) throws ServiceException {
     try {
       TokenRecovery recovery = tokenRepository.findById(tokenRecovery);
+      if (recovery == null) {
+        return false;
+      }
       Date compareDate = new Date(recovery.getRegisterDate().getTime());
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(compareDate);
@@ -81,7 +85,7 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
 
   @Override
   public boolean recoveryPassword(String email) throws ServiceException {
-
+    Email emailObj = new Email();
     String adminToken = null;
     try {
       adminToken = adminUtils.getAdmintoken();
@@ -89,9 +93,11 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
       if (user == null) {
         return false;
       }
-      TokenRecovery recovery = generateTocken(email, user.getId());
+      TokenRecovery recovery = generateToken(email, user.getId());
+      emailObj.setTo(email);
+      emailObj.setMessage(recovery.getId());
       LOG.info("TokenRecovery:  " +  recovery.getId());
-      mailService.sendMail(email, TemplatesEnum.MAIL_SAMPLE);
+      mailService.sendMail(TemplatesEnum.MAIL_SAMPLE, emailObj);
       return true;
     } catch (Exception e) {
       LOG.error("Error trying to recovery password, cause: ", e);
@@ -112,6 +118,7 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
         adminToken = adminUtils.getAdmintoken();
         CreateUser createUser = userService.getUser(recovery.getIdUser(), adminToken);
         createUser.getUser().setPassword(new String(request.getPassword()));
+        createUser.getUser().setEnabled(true);
         createUser = userService.updateUser(recovery.getIdUser(), adminToken, createUser);
         return true;
       }
@@ -125,6 +132,17 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
         loginService.invalidToken(adminToken);
     }
 
+  }
+
+  @Override
+  public TokenRecovery getTokenById(String token) throws ServiceException {
+    try {
+      return tokenRepository.findById(token);
+      
+    } catch(Exception e) {
+      LOG.error("Error trying to get TokenRecovery, cause: ", e);
+      throw new ServiceException(e);
+    }
   }
 
 }

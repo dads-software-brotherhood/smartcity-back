@@ -3,3 +3,4 @@ nbactions.xml
 .project
 .idea
 .settings/
+/nbactions-development.xml
