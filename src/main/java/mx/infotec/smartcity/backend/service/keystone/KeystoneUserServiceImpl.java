@@ -26,6 +26,7 @@ import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.TokenInfo;
 import mx.infotec.smartcity.backend.model.TokenRecovery;
 import mx.infotec.smartcity.backend.model.TokenType;
+import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.RoleService;
 import mx.infotec.smartcity.backend.service.UserService;
@@ -33,6 +34,7 @@ import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
+import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.User_;
 import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token;
 import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token_;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
@@ -376,6 +378,20 @@ public class KeystoneUserServiceImpl implements UserService {
       LOGGER.error("Error to create user and send notificartion, cause: ", e);
     }
 
+    return false;
+  }
+
+  @Override
+  public boolean createUserByAdmin(CreateUser user) throws ServiceException {
+    createUser(user);
+    UserProfile userProfile = new UserProfile();
+    TokenRecovery recovery =
+        recoveryService.generateToken(user.getUser().getName(), user.getUser().getId());
+    Email email = new Email();
+    email.setTo(user.getUser().getName());
+    email.setMessage(recovery.getId());
+    mailService.sendMail(TemplatesEnum.MAIL_SAMPLE, email);
+    
     return false;
   }
 
