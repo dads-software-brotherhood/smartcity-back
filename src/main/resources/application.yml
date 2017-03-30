@@ -5,13 +5,18 @@ spring:
         mongodb:
             database: smartcity
     mail:
-        active: false
+        active: true
         host: smtp.gmail.com
         port: 587
         protocol: smtp
         from: gitlab.infotec@gmail.com
         username: gitlab.infotec@gmail.com
         password: 
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
     
 server:
     port: 9000
@@ -49,6 +54,11 @@ spring:
         from: gitlab.infotec@gmail.com
         username: gitlab.infotec@gmail.com
         password: 
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
 server:
     port: 9000
     contextPath: /back-sdk
@@ -85,6 +95,11 @@ spring:
         from: gitlab.infotec@gmail.com
         username: gitlab.infotec@gmail.com
         password: 
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
 server:
     port: 8080
     contextPath: /back-sdk
@@ -120,6 +135,11 @@ spring:
         from: gitlab.infotec@gmail.com
         username: gitlab.infotec@gmail.com
         password: 
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
 server:
     port: 8080
     contextPath: /back-sdk

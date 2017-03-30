@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
@@ -57,5 +58,9 @@ public interface UserService extends Serializable {
 
   IdentityUser getUserFromTokenToIdentityUser(String tokenAdmin, String authToken)
       throws ServiceException;
+
+
+
+  boolean createUserWithRole(CreateUser user, Role role) throws ServiceException;
 
 }

@@ -17,4 +17,8 @@ public interface Constants {
     public static final String FORTMAT_TEXT_HTML = "html";
     
     public static final String ADMIN_ROLE = "admin";
+    
+    public static final String RECOVERY_PASSWORD_URL = "/restore-password/";
+    public static final String VALIDATE_ACCOUNT_URL = "/account-verification/";
+    
 }
