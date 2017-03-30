@@ -370,7 +370,7 @@ public class KeystoneUserServiceImpl implements UserService {
       Email email = new Email();
       email.setTo(user.getUser().getName());
       email.setMessage(recovery.getId());
-      mailService.sendMail(TemplatesEnum.MAIL_SAMPLE, email);
+      mailService.sendMail(template, email);
       return true;
     } catch (Exception e) {
       LOGGER.error("Error to create user and send notificartion, cause: ", e);
