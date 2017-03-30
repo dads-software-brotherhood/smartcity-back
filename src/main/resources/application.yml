@@ -31,8 +31,8 @@ idm:
         username: idm
         password: idm
     oauth:
-        clientId: 71c1a6a1a7f24345946509f826cb445f
-        clientSecret: 11ee4954366940a08e3565b34dea61d6
+        clientId: 
+        clientSecret: 
     default:
         domain: default
 front:
@@ -72,8 +72,8 @@ idm:
         username: idm
         password: idm
     oauth:
-        clientId: 71c1a6a1a7f24345946509f826cb445f
-        clientSecret: 11ee4954366940a08e3565b34dea61d6
+        clientId: 
+        clientSecret: 
     default:
         domain: default
 front:
@@ -114,8 +114,8 @@ idm:
         username: idm
         password: idm
     oauth:
-        clientId: 3a78de79264b41698130f611c0c1036f
-        clientSecret: 43ed1b086e864dea895fb576ca1c90fb
+        clientId: 
+        clientSecret: 
 front:
     url: http://207.249.127.180
 
@@ -147,9 +147,9 @@ server:
 # Erik's cloud server
 idm:
     servers:
-        keystone: http://192.168.56.11:5000
-        horizon: http://192.168.56.11:8000
-        orion: http://192.168.56.11:1026
+        keystone: http://localhost:5000
+        horizon: http://localhost:8000
+        orion: http://localhost:1026
     admin:
         username: idm
         password: idm
