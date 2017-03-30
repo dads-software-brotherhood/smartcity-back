@@ -5,7 +5,7 @@ spring:
         mongodb:
             database: smartcity
     mail:
-        active: true
+        active: false
         host: smtp.gmail.com
         port: 587
         protocol: smtp
@@ -17,7 +17,9 @@ spring:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
-    
+    jackson:
+        date-format: yyyy-MM-dd
+
 server:
     port: 9000
     contextPath: /back-sdk
@@ -59,6 +61,9 @@ spring:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
+    jackson:
+        date-format: yyyy-MM-dd
+
 server:
     port: 9000
     contextPath: /back-sdk
@@ -100,6 +105,9 @@ spring:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
+    jackson:
+        date-format: yyyy-MM-dd
+
 server:
     port: 8080
     contextPath: /back-sdk
@@ -140,6 +148,9 @@ spring:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
+    jackson:
+        date-format: yyyy-MM-dd
+
 server:
     port: 8080
     contextPath: /back-sdk
