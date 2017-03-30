@@ -36,7 +36,7 @@ idm:
     default:
         domain: default
 front:
-    url: http://localhost:4200
+    url: http://localhost:4200/#
 
 ---
 spring:
@@ -77,7 +77,7 @@ idm:
     default:
         domain: default
 front:
-    url: http://localhost:4200
+    url: http://localhost:4200/#
 
 ---
 spring:
@@ -117,7 +117,7 @@ idm:
         clientId: 
         clientSecret: 
 front:
-    url: http://207.249.127.180
+    url: http://207.249.127.180/#
 
 ---
 spring:
@@ -159,4 +159,4 @@ idm:
     default:
         domain: default        
 front:
-    url: http://207.249.127.91
+    url: http://207.249.127.91/#
