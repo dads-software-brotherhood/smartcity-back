@@ -401,6 +401,7 @@ public class KeystoneUserServiceImpl implements UserService {
       userProfile.setName(userModel.getName());
       userProfile.setFamilyName(userModel.getFamilyName());
       userProfile.setRegisterDate(new Date());
+      userProfile.setKeystoneId(createUser.getUser().getId());
       userRepository.save(userProfile);
       TokenRecovery recovery = recoveryService.generateToken(createUser.getUser().getName(),
           createUser.getUser().getId());
