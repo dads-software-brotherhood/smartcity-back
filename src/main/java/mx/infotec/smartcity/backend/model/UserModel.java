@@ -2,8 +2,6 @@ package mx.infotec.smartcity.backend.model;
 
 import java.io.Serializable;
 
-import mx.infotec.smartcity.backend.model.RoleId;
-
 public class UserModel implements Serializable {
 
   /**
@@ -17,7 +15,7 @@ public class UserModel implements Serializable {
   
   private String email;
   
-  private RoleId role;
+  private Role role;
   
   private String message;
 
@@ -45,11 +43,11 @@ public class UserModel implements Serializable {
     this.email = email;
   }
 
-  public RoleId getRole() {
+  public Role getRole() {
     return role;
   }
 
-  public void setRole(RoleId role) {
+  public void setRole(Role role) {
     this.role = role;
   }
 
@@ -60,8 +58,5 @@ public class UserModel implements Serializable {
   public void setMessage(String message) {
     this.message = message;
   }
-  
-  
-  
-
+    
 }

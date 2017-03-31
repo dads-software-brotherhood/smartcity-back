@@ -372,7 +372,7 @@ public class KeystoneUserServiceImpl implements UserService {
   public boolean createUserAndSendMail(CreateUser user, TemplatesEnum template)
       throws ServiceException {
     try {
-      createUser(user);
+      createUserWithRole(user, Role.USER);
       TokenRecovery recovery =
           recoveryService.generateToken(user.getUser().getName(), user.getUser().getId());
       LOGGER.info("Create User token: " + recovery.getId());
@@ -395,7 +395,7 @@ public class KeystoneUserServiceImpl implements UserService {
     user.setPassword("");
     CreateUser createUser = new CreateUser(user);
     try {
-      createUser(createUser);
+      createUserWithRole(createUser, userModel.getRole());
       UserProfile userProfile = new UserProfile();
       userProfile.setEmail(createUser.getUser().getName());
       userProfile.setName(userModel.getName());
