@@ -39,6 +39,7 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.User_;
+import mx.infotec.smartcity.backend.service.keystone.pojo.roles.Roles;
 import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token;
 import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token_;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
@@ -422,6 +423,7 @@ public class KeystoneUserServiceImpl implements UserService {
   public List<UserModel> getUserModelList() throws ServiceException {
     try {
       List<UserProfile> usersProfileList = userRepository.findAll();
+      String tokenAdmin = adminUtils.getAdmintoken();
       if (usersProfileList != null && !usersProfileList.isEmpty()) {
         List<UserModel> usersModelList = new ArrayList<>();
         for (UserProfile item : usersProfileList) {
@@ -429,6 +431,7 @@ public class KeystoneUserServiceImpl implements UserService {
           model.setEmail(item.getEmail());
           model.setFamilyName(item.getFamilyName());
           model.setName(item.getName());
+          //Roles rolesByUser = roleService.getRoleUserDefaultDomain(item.getKeystoneId(), tokenAdmin);
           usersModelList.add(model);
         }
         return usersModelList;
