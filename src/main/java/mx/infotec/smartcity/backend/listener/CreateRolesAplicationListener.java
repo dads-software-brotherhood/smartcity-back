@@ -1,7 +1,6 @@
 package mx.infotec.smartcity.backend.listener;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +43,7 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
     try {
       adminToken = adminUtils.getAdmintoken();
       Roles roles = roleService.getAllRolesLikeRoles(adminToken);
-      Set<RoleId> rolesId = new HashSet<RoleId>();
+      HashMap<String, RoleId> rolesId = new HashMap<String, RoleId>();
       for (Role role : Role.values()) {
         Boolean create = true;
         for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role roleKey : roles
@@ -52,7 +51,7 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
           if (roleKey.getName().equals(role.name())) {
             create = false;
 
-            rolesId.add(new RoleId(role, roleKey.getId()));
+            rolesId.put(role.name(), new RoleId(role, roleKey.getId()));
           }
 
         }
@@ -60,7 +59,7 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
           LOGGER.debug("It will be create the role {}", role.name());
           SelfRole newRole = new SelfRole(role.name());
           newRole = roleService.createRole(newRole, adminToken);
-          rolesId.add(new RoleId(role, newRole.getRole().getId()));
+          rolesId.put(role.name(), new RoleId(role, newRole.getRole().getId()));
         }
       }
       RoleUtil.init(rolesId);

@@ -57,38 +57,38 @@ import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 @Service("keystoneUserService")
 public class KeystoneUserServiceImpl implements UserService {
 
-  private static final long    serialVersionUID = 1L;
+  private static final long     serialVersionUID = 1L;
 
-  private static final Logger  LOGGER           =
+  private static final Logger   LOGGER           =
       LoggerFactory.getLogger(KeystoneUserServiceImpl.class);
 
   @Autowired
-  private AdminUtilsService    adminUtils;
+  private AdminUtilsService     adminUtils;
 
   @Autowired
-  private MailService          mailService;
+  private MailService           mailService;
 
   @Autowired
-  private TokenRecoveryService recoveryService;
+  private TokenRecoveryService  recoveryService;
 
   @Autowired
   @Qualifier("keystoneRoleService")
-  private RoleService          roleService;
-  
+  private RoleService           roleService;
+
   @Autowired
   private UserProfileRepository userRepository;
 
 
   @Value("${idm.servers.keystone}")
-  private String               keystonUrl;
+  private String                keystonUrl;
 
-  private String               userUrl;
-  private String               changePasswordUrl;
-  private String               updateUserUrl;
-  private String               tokenUrl;
-  private String               DBLCUOTE         = "\"";
-  private Integer              TIMEOUT          = 90000;
-  private String               paramName;
+  private String                userUrl;
+  private String                changePasswordUrl;
+  private String                updateUserUrl;
+  private String                tokenUrl;
+  private String                DBLCUOTE         = "\"";
+  private Integer               TIMEOUT          = 90000;
+  private String                paramName;
 
   @PostConstruct
   protected void init() {
@@ -331,7 +331,7 @@ public class KeystoneUserServiceImpl implements UserService {
     Set<Role> rolesEnum = new HashSet<>();
     // rolesEnum.add(Role.ADMIN);
     for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role role : roles) {
-      Role roleEnum = RoleUtil.getInstance().validateRole(role.getName());
+      Role roleEnum = RoleUtil.validateRole(role.getName());
       if (roleEnum != null) {
         rolesEnum.add(roleEnum);
       }
@@ -344,7 +344,7 @@ public class KeystoneUserServiceImpl implements UserService {
       List<mx.infotec.smartcity.backend.service.keystone.pojo.token.Role> roles) {
     Set<Role> rolesEnum = new HashSet<>();
     for (mx.infotec.smartcity.backend.service.keystone.pojo.token.Role role : roles) {
-      Role roleEnum = RoleUtil.getInstance().validateRole(role.getName());
+      Role roleEnum = RoleUtil.validateRole(role.getName());
       if (roleEnum != null) {
         rolesEnum.add(roleEnum);
       }
@@ -402,8 +402,8 @@ public class KeystoneUserServiceImpl implements UserService {
       userProfile.setFamilyName(userModel.getFamilyName());
       userProfile.setRegisterDate(new Date());
       userRepository.save(userProfile);
-      TokenRecovery recovery =
-          recoveryService.generateToken(createUser.getUser().getName(), createUser.getUser().getId());
+      TokenRecovery recovery = recoveryService.generateToken(createUser.getUser().getName(),
+          createUser.getUser().getId());
       LOGGER.info("Token recovery: " + recovery.getId());
       Email email = new Email();
       email.setTo(createUser.getUser().getName());
@@ -413,7 +413,7 @@ public class KeystoneUserServiceImpl implements UserService {
     } catch (Exception e) {
       LOGGER.error("Error trying to create user by admin, cause: ", e);
     }
-    
+
     return false;
   }
 
@@ -424,20 +424,20 @@ public class KeystoneUserServiceImpl implements UserService {
       if (usersProfileList != null && !usersProfileList.isEmpty()) {
         List<UserModel> usersModelList = new ArrayList<>();
         for (UserProfile item : usersProfileList) {
-         UserModel model = new UserModel();
-         model.setEmail(item.getEmail());
-         model.setFamilyName(item.getFamilyName());
-         model.setName(item.getName());
-         usersModelList.add(model);
+          UserModel model = new UserModel();
+          model.setEmail(item.getEmail());
+          model.setFamilyName(item.getFamilyName());
+          model.setName(item.getName());
+          usersModelList.add(model);
         }
         return usersModelList;
       }
       return null;
     } catch (Exception e) {
-      LOGGER.error("Error on usersProfile recovery, cause: ",e);
+      LOGGER.error("Error on usersProfile recovery, cause: ", e);
       throw new ServiceException(e);
     }
- 
+
   }
 
   @Override
@@ -449,7 +449,7 @@ public class KeystoneUserServiceImpl implements UserService {
       userRepository.delete(userRepository.findByEmail(model.getEmail()));
       return true;
     } catch (Exception e) {
-      LOGGER.error("Error trying delete user, cause: ",e);
+      LOGGER.error("Error trying delete user, cause: ", e);
       throw new ServiceException(e);
     }
   }
