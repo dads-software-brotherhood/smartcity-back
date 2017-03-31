@@ -11,8 +11,6 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
@@ -60,7 +58,7 @@ public class MailServiceImpl implements MailService {
         mimeMessage.setSubject("notification");
         mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(email.getTo()));
         mimeMessage.setFrom(new InternetAddress(from));
-        mimeMessage.setText(getTemplate(templateId, email), Constants.ENCODING, Constants.FORTMAT_TEXT_HTML);
+        mimeMessage.setContent(getTemplate(templateId, email), "text/html; charset=utf-8");
         
       }
     };
