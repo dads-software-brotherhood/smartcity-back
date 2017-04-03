@@ -197,7 +197,7 @@ public class KeystoneRoleServiceImpl implements RoleService {
     LOGGER.info("set role: {}", String.format(userRoleDomainUrl, domain, userId, roleId));
     HttpEntity<Request> requestEntity = new HttpEntity<Request>(headers);
     HttpEntity<Roles> responseEntity =
-        restTemplate.exchange(String.format(userRoleDomainUrl, domain, userId, roleId),
+        restTemplate.exchange(String.format(userRoleDomainUrl, domain, userId, roleId.toLowerCase()),
             HttpMethod.PUT, requestEntity, Roles.class);
     // return responseEntity.getBody().getRoles();
 
