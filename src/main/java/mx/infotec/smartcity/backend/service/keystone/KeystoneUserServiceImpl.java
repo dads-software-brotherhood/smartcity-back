@@ -138,7 +138,7 @@ public class KeystoneUserServiceImpl implements UserService {
   }
 
   @Override
-  public boolean createUserWithRole(CreateUser user, Role role) throws ServiceException {
+  public CreateUser createUserWithRole(CreateUser user, Role role) throws ServiceException {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
     HttpHeaders headers = new HttpHeaders();
@@ -154,7 +154,7 @@ public class KeystoneUserServiceImpl implements UserService {
       String adminToken = this.adminUtils.getAdmintoken();
       roleService.assignRoleToUserOnDefaultDomain(RoleUtil.getInstance().getIdRole(role), userId,
           adminToken);
-      return true;
+      return createdUser;
     } catch (Exception e) {
       LOGGER.error("Error to create user, cause: ", e);
       throw new ServiceException(e);
@@ -396,13 +396,13 @@ public class KeystoneUserServiceImpl implements UserService {
     user.setPassword("");
     CreateUser createUser = new CreateUser(user);
     try {
-      createUserWithRole(createUser, userModel.getRole());
+      CreateUser createdUser = createUserWithRole(createUser, userModel.getRole());
       UserProfile userProfile = new UserProfile();
       userProfile.setEmail(createUser.getUser().getName());
       userProfile.setName(userModel.getName());
       userProfile.setFamilyName(userModel.getFamilyName());
       userProfile.setRegisterDate(new Date());
-      userProfile.setKeystoneId(createUser.getUser().getId());
+      userProfile.setKeystoneId(createdUser.getUser().getId());
       userRepository.save(userProfile);
       TokenRecovery recovery = recoveryService.generateToken(createUser.getUser().getName(),
           createUser.getUser().getId());
@@ -431,7 +431,8 @@ public class KeystoneUserServiceImpl implements UserService {
           model.setEmail(item.getEmail());
           model.setFamilyName(item.getFamilyName());
           model.setName(item.getName());
-          //Roles rolesByUser = roleService.getRoleUserDefaultDomain(item.getKeystoneId(), tokenAdmin);
+          Roles rolesByUser = roleService.getRoleUserDefaultDomain(item.getKeystoneId(), tokenAdmin);
+          model.setRole(RoleUtil.getInstance().validateRole(rolesByUser.getRoles().get(0).getName().toUpperCase()));
           usersModelList.add(model);
         }
         return usersModelList;
