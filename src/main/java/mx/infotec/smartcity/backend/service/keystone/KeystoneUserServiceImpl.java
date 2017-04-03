@@ -194,7 +194,7 @@ public class KeystoneUserServiceImpl implements UserService {
     LOGGER.info("user url: {}", String.format(updateUserUrl, userId));
     HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(headers);
     HttpEntity<CreateUser> responseEntity = restTemplate.exchange(
-        String.format(updateUserUrl, userId), HttpMethod.GET, requestEntity, CreateUser.class);
+        String.format(updateUserUrl, userId), HttpMethod.DELETE, requestEntity, CreateUser.class);
     return responseEntity.getBody();
 
   }
@@ -449,9 +449,9 @@ public class KeystoneUserServiceImpl implements UserService {
   public boolean deleteUserByAdmin(UserModel model) throws ServiceException {
     try {
       String adminToken = adminUtils.getAdmintoken();
-      User usr = getUserByName(model.getEmail(), adminToken);
-      deleteUser(usr.getId(), adminToken);
-      userRepository.delete(userRepository.findByEmail(model.getEmail()));
+      UserProfile profile = userRepository.findByEmail(model.getEmail());
+      deleteUser(profile.getKeystoneId(), adminToken);
+      userRepository.delete(adminToken);
       return true;
     } catch (Exception e) {
       LOGGER.error("Error trying delete user, cause: ", e);
