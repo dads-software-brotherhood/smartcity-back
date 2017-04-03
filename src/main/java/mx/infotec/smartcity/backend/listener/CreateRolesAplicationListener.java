@@ -48,7 +48,7 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
         Boolean create = true;
         for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role roleKey : roles
             .getRoles()) {
-          if (roleKey.getName().equals(role.name())) {
+          if (roleKey.getName().equals(role.name().toLowerCase())) {
             create = false;
 
             rolesId.put(role.name(), new RoleId(role, roleKey.getId()));
@@ -57,7 +57,7 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
         }
         if (create) {
           LOGGER.debug("It will be create the role {}", role.name());
-          SelfRole newRole = new SelfRole(role.name());
+          SelfRole newRole = new SelfRole(role.name().toLowerCase());
           newRole = roleService.createRole(newRole, adminToken);
           rolesId.put(role.name(), new RoleId(role, newRole.getRole().getId()));
         }
