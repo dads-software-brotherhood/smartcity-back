@@ -38,6 +38,8 @@ public class UserProfile implements Serializable {
     private HealthProfile healthProfile;
     private List<Address> addresses;
     private List<Vehicle> vehicles;
+    
+    private String keystoneId;
 
     public String getId() {
         return id;
@@ -159,4 +161,13 @@ public class UserProfile implements Serializable {
         this.vehicles = vehicles;
     }
 
+    public String getKeystoneId() {
+      return keystoneId;
+    }
+
+    public void setKeystoneId(String keystoneId) {
+      this.keystoneId = keystoneId;
+    }
+
+    
 }

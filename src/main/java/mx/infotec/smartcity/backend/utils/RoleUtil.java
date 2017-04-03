@@ -1,20 +1,20 @@
 package mx.infotec.smartcity.backend.utils;
 
-import java.util.Set;
+import java.util.HashMap;
 
 import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.RoleId;
 
 public class RoleUtil {
 
-  private static RoleUtil    instance;
-  private static Set<RoleId> roles;
+  private static RoleUtil                instance;
+  private static HashMap<String, RoleId> roles;
 
   private RoleUtil() {
 
   }
 
-  private RoleUtil(Set<RoleId> roles) {
+  private RoleUtil(HashMap<String, RoleId> roles) {
     RoleUtil.roles = roles;
   }
 
@@ -25,7 +25,7 @@ public class RoleUtil {
     return instance;
   }
 
-  public static RoleUtil init(Set<RoleId> roles) {
+  public static RoleUtil init(HashMap<String, RoleId> roles) {
     if (instance == null) {
       instance = new RoleUtil(roles);
     }
@@ -33,21 +33,11 @@ public class RoleUtil {
   }
 
   public static Role validateRole(String name) {
-    for (RoleId role : roles) {
-      if (role.getRole().name().equals(name)) {
-        return role.getRole();
-      }
-    }
-    return null;
+    return roles.get(name).getRole();
   }
 
   public String getIdRole(Role role) {
-    for (RoleId roleId : roles) {
-      if (roleId.getRole().name().equals(role.name())) {
-        return roleId.getId();
-      }
-    }
-    return null;
+    return roles.get(role.name()).getId();
   }
 
 

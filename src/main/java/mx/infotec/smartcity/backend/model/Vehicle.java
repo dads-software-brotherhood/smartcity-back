@@ -18,12 +18,6 @@ public class Vehicle implements Serializable {
     private VehicleType vehicleType;
     private String brandName;
     private String modelName;
-    private String manufacturerName;
-    private Float cargoVolume;
-    private Float height;
-    private Float width;
-    private Float depth;
-    private Float weight;
     private Date vehicleModelDate;
     private FuelType fuelType;
     private Float fuelConsumption;
@@ -120,52 +114,5 @@ public class Vehicle implements Serializable {
       this.fuelConsumption = fuelConsumption;
     }
 
-    public String getManufacturerName() {
-      return manufacturerName;
-    }
-
-    public void setManufacturerName(String manufacturerName) {
-      this.manufacturerName = manufacturerName;
-    }
-
-    public Float getCargoVolume() {
-      return cargoVolume;
-    }
-
-    public void setCargoVolume(Float cargoVolume) {
-      this.cargoVolume = cargoVolume;
-    }
-
-    public Float getHeight() {
-      return height;
-    }
-
-    public void setHeight(Float height) {
-      this.height = height;
-    }
-
-    public Float getWidth() {
-      return width;
-    }
-
-    public void setWidth(Float width) {
-      this.width = width;
-    }
-
-    public Float getDepth() {
-      return depth;
-    }
-
-    public void setDepth(Float depth) {
-      this.depth = depth;
-    }
-
-    public Float getWeight() {
-      return weight;
-    }
-
-    public void setWeight(Float weight) {
-      this.weight = weight;
-    }
     
 }
