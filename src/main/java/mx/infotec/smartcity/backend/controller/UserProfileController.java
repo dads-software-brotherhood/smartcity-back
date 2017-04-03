@@ -177,6 +177,25 @@ public class UserProfileController {
         }
     }    
     
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/address/{index}")
+    public ResponseEntity<?> getAddress(@PathVariable("id") String id, @PathVariable("index") int index) {
+        UserProfile userProfile = null;
+        
+        try {
+            userProfile = userProfileRepository.findOne(id);
+        } catch (Exception ex) {
+            LOGGER.error("Error al retrieve userProfile", ex);
+        }
+
+        if (userProfile == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+        } else if(userProfile.getAddresses() == null || userProfile.getAddresses().size() < index) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("User without address");
+        } else {
+            return ResponseEntity.accepted().body(userProfile.getAddresses().get(index));
+        }
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/address")
     public ResponseEntity<?> addAddress(@RequestBody Address address, @PathVariable("id") String id) {
         //TODO: Agregar validaciones y bloques de try/catch
@@ -242,7 +261,26 @@ public class UserProfileController {
         } else {
             return ResponseEntity.accepted().body(userProfile.getVehicles());
         }
-    }    
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/vehicle/{index}")
+    public ResponseEntity<?> getVehicle(@PathVariable("id") String id, @PathVariable("index") int index) {
+        UserProfile userProfile = null;
+        
+        try {
+            userProfile = userProfileRepository.findOne(id);
+        } catch (Exception ex) {
+            LOGGER.error("Error al retrieve userProfile", ex);
+        }
+
+        if (userProfile == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+        } else if(userProfile.getVehicles() == null || userProfile.getVehicles().size() < index) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("User without vehicle");
+        } else {
+            return ResponseEntity.accepted().body(userProfile.getVehicles().get(index));
+        }
+    }
     
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/vehicle")
     public ResponseEntity<?> addVehicle(@RequestBody Vehicle vehicle, @PathVariable("id") String id) {
