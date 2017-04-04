@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.User_;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 import mx.infotec.smartcity.backend.service.recovery.TokenRecoveryService;
+import mx.infotec.smartcity.backend.utils.Constants;
 import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 
 @RestController
@@ -70,6 +72,21 @@ public class RegisterController {
         keystoneUserService.updateUser(user.getId(), adminToken, createUser);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
 
+      }
+      return ResponseEntity.status(HttpStatus.CONFLICT).body("Registered User");
+    } catch (ServiceException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+    }
+  }
+  
+  @RequestMapping(value = "/register/update-password", method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<?> updatePassword(@RequestHeader(name = Constants.AUTH_TOKEN_HEADER) String token,
+      @RequestBody mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_ user) {
+    try {
+      if (keystoneUserService.changePassword(user, token)) {
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
       }
       return ResponseEntity.status(HttpStatus.CONFLICT).body("Registered User");
     } catch (ServiceException e) {
