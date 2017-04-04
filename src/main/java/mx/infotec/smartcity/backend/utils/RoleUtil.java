@@ -33,7 +33,11 @@ public class RoleUtil {
   }
 
   public static Role validateRole(String name) {
-    return roles.get(name).getRole();
+    if (roles.containsKey(name)) {
+      return roles.get(name).getRole();
+    } else {
+      return null;
+    }
   }
 
   public String getIdRole(Role role) {
