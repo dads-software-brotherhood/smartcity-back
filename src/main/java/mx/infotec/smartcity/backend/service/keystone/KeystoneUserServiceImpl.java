@@ -63,6 +63,9 @@ public class KeystoneUserServiceImpl implements UserService {
   private static final Logger   LOGGER           =
       LoggerFactory.getLogger(KeystoneUserServiceImpl.class);
 
+  @Value("${idm.admin.username}")
+  private String idmUsr;
+  
   @Autowired
   private AdminUtilsService     adminUtils;
 
@@ -427,12 +430,20 @@ public class KeystoneUserServiceImpl implements UserService {
       if (usersProfileList != null && !usersProfileList.isEmpty()) {
         List<UserModel> usersModelList = new ArrayList<>();
         for (UserProfile item : usersProfileList) {
+          if (item.getName().equals(idmUsr)) {
+            continue;
+          }
           UserModel model = new UserModel();
           model.setEmail(item.getEmail());
           model.setFamilyName(item.getFamilyName());
           model.setName(item.getName());
           Roles rolesByUser = roleService.getRoleUserDefaultDomain(item.getKeystoneId(), tokenAdmin);
-          model.setRole(RoleUtil.getInstance().validateRole(rolesByUser.getRoles().get(0).getName().toUpperCase()));
+          if (rolesByUser == null) {
+            model.setRole(null);
+          } else {
+            model.setRole(RoleUtil.getInstance().validateRole(rolesByUser.getRoles().get(0).getName().toUpperCase()));
+          }
+          
           usersModelList.add(model);
         }
         return usersModelList;

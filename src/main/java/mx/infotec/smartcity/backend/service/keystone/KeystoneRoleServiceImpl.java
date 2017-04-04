@@ -132,6 +132,7 @@ public class KeystoneRoleServiceImpl implements RoleService {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set("X-auth-token", authToken);
     HttpEntity<SelfRole> requestEntity = new HttpEntity<SelfRole>(headers);
+    System.out.println("URL: " + String.format(getUserRole, defaultDomain, userId));
     HttpEntity<Roles> responseEntity =
         restTemplate.exchange(String.format(getUserRole, defaultDomain, userId), HttpMethod.GET,
             requestEntity, Roles.class);
