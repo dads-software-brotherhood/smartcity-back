@@ -1,6 +1,7 @@
 package mx.infotec.smartcity.backend.controller.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import mx.infotec.smartcity.backend.model.TokenRecovery;
 import mx.infotec.smartcity.backend.model.TokenRequest;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
+import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
@@ -34,6 +36,10 @@ public class RegisterController {
 
   @Autowired
   private AdminUtilsService    adminUtils;
+  
+  @Autowired
+  @Qualifier("keystoneLoginService")
+  private LoginService loginService;
 
   @RequestMapping(value = "/register", method = RequestMethod.POST,
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -84,11 +90,14 @@ public class RegisterController {
   public ResponseEntity<?> updatePassword(@RequestHeader(name = Constants.AUTH_TOKEN_HEADER) String token,
       @RequestBody mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_ user) {
     try {
-      if (keystoneUserService.changePassword(user, token)) {
+      if (loginService.isValidToken(token)) {
+        if (keystoneUserService.changePassword(user, token)) {
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
+          return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Registered User");
       }
-      return ResponseEntity.status(HttpStatus.CONFLICT).body("Registered User");
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
     } catch (ServiceException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
     }
