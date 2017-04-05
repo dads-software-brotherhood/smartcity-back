@@ -73,4 +73,5 @@ public interface UserService extends Serializable {
   
   boolean changePassword(User_ user, String token) throws ServiceException;
 
+  List<UserModel> filterUsers(UserModel model) throws ServiceException;
 }

@@ -445,7 +445,7 @@ public class KeystoneUserServiceImpl implements UserService {
           model.setName(item.getName());
           Roles rolesByUser =
               roleService.getRoleUserDefaultDomain(item.getKeystoneId(), tokenAdmin);
-          if (rolesByUser == null) {
+          if (rolesByUser == null || item.getKeystoneId() == null) {
             model.setRole(null);
           } else {
             model.setRole(RoleUtil.getInstance()
@@ -470,7 +470,7 @@ public class KeystoneUserServiceImpl implements UserService {
       String adminToken = adminUtils.getAdmintoken();
       UserProfile profile = userRepository.findByEmail(model.getEmail());
       deleteUser(profile.getKeystoneId(), adminToken);
-      userRepository.delete(adminToken);
+      userRepository.delete(profile.getId());
       return true;
     } catch (Exception e) {
       LOGGER.error("Error trying delete user, cause: ", e);
@@ -494,6 +494,17 @@ public class KeystoneUserServiceImpl implements UserService {
       throw new ServiceException(e);
     }
    
+  }
+
+  @Override
+  public List<UserModel> filterUsers(UserModel model) throws ServiceException {
+    // TODO Auto-generated method stub
+    if (model.getRole() != null) {
+      
+    } else {
+      
+    }
+    return null;
   }
 
 }

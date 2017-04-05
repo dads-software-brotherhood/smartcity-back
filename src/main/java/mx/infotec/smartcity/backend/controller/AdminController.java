@@ -72,4 +72,22 @@ public class AdminController {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
     }
   }
+  
+  @RequestMapping(value = "/user/filter", method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public ResponseEntity<?> userTry(@RequestBody UserModel model) {
+    try {
+      if (!keystoneUserService.isRegisteredUser(model.getEmail())) {
+
+        if (keystoneUserService.createUserByAdmin(model)) {
+          return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+      }
+      return ResponseEntity.status(HttpStatus.CONFLICT).body("Registered User");
+    } catch (ServiceException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+    }
+  }
 }
