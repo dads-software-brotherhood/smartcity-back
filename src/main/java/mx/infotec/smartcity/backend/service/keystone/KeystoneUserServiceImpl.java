@@ -32,6 +32,7 @@ import mx.infotec.smartcity.backend.model.UserModel;
 import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
+import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.RoleService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
@@ -64,8 +65,8 @@ public class KeystoneUserServiceImpl implements UserService {
       LoggerFactory.getLogger(KeystoneUserServiceImpl.class);
 
   @Value("${idm.admin.username}")
-  private String idmUsr;
-  
+  private String                idmUsr;
+
   @Autowired
   private AdminUtilsService     adminUtils;
 
@@ -81,6 +82,10 @@ public class KeystoneUserServiceImpl implements UserService {
 
   @Autowired
   private UserProfileRepository userRepository;
+  
+  @Autowired
+  @Qualifier("keystoneLoginService")
+  private LoginService loginService;
 
 
   @Value("${idm.servers.keystone}")
@@ -215,7 +220,7 @@ public class KeystoneUserServiceImpl implements UserService {
     HttpEntity<ChangeUserPassword> requestEntity = new HttpEntity<>(user, headers);
     LOGGER.info("user url: {}", String.format(changePasswordUrl, userid));
     HttpEntity<ChangeUserPassword> responseEntity =
-        restTemplate.exchange(String.format(changePasswordUrl, userid), HttpMethod.PATCH,
+        restTemplate.exchange(String.format(changePasswordUrl, userid), HttpMethod.POST,
             requestEntity, ChangeUserPassword.class);
     return responseEntity.getBody();
 
@@ -437,13 +442,15 @@ public class KeystoneUserServiceImpl implements UserService {
           model.setEmail(item.getEmail());
           model.setFamilyName(item.getFamilyName());
           model.setName(item.getName());
-          Roles rolesByUser = roleService.getRoleUserDefaultDomain(item.getKeystoneId(), tokenAdmin);
+          Roles rolesByUser =
+              roleService.getRoleUserDefaultDomain(item.getKeystoneId(), tokenAdmin);
           if (rolesByUser == null) {
             model.setRole(null);
           } else {
-            model.setRole(RoleUtil.getInstance().validateRole(rolesByUser.getRoles().get(0).getName().toUpperCase()));
+            model.setRole(RoleUtil.getInstance()
+                .validateRole(rolesByUser.getRoles().get(0).getName().toUpperCase()));
           }
-          
+
           usersModelList.add(model);
         }
         return usersModelList;
@@ -468,6 +475,24 @@ public class KeystoneUserServiceImpl implements UserService {
       LOGGER.error("Error trying delete user, cause: ", e);
       throw new ServiceException(e);
     }
+  }
+
+  @Override
+  public boolean changePassword(
+      mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_ user, String token)
+      throws ServiceException {
+    try {
+      ChangeUserPassword password = new ChangeUserPassword();
+      password.setUser(user);
+      IdentityUser identity = loginService.findUserByValidToken(token);
+      Object obj = changePassword(identity.getId(), password, token);
+      System.out.println(obj);
+      return true;
+    } catch (Exception e) {
+      LOGGER.error("Error to trying update password, cause: ", e);
+      throw new ServiceException(e);
+    }
+   
   }
 
 }

@@ -9,6 +9,7 @@ import mx.infotec.smartcity.backend.model.UserModel;
 import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
+import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
@@ -69,5 +70,7 @@ public interface UserService extends Serializable {
   List<UserModel> getUserModelList() throws ServiceException;
   
   boolean deleteUserByAdmin(UserModel model) throws ServiceException;
+  
+  boolean changePassword(User_ user, String token) throws ServiceException;
 
 }
