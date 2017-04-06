@@ -1,5 +1,7 @@
 package mx.infotec.smartcity.backend.controller.security;
 
+import javax.servlet.http.HttpServletRequest;
+import mx.infotec.smartcity.backend.model.IdentityUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -88,9 +90,12 @@ public class RegisterController {
   @RequestMapping(value = "/register/update-password", method = RequestMethod.POST,
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> updatePassword(@RequestHeader(name = Constants.AUTH_TOKEN_HEADER) String token,
-      @RequestBody mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_ user) {
+      @RequestBody mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_ user,
+            HttpServletRequest request) {
     try {
         if (keystoneUserService.changePassword(user, token)) {
+            //El usuario logueado
+            IdentityUser identityUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
           return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
         } else {
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad password"); //Nunca llega a este paso
