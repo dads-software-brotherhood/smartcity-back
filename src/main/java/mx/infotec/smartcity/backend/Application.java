@@ -43,7 +43,7 @@ public class Application extends SpringBootServletInitializer {
     config.addAllowedOrigin("*");
     config.addAllowedHeader("*");
     config.addAllowedMethod("*");
-    source.registerCorsConfiguration("/*", config);
+    source.registerCorsConfiguration("/**", config);
     FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
     bean.setOrder(0);
     return bean;
@@ -60,7 +60,7 @@ public class Application extends SpringBootServletInitializer {
     FilterRegistrationBean registration = new FilterRegistrationBean();
     registration.setFilter(loggedUserFilter());
     registration.addUrlPatterns("/customers/*", "/user_profile/*", "/countries/*", "/regions/*",
-        "/localities/*");
+        "/localities/*", "/register/update-password", "/admin/*");
     // registration.addInitParameter("paramName", "paramValue");
     registration.setName("loggedUserFilter");
 
