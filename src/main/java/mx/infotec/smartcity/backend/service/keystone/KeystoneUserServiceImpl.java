@@ -486,8 +486,7 @@ public class KeystoneUserServiceImpl implements UserService {
       ChangeUserPassword password = new ChangeUserPassword();
       password.setUser(user);
       IdentityUser identity = loginService.findUserByValidToken(token);
-      Object obj = changePassword(identity.getId(), password, token);
-      System.out.println(obj);
+      changePassword(identity.getId(), password, token);
       return true;
     } catch (Exception e) {
       LOGGER.error("Error to trying update password, cause: ", e);
