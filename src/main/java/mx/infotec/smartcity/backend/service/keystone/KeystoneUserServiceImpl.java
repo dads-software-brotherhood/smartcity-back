@@ -25,7 +25,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import ch.qos.logback.classic.turbo.MatchingFilter;
 import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.Role;
@@ -449,10 +448,7 @@ public class KeystoneUserServiceImpl implements UserService {
                     if (item.getName().equals(idmUsr)) {
                         continue;
                     }
-                    UserModel model = new UserModel();
-                    model.setEmail(item.getEmail());
-                    model.setFamilyName(item.getFamilyName());
-                    model.setName(item.getName());
+                    UserModel model = setUserModelProperties(item);
                     Roles rolesByUser =
                             roleService.getRoleUserDefaultDomain(item.getKeystoneId(), tokenAdmin);
                     if (rolesByUser == null || item.getKeystoneId() == null) {
