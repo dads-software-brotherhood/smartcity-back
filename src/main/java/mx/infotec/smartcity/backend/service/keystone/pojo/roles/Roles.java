@@ -16,7 +16,7 @@ public class Roles implements Serializable {
     private final static long serialVersionUID = 1173144707708238359L;
 
     @JsonProperty("role_assignments")
-    private List<RoleAssignments> roleAssignments;
+    private List<RoleAssignments>  roleAssignments;
 
     public Links getLinks() {
         return links;
@@ -38,8 +38,9 @@ public class Roles implements Serializable {
         return roleAssignments;
     }
 
-    public void setRoleAssignments(List<RoleAssignments> roleAssignments) {
+    public void setRoleAssignments(List<RoleAssignments>  roleAssignments) {
         this.roleAssignments = roleAssignments;
     }
+    
     
 }

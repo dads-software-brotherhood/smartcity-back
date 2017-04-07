@@ -20,74 +20,70 @@ import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 @RequestMapping("/admin")
 public class AdminController {
 
-  @Autowired
-  private UserService keystoneUserService;
+    @Autowired
+    private UserService keystoneUserService;
 
 
-  @RequestMapping(value = "/user/register", method = RequestMethod.POST,
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public ResponseEntity<?> userRegistration(@RequestBody UserModel model) {
-    try {
-      if (!keystoneUserService.isRegisteredUser(model.getEmail())) {
+    @RequestMapping(value = "/user/register", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> userRegistration(@RequestBody UserModel model) {
+        try {
+            if (!keystoneUserService.isRegisteredUser(model.getEmail())) {
 
-        if (keystoneUserService.createUserByAdmin(model)) {
-          return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
+                if (keystoneUserService.createUserByAdmin(model)) {
+                    return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
+                }
+
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+            }
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Registered User");
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
         }
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
-      }
-      return ResponseEntity.status(HttpStatus.CONFLICT).body("Registered User");
-    } catch (ServiceException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
     }
-  }
-  
-  @RequestMapping(value = "/user/delete", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public ResponseEntity<?> deleteUser(@RequestBody UserModel model) {
-    try {
-      if (keystoneUserService.isRegisteredUser(model.getEmail())){
 
-        if (keystoneUserService.deleteUserByAdmin(model)) {
-          return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
+    @RequestMapping(value = "/user/delete", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> deleteUser(@RequestBody UserModel model) {
+        try {
+            if (keystoneUserService.isRegisteredUser(model.getEmail())) {
+
+                if (keystoneUserService.deleteUserByAdmin(model)) {
+                    return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
+                }
+
+            }
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User Not Fond");
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
         }
-
-      }
-      return ResponseEntity.status(HttpStatus.CONFLICT).body("User Not Fond");
-    } catch (ServiceException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
     }
-  }
 
-  @RequestMapping(value = "/user/list", method = RequestMethod.GET)
-  public ResponseEntity<?> userList() {
-    try {
-      List<UserModel> userModelList = keystoneUserService.getUserModelList();
-      if (userModelList != null && !userModelList.isEmpty()) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userModelList);
-      }
-      
-      return ResponseEntity.status(HttpStatus.CONFLICT).body("Users Not Found");
-    } catch (
-    ServiceException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
-    }
-  }
-  
-  @RequestMapping(value = "/user/filter", method = RequestMethod.POST,
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public ResponseEntity<?> userTry(@RequestBody UserModel model) {
-    try {
-      if (!keystoneUserService.isRegisteredUser(model.getEmail())) {
+    @RequestMapping(value = "/user/list", method = RequestMethod.GET)
+    public ResponseEntity<?> userList() {
+        try {
+            List<UserModel> userModelList = keystoneUserService.getUserModelList();
+            if (userModelList != null && !userModelList.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(userModelList);
+            }
 
-        if (keystoneUserService.createUserByAdmin(model)) {
-          return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Users Not Found");
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
         }
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
-      }
-      return ResponseEntity.status(HttpStatus.CONFLICT).body("Registered User");
-    } catch (ServiceException e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
     }
-  }
+
+    @RequestMapping(value = "/user/filter", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> userTry(@RequestBody UserModel model) {
+        try {
+            List<UserModel> models = keystoneUserService.filterUsers(model);
+            if (models != null && !models.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(models);
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Users Not Found");
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+        }
+    }
 }

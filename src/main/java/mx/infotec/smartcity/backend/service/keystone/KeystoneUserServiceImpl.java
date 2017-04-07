@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -22,6 +25,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import ch.qos.logback.classic.turbo.MatchingFilter;
 import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.Role;
@@ -433,6 +437,7 @@ public class KeystoneUserServiceImpl implements UserService {
         return false;
     }
 
+    @SuppressWarnings("static-access")
     @Override
     public List<UserModel> getUserModelList() throws ServiceException {
         try {
@@ -500,26 +505,78 @@ public class KeystoneUserServiceImpl implements UserService {
 
     }
 
+    @SuppressWarnings("static-access")
     @Override
     public List<UserModel> filterUsers(UserModel model) throws ServiceException {
-        // TODO Auto-generated method stub
         try {
+            List<UserModel> userModels;
+            List<UserProfile> users;
+            Roles rolesByUser;
+            Example<UserProfile> exampleUser;
+            String adminToken = adminUtils.getAdmintoken();
+            ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(StringMatcher.CONTAINING);
             if (model.getRole() != null) {
-                String adminToken = adminUtils.getAdmintoken();
+                // 1 Recuperamos el rol del usuario
                 SelfRole role = roleService.getRoleByName(model.getRole().toString().toLowerCase(),
                         adminToken);
+                // 2 Creamos una lista de roles la cual se utiliza para obtener el nombre del rol a mostrar en el front
+                List<mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role> roles = new ArrayList<>();
+                roles.add(role.getRole());
+                rolesByUser = new Roles();
+                rolesByUser.setRoles(roles);
                 List<RoleAssignments> roleAssignments =
                         roleService.getUsersByRoleId(role.getRole().getId(), adminToken);
+                if (roleAssignments != null && !roleAssignments.isEmpty()) {
+                    userModels = new ArrayList<>();
+                    for (RoleAssignments item : roleAssignments) {
+                        exampleUser = Example.of(new UserProfile(null,model.getEmail(),model.getName(),model.getFamilyName(),item.getUser().getId()),
+                                matcher);
+                        UserProfile profile = userRepository.findOne(exampleUser);
+                        if (profile == null) {
+                            continue;
+                        }
+                        UserModel userModel = setUserModelProperties(profile);
+                        
+                        // 3 Seteamos el rol que tiene el usuario
+                        userModel.setRole(RoleUtil.getInstance().validateRole(
+                                rolesByUser.getRoles().get(0).getName().toUpperCase()));
+                        userModels.add(userModel);
+                    }
+                    
+                    return userModels;
+                }
                 
-
             } else {
-
+                exampleUser = Example.of(new UserProfile(null,model.getEmail(),model.getName(),model.getFamilyName(),null),
+                        matcher);
+                users = userRepository.findAll(exampleUser);
+                if (users != null && !users.isEmpty()) {
+                    userModels = new ArrayList<>();
+                    for (UserProfile item : users) {
+                        rolesByUser =
+                                roleService.getRoleUserDefaultDomain(item.getKeystoneId(), adminToken);
+                        UserModel userModel = setUserModelProperties(item);
+                        userModel.setRole(RoleUtil.getInstance().validateRole(
+                                rolesByUser.getRoles().get(0).getName().toUpperCase()));
+                        userModels.add(userModel);
+                  }
+                    return userModels;
+                }
             }
         } catch (ServiceException e) {
-            // TODO: handle exception
+            LOGGER.error("Error into filterUsers, cause: ", e);
+            throw new ServiceException(e);
         }
 
         return null;
+    }
+    
+    private UserModel setUserModelProperties(UserProfile profile) {
+        UserModel userModel = new UserModel();
+        userModel.setEmail(profile.getEmail());
+        userModel.setFamilyName(profile.getFamilyName());
+        userModel.setName(profile.getName());
+        return userModel;
     }
 
 }

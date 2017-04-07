@@ -51,7 +51,7 @@ public interface RoleService extends Serializable {
 
   Roles getRoleUserDefaultDomain(String userId, String authToken);
   
-  List<RoleAssignments> getUsersByRoleId(String idRole, String authToken) throws ServiceException;
+  List<RoleAssignments>  getUsersByRoleId(String idRole, String authToken) throws ServiceException;
   
   
 
