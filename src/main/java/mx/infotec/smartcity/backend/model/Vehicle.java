@@ -113,5 +113,6 @@ public class Vehicle implements Serializable {
     public void setFuelConsumption(Float fuelConsumption) {
       this.fuelConsumption = fuelConsumption;
     }
+
     
 }

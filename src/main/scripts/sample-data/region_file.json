@@ -1,0 +1,33 @@
+{"_id":1,"name":"AGUASCALIENTES","country": {"$ref":"country","$id":117},"regionCode":"AGS."}
+{"_id":2,"name":"BAJA CALIFORNIA","country": {"$ref":"country","$id":117},"regionCode":"BC"}
+{"_id":3,"name":"BAJA CALIFORNIA SUR","country": {"$ref":"country","$id":117},"regionCode":"BCS"}
+{"_id":4,"name":"CAMPECHE","country": {"$ref":"country","$id":117},"regionCode":"CAMP."}
+{"_id":5,"name":"COAHUILA","country": {"$ref":"country","$id":117},"regionCode":"COAH."}
+{"_id":6,"name":"COLIMA","country": {"$ref":"country","$id":117},"regionCode":"COL."}
+{"_id":7,"name":"CHIAPAS","country": {"$ref":"country","$id":117},"regionCode":"CHIS."}
+{"_id":8,"name":"CHIHUAHUA","country": {"$ref":"country","$id":117},"regionCode":"CHIH."}
+{"_id":9,"name":"CIUDAD DE MÉXICO","country": {"$ref":"country","$id":117},"regionCode":"CDMX"}
+{"_id":10,"name":"DURANGO","country": {"$ref":"country","$id":117},"regionCode":"DGO."}
+{"_id":11,"name":"GUANAJUATO","country": {"$ref":"country","$id":117},"regionCode":"GTO."}
+{"_id":12,"name":"GUERRERO","country": {"$ref":"country","$id":117},"regionCode":"GRO."}
+{"_id":13,"name":"HIDALGO","country": {"$ref":"country","$id":117},"regionCode":"HGO."}
+{"_id":14,"name":"JALISCO","country": {"$ref":"country","$id":117},"regionCode":"JAL."}
+{"_id":15,"name":"MÉXICO","country": {"$ref":"country","$id":117},"regionCode":"MEX."}
+{"_id":16,"name":"MICHOACÁN","country": {"$ref":"country","$id":117},"regionCode":"MICH."}
+{"_id":17,"name":"MORELOS","country": {"$ref":"country","$id":117},"regionCode":"MOR."}
+{"_id":18,"name":"NAYARIT","country": {"$ref":"country","$id":117},"regionCode":"NAY."}
+{"_id":19,"name":"NUEVO LEÓN","country": {"$ref":"country","$id":117},"regionCode":"NL"}
+{"_id":20,"name":"OAXACA","country": {"$ref":"country","$id":117},"regionCode":"OAX."}
+{"_id":21,"name":"PUEBLA","country": {"$ref":"country","$id":117},"regionCode":"PUE"}
+{"_id":22,"name":"QUERETARO","country": {"$ref":"country","$id":117},"regionCode":"QRO."}
+{"_id":23,"name":"QUINTANA ROO ","country": {"$ref":"country","$id":117},"regionCode":"Q. ROO"}
+{"_id":24,"name":"SAN LUIS POTOSÍ","country": {"$ref":"country","$id":117},"regionCode":"SLP"}
+{"_id":25,"name":"SINALOA","country": {"$ref":"country","$id":117},"regionCode":"SIN."}
+{"_id":26,"name":"SONORA","country": {"$ref":"country","$id":117},"regionCode":"SON."}
+{"_id":27,"name":"TABASCO","country": {"$ref":"country","$id":117},"regionCode":"TAB."}
+{"_id":28,"name":"TAMAULIPAS","country": {"$ref":"country","$id":117},"regionCode":"TAMPS."}
+{"_id":29,"name":"TLAXCALA","country": {"$ref":"country","$id":117},"regionCode":"TLAX."}
+{"_id":30,"name":"VERACRUZ","country": {"$ref":"country","$id":117},"regionCode":"VER."}
+{"_id":31,"name":"YUCATÁN","country": {"$ref":"country","$id":117},"regionCode":"YUC."}
+{"_id":32,"name":"ZACATECAS","country": {"$ref":"country","$id":117},"regionCode":"ZAC."}
+

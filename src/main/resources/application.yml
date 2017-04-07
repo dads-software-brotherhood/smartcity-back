@@ -4,6 +4,22 @@ spring:
     data:
         mongodb:
             database: smartcity
+    mail:
+        active: false
+        host: smtp.gmail.com
+        port: 587
+        protocol: smtp
+        from: gitlab.infotec@gmail.com
+        username: gitlab.infotec@gmail.com
+        password: 
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
+    jackson:
+        date-format: yyyy-MM-dd
+
 server:
     port: 9000
     contextPath: /back-sdk
@@ -17,10 +33,13 @@ idm:
         username: idm
         password: idm
     oauth:
-        clientId: 71c1a6a1a7f24345946509f826cb445f
-        clientSecret: 11ee4954366940a08e3565b34dea61d6
+        clientId: 
+        clientSecret: 
     default:
         domain: default
+front:
+    url: http://localhost:4200/#
+
 ---
 spring:
     profiles: development
@@ -30,12 +49,21 @@ spring:
         mongodb:
             database: smartcity
     mail:
-        host: http://localhost
-        port: 25
+        active: false
+        host: smtp.gmail.com
+        port: 587
         protocol: smtp
-        from: dif.test@geekearte.com
-        username: dif.test@geekearte.com
-        password: dif2015
+        from: gitlab.infotec@gmail.com
+        username: gitlab.infotec@gmail.com
+        password: 
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
+    jackson:
+        date-format: yyyy-MM-dd
+
 server:
     port: 9000
     contextPath: /back-sdk
@@ -49,10 +77,12 @@ idm:
         username: idm
         password: idm
     oauth:
-        clientId: 71c1a6a1a7f24345946509f826cb445f
-        clientSecret: 11ee4954366940a08e3565b34dea61d6
+        clientId: 
+        clientSecret: 
     default:
         domain: default
+front:
+    url: http://localhost:4200/#
 
 ---
 spring:
@@ -62,6 +92,22 @@ spring:
     data:
         mongodb:
             database: smartcity
+    mail:
+        active: true
+        host: smtp.gmail.com
+        port: 587
+        protocol: smtp
+        from: gitlab.infotec@gmail.com
+        username: gitlab.infotec@gmail.com
+        password: 
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
+    jackson:
+        date-format: yyyy-MM-dd
+
 server:
     port: 8080
     contextPath: /back-sdk
@@ -76,8 +122,12 @@ idm:
         username: idm
         password: idm
     oauth:
-        clientId: 3a78de79264b41698130f611c0c1036f
-        clientSecret: 43ed1b086e864dea895fb576ca1c90fb
+        clientId: 
+        clientSecret: 
+    default:
+        domain: default
+front:
+    url: http://207.249.127.180/#
 
 ---
 spring:
@@ -87,6 +137,22 @@ spring:
     data:
         mongodb:
             database: smartcity
+    mail:
+        active: true
+        host: smtp.gmail.com
+        port: 587
+        protocol: smtp
+        from: gitlab.infotec@gmail.com
+        username: gitlab.infotec@gmail.com
+        password: 
+        tls: true
+        properties.mail.smtp:
+            auth: true
+            starttls.enable: true
+            ssl.trust: smtp.gmail.com
+    jackson:
+        date-format: yyyy-MM-dd
+
 server:
     port: 8080
     contextPath: /back-sdk
@@ -94,9 +160,9 @@ server:
 # Erik's cloud server
 idm:
     servers:
-        keystone: http://192.168.56.11:5000
-        horizon: http://192.168.56.11:8000
-        orion: http://192.168.56.11:1026
+        keystone: http://localhost:5000
+        horizon: http://localhost:8000
+        orion: http://localhost:1026
     admin:
         username: idm
         password: idm
@@ -105,3 +171,5 @@ idm:
         clientSecret:
     default:
         domain: default        
+front:
+    url: http://207.249.127.91/#

@@ -1,6 +1,8 @@
 
 package mx.infotec.smartcity.backend.service.keystone.pojo.createUser;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,7 +21,7 @@ public class User_ {
   private Roles   role;
 
   @JsonProperty("password_expires_at")
-  private String  passwordExpiresAt;
+  private Date    passwordExpiresAt;
 
 
   public String getId() {
@@ -71,14 +73,15 @@ public class User_ {
   }
 
   @JsonProperty("password_expires_at")
-  public String getPasswordExpiresAt() {
+  public Date getPasswordExpiresAt() {
     return passwordExpiresAt;
   }
 
   @JsonProperty("password_expires_at")
-  public void setPasswordExpiresAt(String passwordExpiresAt) {
+  public void setPasswordExpiresAt(Date passwordExpiresAt) {
     this.passwordExpiresAt = passwordExpiresAt;
   }
+
 
 
 }

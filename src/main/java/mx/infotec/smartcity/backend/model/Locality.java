@@ -3,6 +3,7 @@ package mx.infotec.smartcity.backend.model;
 import java.io.Serializable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 /**
  *
@@ -14,9 +15,11 @@ public class Locality implements Serializable {
     
     @Id
     private Integer id;
-    @Indexed
-    private Integer regionId;
     private String name;
+    
+    @Indexed
+    @DBRef
+    private Region region;
 
     public Integer getId() {
         return id;
@@ -26,20 +29,20 @@ public class Locality implements Serializable {
         this.id = id;
     }
 
-    public Integer getRegionId() {
-        return regionId;
-    }
-
-    public void setRegionId(Integer regionId) {
-        this.regionId = regionId;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
     
 }

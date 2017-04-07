@@ -3,6 +3,8 @@ package mx.infotec.smartcity.backend.model;
 
 import java.util.Date;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -14,8 +16,10 @@ public class Group {
   @JsonProperty("id")
   private String id;
   @JsonProperty("type")
+  @NotEmpty
   private String type;
   @JsonProperty("group")
+  @NotEmpty
   private String group;
   @JsonProperty("dateCreated")
   private Date   dateCreated;
