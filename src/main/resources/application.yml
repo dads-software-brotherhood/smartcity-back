@@ -124,6 +124,8 @@ idm:
     oauth:
         clientId: 
         clientSecret: 
+    default:
+        domain: default
 front:
     url: http://207.249.127.180/#
 
