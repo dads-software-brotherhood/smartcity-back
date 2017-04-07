@@ -40,6 +40,30 @@ public class UserProfile implements Serializable {
     private List<Vehicle> vehicles;
     
     private String keystoneId;
+    
+    /**
+     * Default constructor
+     */
+    public UserProfile() {
+      
+    }
+
+    /**
+     * Constructor with search parameters
+     * @param id
+     * @param email
+     * @param name
+     * @param familyName
+     * @param keystoneId
+     */
+    public UserProfile(String id, String email, String name, String familyName, String keystoneId) {
+      super();
+      this.id = id;
+      this.email = email;
+      this.name = name;
+      this.familyName = familyName;
+      this.keystoneId = keystoneId;
+    }
 
     public String getId() {
         return id;
