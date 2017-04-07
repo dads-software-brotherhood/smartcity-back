@@ -3,7 +3,9 @@ package mx.infotec.smartcity.backend.service;
 import java.io.Serializable;
 import java.util.List;
 
+import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role;
+import mx.infotec.smartcity.backend.service.keystone.pojo.roles.RoleAssignments;
 import mx.infotec.smartcity.backend.service.keystone.pojo.roles.Roles;
 import mx.infotec.smartcity.backend.service.keystone.pojo.roles.SelfRole;
 
@@ -48,6 +50,10 @@ public interface RoleService extends Serializable {
   Roles getAllRolesLikeRoles(String authToken);
 
   Roles getRoleUserDefaultDomain(String userId, String authToken);
+  
+  List<RoleAssignments> getUsersByRoleId(String idRole, String authToken) throws ServiceException;
+  
+  
 
 
 }
