@@ -11,6 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
@@ -55,8 +57,10 @@ public class LoggedUserFilter implements Filter {
       // TODO: implementar método para recuperar Usuario en loginService
       try {
         IdentityUser user = loginService.findUserByValidToken(token);
+        if (!user.getRoles().contains(Role.ADMIN) || !user.getRoles().contains(Role.SA)) {
+            response.sendError(HttpStatus.SC_UNAUTHORIZED,"Unauthorized");
+        }
         servletRequest.setAttribute(Constants.USER_REQUES_KEY, user);
-
         filterChain.doFilter(servletRequest, servletResponse);
       } catch (InvalidTokenException e) {
         response.sendError(403, "Invalid user");
