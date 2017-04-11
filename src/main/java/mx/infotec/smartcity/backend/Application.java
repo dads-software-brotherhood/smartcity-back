@@ -60,7 +60,7 @@ public class Application extends SpringBootServletInitializer {
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(loggedUserFilter());
-        registration.addUrlPatterns("/customers/*", "/user_profile/*", "/countries/*", "/regions/*",
+        registration.addUrlPatterns("/customers/*", "/user-profile/*", "/countries/*", "/regions/*",
                 "/localities/*", "/register/update-password", "/admin/*");
         // registration.addInitParameter("paramName", "paramValue");
         registration.setName("loggedUserFilter");
