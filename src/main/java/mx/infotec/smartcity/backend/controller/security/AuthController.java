@@ -56,7 +56,7 @@ public class AuthController {
         try {
             IdentityUser identityUser = loginService.performLogin(tokenRequest.getUsername(), tokenRequest.getPassword());
 
-            UserProfile userProfile = profileRepository.findByEmail(tokenRequest.getUsername());
+            UserProfile userProfile = profileRepository.findByKeystoneId(identityUser.getIdmId());
 
             //TODO: Pasar al servicio del user profile
             if (userProfile == null) {

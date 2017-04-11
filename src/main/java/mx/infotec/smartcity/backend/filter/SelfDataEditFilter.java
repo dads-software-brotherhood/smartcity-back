@@ -26,7 +26,7 @@ import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.utils.Constants;
 
-@Component
+//@Component
 public class SelfDataEditFilter implements Filter {
 
     @Autowired

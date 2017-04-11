@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  */
 public interface UserProfileRepository extends MongoRepository<UserProfile, String> {
     
+    UserProfile findByKeystoneId(String keystoneId);
     UserProfile findByEmail(String email);
     List<UserProfile> findByGroup(String group);
     
