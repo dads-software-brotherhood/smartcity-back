@@ -18,21 +18,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.UserProfile;
+import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.utils.Constants;
 
-//@Component
 public class SelfDataEditFilter implements Filter {
 
     @Autowired
     @Qualifier("keystoneLoginService")
     private LoginService loginService;
 
+    @Autowired
+    private UserProfileRepository profileRepository;
+    
     static final Logger  LOG = LoggerFactory.getLogger(SelfDataEditFilter.class);
     
     @Override
@@ -80,10 +83,17 @@ public class SelfDataEditFilter implements Filter {
                 }
             }
             
-            if (!loggedUser.getId().equals(id)) {
-                httpResponse.sendError(HttpStatus.SC_UNAUTHORIZED,"Unauthorized");
-                filterChain.doFilter(httpRequest, httpResponse);
+            try {
+                UserProfile profile = profileRepository.findOne(id);
+                
+                if (!loggedUser.getId().equals(profile.getKeystoneId())) {
+                    httpResponse.sendError(HttpStatus.SC_UNAUTHORIZED,"Unauthorized");
+                }
+            } catch (Exception e) {
+                httpResponse.sendError(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Internal error");
             }
+            
+           
                      
         }
 
