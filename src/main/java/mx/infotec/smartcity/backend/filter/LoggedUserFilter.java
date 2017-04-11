@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import mx.infotec.smartcity.backend.model.IdentityUser;
-import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
@@ -32,49 +31,49 @@ import mx.infotec.smartcity.backend.utils.Constants;
 @Component
 public class LoggedUserFilter implements Filter {
 
-  @Autowired
-  @Qualifier("keystoneLoginService")
-  private LoginService loginService;
+    @Autowired
+    @Qualifier("keystoneLoginService")
+    private LoginService loginService;
 
-  static final Logger  LOG = LoggerFactory.getLogger(LoggedUserFilter.class);
+    static final Logger LOG = LoggerFactory.getLogger(LoggedUserFilter.class);
 
-  @Override
-  public void init(FilterConfig fc) throws ServletException {
-    // Do notting
-  }
-
-  @Override
-  public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
-      FilterChain filterChain) throws IOException, ServletException {
-    HttpServletRequest request = (HttpServletRequest) servletRequest;
-    HttpServletResponse response = (HttpServletResponse) servletResponse;
-
-    String token = request.getHeader(Constants.AUTH_TOKEN_HEADER);
-
-    if (token == null || !loginService.isValidToken(token)) {
-      response.sendError(403, "Auth required");
-    } else {
-      // TODO: implementar método para recuperar Usuario en loginService
-      try {
-        IdentityUser user = loginService.findUserByValidToken(token);
-        if (!user.getRoles().contains(Role.ADMIN) || !user.getRoles().contains(Role.SA)) {
-            response.sendError(HttpStatus.SC_UNAUTHORIZED,"Unauthorized");
-        }
-        servletRequest.setAttribute(Constants.USER_REQUES_KEY, user);
-        filterChain.doFilter(servletRequest, servletResponse);
-      } catch (InvalidTokenException e) {
-        response.sendError(403, "Invalid user");
-        LOG.error("Error to validate token, cause: ", e);
-      } catch (ServiceException e) {
-        response.sendError(403, "Invalid user");
-        LOG.error("Error to validate token, casue:", e);
-      }
+    @Override
+    public void init(FilterConfig fc) throws ServletException {
+        // Do notting
     }
-  }
 
-  @Override
-  public void destroy() {
-    // Do notting
-  }
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
+            FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        String token = request.getHeader(Constants.AUTH_TOKEN_HEADER);
+
+        if (token == null || !loginService.isValidToken(token)) {
+            response.sendError(HttpStatus.SC_FORBIDDEN, "Auth required");
+        } else {
+            try {
+                IdentityUser user = loginService.findUserByValidToken(token);
+                if (user == null) {
+                    response.sendError(HttpStatus.SC_UNAUTHORIZED, "Unauthorized");
+                } else {
+                    servletRequest.setAttribute(Constants.USER_REQUES_KEY, user);
+                    filterChain.doFilter(servletRequest, servletResponse);
+                }
+            } catch (InvalidTokenException e) {
+                response.sendError(HttpStatus.SC_FORBIDDEN, "Invalid user");
+                LOG.error("Error to validate token, cause: ", e);
+            } catch (ServiceException e) {
+                response.sendError(HttpStatus.SC_FORBIDDEN, "Invalid user");
+                LOG.error("Error to validate token, casue:", e);
+            }
+        }
+    }
+
+    @Override
+    public void destroy() {
+        // Do notting
+    }
 
 }
