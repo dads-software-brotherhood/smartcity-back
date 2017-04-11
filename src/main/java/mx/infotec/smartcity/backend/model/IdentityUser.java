@@ -1,6 +1,7 @@
 package mx.infotec.smartcity.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Set;
 
 /**
@@ -10,19 +11,21 @@ import java.util.Set;
 @JsonIgnoreProperties({"idIdm"})
 public class IdentityUser {
 
-    private String id;
+    private String mongoId;
     private String idmId;
     private String name;
     private String username;
     private TokenInfo tokenInfo;
     private Set<Role> roles;
 
-    public String getId() {
-        return id;
+    @JsonProperty("id")
+    public String getMongoId() {
+        return mongoId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @JsonProperty("id")
+    public void setMongoId(String mongoId) {
+        this.mongoId = mongoId;
     }
 
     public String getIdmId() {

@@ -79,7 +79,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
   protected void init() {
     tokenRequestUrl = keystonUrl + "/v3/auth/tokens";
 
-    LOGGER.info("Token url: {}", tokenRequestUrl);
+    LOGGER.debug("Token url: {}", tokenRequestUrl);
   }
 
   @Override
@@ -103,10 +103,16 @@ public class KeystoneLoginServiceImpl implements LoginService {
   @Override
   public IdentityUser findUserByValidToken(String token)
       throws InvalidTokenException, ServiceException {
-    if (isValidToken(token)) {
+    if (token != null) {
       String tokenAdmin = adminUtils.getAdmintoken();
-      IdentityUser idu = userService.getUserFromTokenToIdentityUser(tokenAdmin, token);
-      this.invalidToken(tokenAdmin);
+      IdentityUser idu = null;
+      
+      try {
+        idu = userService.getUserFromTokenToIdentityUser(tokenAdmin, token);
+      } finally {
+          this.invalidToken(tokenAdmin);
+      }
+      
       return idu;
     } else {
       return null;
@@ -261,7 +267,7 @@ public class KeystoneLoginServiceImpl implements LoginService {
               .getUserFromTokenToIdentityUser(adminToken, token.getToken()).getRoles());
           this.invalidToken(adminToken);
         } catch (ServiceException e) {
-          LOGGER.debug("error creando el adminToken en KeystoneLoginService");
+          LOGGER.error("error creando el adminToken en KeystoneLoginService", e);
         }
       }
 

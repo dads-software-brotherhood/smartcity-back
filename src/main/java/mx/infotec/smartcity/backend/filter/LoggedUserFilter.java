@@ -48,23 +48,21 @@ public class LoggedUserFilter implements Filter {
 
         String token = request.getHeader(Constants.AUTH_TOKEN_HEADER);
 
-        if (token == null || !loginService.isValidToken(token)) {
+        if (token == null) {
             response.sendError(HttpStatus.SC_FORBIDDEN, "Auth required");
         } else {
             try {
                 IdentityUser user = loginService.findUserByValidToken(token);
+                
                 if (user == null) {
-                    response.sendError(HttpStatus.SC_UNAUTHORIZED, "Unauthorized");
+                    response.sendError(HttpStatus.SC_FORBIDDEN, "Invalid user");
                 } else {
                     servletRequest.setAttribute(Constants.USER_REQUES_KEY, user);
                     filterChain.doFilter(servletRequest, servletResponse);
                 }
-            } catch (InvalidTokenException e) {
+            } catch (Exception ex) {
+                LOG.error("Error at userFilter", ex);
                 response.sendError(HttpStatus.SC_FORBIDDEN, "Invalid user");
-                LOG.error("Error to validate token, cause: ", e);
-            } catch (ServiceException e) {
-                response.sendError(HttpStatus.SC_FORBIDDEN, "Invalid user");
-                LOG.error("Error to validate token, casue:", e);
             }
         }
     }
