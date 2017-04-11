@@ -27,14 +27,10 @@ server:
 idm:
     servers:
         keystone: http://localhost:5000
-        horizon: http://localhost:8000
         orion: http://localhost:1026
     admin:
         username: idm
         password: idm
-    oauth:
-        clientId: 
-        clientSecret: 
     default:
         domain: default
 front:
@@ -71,14 +67,10 @@ server:
 idm:
     servers:
         keystone: http://localhost:5000
-        horizon: http://localhost:8000
         orion: http://localhost:1026
     admin:
         username: idm
         password: idm
-    oauth:
-        clientId: 
-        clientSecret: 
     default:
         domain: default
 front:
@@ -116,14 +108,10 @@ server:
 idm:
     servers:
         keystone: http://191.168.186.252:5000
-        horizon: http://191.168.186.252:8000
         orion: http://192.168.56.11:1026
     admin:
         username: idm
         password: idm
-    oauth:
-        clientId: 
-        clientSecret: 
     default:
         domain: default
 front:
@@ -161,14 +149,10 @@ server:
 idm:
     servers:
         keystone: http://localhost:5000
-        horizon: http://localhost:8000
         orion: http://localhost:1026
     admin:
         username: idm
         password: idm
-    oauth:
-        clientId:
-        clientSecret:
     default:
         domain: default        
 front:
