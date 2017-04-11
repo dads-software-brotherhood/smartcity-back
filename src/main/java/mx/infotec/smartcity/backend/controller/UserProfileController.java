@@ -87,7 +87,6 @@ public class UserProfileController {
 
                     userProfile.setId(id);
                     userProfile.setAddresses(original.getAddresses());
-                    userProfile.setHealthProfile(original.getHealthProfile());
                     userProfile.setVehicles(original.getVehicles());
 
                     userProfileRepository.save(userProfile);
