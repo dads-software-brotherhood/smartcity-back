@@ -6,6 +6,7 @@ import mx.infotec.smartcity.backend.model.Address;
 import mx.infotec.smartcity.backend.model.HealthProfile;
 import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.model.Vehicle;
+import mx.infotec.smartcity.backend.model.VehicleType;
 import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,22 +77,32 @@ public class UserProfileController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     public ResponseEntity<?> update(@RequestBody UserProfile userProfile, @PathVariable("id") String id) {
-        try {
-            if (userProfileRepository.exists(id)) {
-                if (userProfile.getId() != null) {
-                    LOGGER.warn("ID from object is ignored");
+        if (isValid(userProfile)) {
+            try {
+                UserProfile original = userProfileRepository.findOne(id);
+                if (original != null) {
+                    if (userProfile.getId() != null) {
+                        LOGGER.warn("ID from object is ignored");
+                    }
+
+                    userProfile.setId(id);
+                    userProfile.setAddresses(original.getAddresses());
+                    userProfile.setHealthProfile(original.getHealthProfile());
+                    userProfile.setVehicles(original.getVehicles());
+
+                    userProfileRepository.save(userProfile);
+
+                    return ResponseEntity.accepted().body("updated");
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
                 }
-
-                userProfile.setId(id);
-                userProfileRepository.save(userProfile);
-
-                return ResponseEntity.accepted().body("updated");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
+            } catch (Exception ex) {
+                LOGGER.error("Error at update", ex);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
             }
-        } catch (Exception ex) {
-            LOGGER.error("Error at update", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+        } else {
+            LOGGER.error("Invalid userProfile: {}", userProfile);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
         }
     }
 
@@ -198,35 +209,43 @@ public class UserProfileController {
     
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/address")
     public ResponseEntity<?> addAddress(@RequestBody Address address, @PathVariable("id") String id) {
-        //TODO: Agregar validaciones y bloques de try/catch
-        UserProfile userProfile = userProfileRepository.findOne(id);
-        
-        if (userProfile != null) {
-            if (userProfile.getAddresses()== null) {
-                userProfile.setAddresses(new ArrayList<>());
+        if (isValid(address)) {
+            UserProfile userProfile = userProfileRepository.findOne(id);
+
+            if (userProfile != null) {
+                if (userProfile.getAddresses()== null) {
+                    userProfile.setAddresses(new ArrayList<>());
+                }
+
+                userProfile.getAddresses().add(address);
+
+                userProfileRepository.save(userProfile);
+
+                return ResponseEntity.accepted().body(userProfile.getAddresses()); 
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
             }
-            
-            userProfile.getAddresses().add(address);
-            
-            userProfileRepository.save(userProfile);
-            
-            return ResponseEntity.accepted().body(userProfile.getAddresses()); 
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+            LOGGER.error("Invalid address: {}", address);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
         }
     }
     
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/address/{index}")
     public ResponseEntity<?> updateAddress(@RequestBody Address address, @PathVariable("id") String id, @PathVariable("index") int index) {
-        //TODO: Agregar validaciones y bloques de try/catch
-        UserProfile userProfile = userProfileRepository.findOne(id);
-        
-        if (userProfile != null && userProfile.getAddresses()!= null && userProfile.getAddresses().size() > index) {
-            userProfile.getAddresses().set(index, address);
-            userProfileRepository.save(userProfile);
-            return ResponseEntity.accepted().body(userProfile.getAddresses()); 
+        if (isValid(address)) {
+            UserProfile userProfile = userProfileRepository.findOne(id);
+
+            if (userProfile != null && userProfile.getAddresses()!= null && userProfile.getAddresses().size() > index) {
+                userProfile.getAddresses().set(index, address);
+                userProfileRepository.save(userProfile);
+                return ResponseEntity.accepted().body(userProfile.getAddresses()); 
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+            LOGGER.error("Invalid address: {}", address);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
         }
     }
 
@@ -284,39 +303,47 @@ public class UserProfileController {
     
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/vehicle")
     public ResponseEntity<?> addVehicle(@RequestBody Vehicle vehicle, @PathVariable("id") String id) {
-        //TODO: Agregar validaciones y bloques de try/catch
-        UserProfile userProfile = userProfileRepository.findOne(id);
-        
-        if (userProfile != null) {
-            if (userProfile.getVehicles()== null) {
-                userProfile.setVehicles(new ArrayList<>());
+        if (isValid(vehicle)) {
+            UserProfile userProfile = userProfileRepository.findOne(id);
+
+            if (userProfile != null) {
+                if (userProfile.getVehicles()== null) {
+                    userProfile.setVehicles(new ArrayList<>());
+                }
+
+                vehicle.setDatecreated(new Date());
+                vehicle.setDateModified(new Date());
+
+                userProfile.getVehicles().add(vehicle);
+
+                userProfileRepository.save(userProfile);
+
+                return ResponseEntity.accepted().body(userProfile.getVehicles()); 
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
             }
-            
-            vehicle.setDatecreated(new Date());
-            vehicle.setDateModified(new Date());
-            
-            userProfile.getVehicles().add(vehicle);
-            
-            userProfileRepository.save(userProfile);
-            
-            return ResponseEntity.accepted().body(userProfile.getVehicles()); 
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+            LOGGER.error("Invalid vehicle: {}", vehicle);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
         }
     }
     
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/vehicle/{index}")
     public ResponseEntity<?> updateVehicle(@RequestBody Vehicle vehicle, @PathVariable("id") String id, @PathVariable("index") int index) {
-        //TODO: Agregar validaciones y bloques de try/catch
-        UserProfile userProfile = userProfileRepository.findOne(id);
-        
-        if (userProfile != null && userProfile.getVehicles() != null && userProfile.getVehicles().size() > index) {
-            vehicle.setDateModified(new Date());
-            userProfile.getVehicles().set(index, vehicle);
-            userProfileRepository.save(userProfile);
-            return ResponseEntity.accepted().body(userProfile.getVehicles()); 
+        if (isValid(vehicle)) {
+            UserProfile userProfile = userProfileRepository.findOne(id);
+
+            if (userProfile != null && userProfile.getVehicles() != null && userProfile.getVehicles().size() > index) {
+                vehicle.setDateModified(new Date());
+                userProfile.getVehicles().set(index, vehicle);
+                userProfileRepository.save(userProfile);
+                return ResponseEntity.accepted().body(userProfile.getVehicles()); 
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+            LOGGER.error("Invalid vehicle: {}", vehicle);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
         }
     }
 
@@ -331,6 +358,30 @@ public class UserProfileController {
             return ResponseEntity.accepted().body(userProfile.getVehicles()); 
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+        }
+    }
+    
+    private boolean isValid(UserProfile userProfile) {
+        Date currentDate = new Date();
+        
+        return userProfile != null && userProfile.getName() != null 
+                && userProfile.getFamilyName() != null && (userProfile.getBirthDate() == null 
+                || (userProfile.getBirthDate() != null && userProfile.getBirthDate().before(currentDate)));
+    }
+    
+    private boolean isValid(Address address) {
+        return address != null && address.getStreet() != null && address.getLocality() != null;
+    }
+    
+    private boolean isValid(Vehicle vehicle) {
+        if (vehicle == null) {
+            return false;
+        } else if (vehicle.getName() == null || vehicle.getVehicleType() == null || vehicle.getFuelType() == null) {
+            return false;
+        } else if (vehicle.getVehicleType() == VehicleType.CAR || vehicle.getVehicleType() == VehicleType.MOTORCYCLE) {
+            return vehicle.getBrandName() != null && vehicle.getModelName() != null;
+        } else {
+            return true;
         }
     }
 }
