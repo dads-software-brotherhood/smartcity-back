@@ -77,6 +77,7 @@ public class RegisterController {
         userToUpdate.setId(user.getId());
         createUser.setUser(userToUpdate);
         keystoneUserService.updateUser(user.getId(), adminToken, createUser);
+        recoveryService.deleteAllByEmail(recovery.getEmail());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
 
       }
