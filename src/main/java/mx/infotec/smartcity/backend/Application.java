@@ -15,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import mx.infotec.smartcity.backend.filter.AdminFilter;
 import mx.infotec.smartcity.backend.filter.LoggedUserFilter;
 import mx.infotec.smartcity.backend.filter.SelfDataEditFilter;
 
@@ -91,7 +92,23 @@ public class Application extends SpringBootServletInitializer {
     public Filter selfDataEditFilter() {
         return new SelfDataEditFilter();
     }
+    
+    @Bean
+    public FilterRegistrationBean adminFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(adminFilter());
+        registration.addServletNames("adminFilter");
+//        registration.addUrlPatterns("/admin/*","/user-profile/*", "/public-transports/*", "/groups/*", "/rules/*");
+        registration.addUrlPatterns("/rules/*");
+        registration.setOrder(3);
+        return registration;
+    }
 
+    @Bean
+    public Filter adminFilter() {
+        return new AdminFilter();
+    }
+    
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
