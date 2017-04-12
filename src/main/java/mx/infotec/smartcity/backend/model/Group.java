@@ -25,6 +25,9 @@ public class Group {
   private Date   dateCreated;
   @JsonProperty("dateModified")
   private Date   dateModified;
+  @JsonProperty("notificationIds")
+  private String[] notificationIds;
+  
 
   @JsonProperty("id")
   public String getId() {
@@ -75,5 +78,16 @@ public class Group {
   public void setDateModified(Date dateModified) {
     this.dateModified = dateModified;
   }
+
+    @JsonProperty("notificationIds")
+    public String[] getNotificationIds() {
+        return notificationIds;
+    }
+    @JsonProperty("notificationIds")
+    public void setNotificationIds(String[] notificationIds) {
+        this.notificationIds = notificationIds;
+    }
+  
+  
 
 }

@@ -30,7 +30,7 @@ import mx.infotec.smartcity.backend.persistence.GroupRepository;
  * @author Benjamin Vander Stichelen
  */
 @RestController
-@RequestMapping("/groupss")
+@RequestMapping("/groups")
 public class GroupController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GroupController.class);
