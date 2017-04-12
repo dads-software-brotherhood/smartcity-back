@@ -5,13 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+//import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+//import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import mx.infotec.smartcity.backend.model.Role;
@@ -29,7 +29,8 @@ import mx.infotec.smartcity.backend.utils.RoleUtil;
  * @author Benjamin Vander Stichelen
  */
 @RestController
-@RequestMapping("/users")
+//@RequestMapping("/users")
+@Deprecated
 public class UserController {
 
 
@@ -57,7 +58,7 @@ public class UserController {
       "Administrator of public transport";
 
 
-  @RequestMapping(method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> getUsers(@RequestHeader(value = "token-auth") String token) {
     try {
       return ResponseEntity.accepted().body(userService.getAllUsers(token));
@@ -67,8 +68,8 @@ public class UserController {
   }
 
 
-  @RequestMapping(method = RequestMethod.POST, value = "/role/{role}",
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.POST, value = "/role/{role}",
+  //    consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> createUsersWithDefaultRole(
       @RequestHeader(value = "token-auth") String token, @RequestBody CreateUser user,
       @PathVariable("role") String role) {
@@ -90,8 +91,8 @@ public class UserController {
 
 
 
-  @RequestMapping(method = RequestMethod.POST, value = "/{userid}/password",
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.POST, value = "/{userid}/password",
+  //    consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> changeUserPassword(@PathVariable("userid") String userid,
       @RequestHeader(value = "token-auth") String token, @RequestBody ChangeUserPassword user) {
     try {
@@ -103,8 +104,8 @@ public class UserController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.PATCH, value = "/{userid}",
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.PATCH, value = "/{userid}",
+  //    consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> updateUser(@PathVariable("userid") String userid,
       @RequestHeader(value = "token-auth") String token, @RequestBody CreateUser user) {
     try {
@@ -116,8 +117,8 @@ public class UserController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/{userid}",
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.GET, value = "/{userid}",
+  //    consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> getUser(@PathVariable("userid") String userid,
       @RequestHeader(value = "token-auth") String token) {
     try {
@@ -129,8 +130,8 @@ public class UserController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/{username}/byUsername",
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.GET, value = "/{username}/byUsername",
+  //    consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> getUserByUsername(@PathVariable("username") String username,
       @RequestHeader(value = "token-auth") String token) {
     try {
@@ -143,8 +144,8 @@ public class UserController {
   }
 
 
-  @RequestMapping(method = RequestMethod.GET, value = "/{name}/byName",
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.GET, value = "/{name}/byName",
+  //    consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> getUserByName(@PathVariable("name") String name,
       @RequestHeader(value = "token-auth") String token) {
     try {
