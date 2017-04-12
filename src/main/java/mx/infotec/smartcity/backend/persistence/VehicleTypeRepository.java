@@ -5,13 +5,13 @@
  */
 package mx.infotec.smartcity.backend.persistence;
 
-import mx.infotec.smartcity.backend.model.VehicleTypes;
+import mx.infotec.smartcity.backend.model.VehicleType;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
  *
  * @author jose.gomez
  */
-public interface VehicleTypesRepository extends MongoRepository<VehicleTypes, String> {
-    VehicleTypes findByName(String vehicleTypeName);
+public interface VehicleTypeRepository extends MongoRepository<VehicleType, String> {
+    VehicleType findByName(String vehicleTypeName);
 }

@@ -430,7 +430,7 @@ public class UserProfileController {
             return false;
         } else if (vehicle.getName() == null || vehicle.getVehicleType() == null || vehicle.getFuelType() == null) {
             return false;
-        } else if (vehicle.getVehicleType() == VehicleType.CAR || vehicle.getVehicleType() == VehicleType.MOTORCYCLE) {
+        } else if (vehicle.getVehicleType().getIncludeBrandModel()) {
             return vehicle.getBrandName() != null && vehicle.getModelName() != null;
         } else {
             return true;
