@@ -66,7 +66,7 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
   @Override
   public boolean validateTokenRecovery(String tokenRecovery) throws ServiceException {
     try {
-      TokenRecovery recovery = tokenRepository.findById(tokenRecovery);
+      TokenRecovery recovery = tokenRepository.findOne(tokenRecovery);
       if (recovery == null) {
         return false;
       }
@@ -114,12 +114,13 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
     String adminToken = null;
     try {
       if (validateTokenRecovery(tokenRecovery)) {
-        TokenRecovery recovery = tokenRepository.findById(tokenRecovery);
+        TokenRecovery recovery = tokenRepository.findOne(tokenRecovery);
         adminToken = adminUtils.getAdmintoken();
         CreateUser createUser = userService.getUser(recovery.getIdUser(), adminToken);
         createUser.getUser().setPassword(new String(request.getPassword()));
         createUser.getUser().setEnabled(true);
         createUser = userService.updateUser(recovery.getIdUser(), adminToken, createUser);
+        tokenRepository.deleteTokenRecoveryByEmail(recovery.getEmail());
         return true;
       }
       return false;
@@ -137,12 +138,22 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
   @Override
   public TokenRecovery getTokenById(String token) throws ServiceException {
     try {
-      return tokenRepository.findById(token);
+      return tokenRepository.findOne(token);
       
     } catch(Exception e) {
       LOG.error("Error trying to get TokenRecovery, cause: ", e);
       throw new ServiceException(e);
     }
   }
+
+    @Override
+    public void deleteById(String id) {
+        tokenRepository.delete(id);
+    }
+
+    @Override
+    public void deleteAllByEmail(String email) {
+        tokenRepository.deleteTokenRecoveryByEmail(email);
+    }
 
 }

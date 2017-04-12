@@ -109,7 +109,7 @@ public class KeystoneRoleServiceImpl implements RoleService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-auth-token", authToken);
-        LOGGER.info("get role user : {}", String.format(getRoleUrl, idRole));
+        LOGGER.debug("get role user : {}", String.format(getRoleUrl, idRole));
         HttpEntity<SelfRole> requestEntity = new HttpEntity<SelfRole>(headers);
         HttpEntity<SelfRole> responseEntity = restTemplate.exchange(
                 String.format(getRoleUrl, idRole), HttpMethod.GET, requestEntity, SelfRole.class);
@@ -139,7 +139,7 @@ public class KeystoneRoleServiceImpl implements RoleService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-auth-token", authToken);
         HttpEntity<SelfRole> requestEntity = new HttpEntity<SelfRole>(headers);
-        System.out.println("URL: " + String.format(getUserRole, defaultDomain, userId));
+        LOGGER.debug("URL: {}", String.format(getUserRole, defaultDomain, userId));
         HttpEntity<Roles> responseEntity =
                 restTemplate.exchange(String.format(getUserRole, defaultDomain, userId),
                         HttpMethod.GET, requestEntity, Roles.class);
@@ -164,7 +164,7 @@ public class KeystoneRoleServiceImpl implements RoleService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-auth-token", authToken);
-        LOGGER.info("user url: {}", String.format(getRoleUrl, roleid));
+        LOGGER.debug("user url: {}", String.format(getRoleUrl, roleid));
         HttpEntity<SelfRole> requestEntity = new HttpEntity<SelfRole>(headers);
         HttpEntity<SelfRole> responseEntity =
                 restTemplate.exchange(String.format(getRoleUrl, roleid), HttpMethod.DELETE,
@@ -203,7 +203,7 @@ public class KeystoneRoleServiceImpl implements RoleService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-auth-token", authToken);
 
-        LOGGER.info("set role: {}", String.format(userRoleDomainUrl, domain, userId, roleId));
+        LOGGER.debug("set role: {}", String.format(userRoleDomainUrl, domain, userId, roleId));
         HttpEntity<Request> requestEntity = new HttpEntity<Request>(headers);
         HttpEntity<Roles> responseEntity = restTemplate.exchange(
                 String.format(userRoleDomainUrl, domain, userId, roleId.toLowerCase()),
@@ -226,7 +226,7 @@ public class KeystoneRoleServiceImpl implements RoleService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-auth-token", authToken);
 
-        LOGGER.info("set role: {}", String.format(userRoleDomainUrl, domain, userId, roleId));
+        LOGGER.debug("set role: {}", String.format(userRoleDomainUrl, domain, userId, roleId));
         HttpEntity<Request> requestEntity = new HttpEntity<Request>(headers);
         HttpEntity<Roles> responseEntity =
                 restTemplate.exchange(String.format(userRoleDomainUrl, domain, userId, roleId),

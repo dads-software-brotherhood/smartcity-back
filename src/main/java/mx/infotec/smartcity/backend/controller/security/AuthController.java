@@ -56,12 +56,14 @@ public class AuthController {
         try {
             IdentityUser identityUser = loginService.performLogin(tokenRequest.getUsername(), tokenRequest.getPassword());
 
-            UserProfile userProfile = profileRepository.findByEmail(tokenRequest.getUsername());
+            UserProfile userProfile = profileRepository.findByKeystoneId(identityUser.getIdmId());
 
             //TODO: Pasar al servicio del user profile
             if (userProfile == null) {
                 LOGGER.warn("Local user don't  found. It will be create a new one");
+                
                 userProfile = new UserProfile();
+                userProfile.setKeystoneId(identityUser.getIdmId());
                 userProfile.setEmail(tokenRequest.getUsername());
                 userProfile.setName(tokenRequest.getUsername());
                 userProfile.setRegisterDate(new Date());
@@ -76,7 +78,7 @@ public class AuthController {
                 sb.append(' ').append(userProfile.getFamilyName());
             }
 
-            identityUser.setId(userProfile.getId());
+            identityUser.setMongoId(userProfile.getId());
             identityUser.setName(sb.toString());
 
             return ResponseEntity.accepted().body(identityUser);

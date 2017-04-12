@@ -6,7 +6,6 @@ import java.util.List;
 import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.UserModel;
-import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
 import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_;
@@ -52,6 +51,7 @@ public interface UserService extends Serializable {
    * @param tokenAdmin
    * @param authToken
    * @return JsonToken
+   * @throws mx.infotec.smartcity.backend.service.exception.ServiceException
    */
   Token getUserFromToken(String tokenAdmin, String authToken) throws ServiceException;
 

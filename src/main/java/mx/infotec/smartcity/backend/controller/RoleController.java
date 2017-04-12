@@ -3,13 +3,13 @@ package mx.infotec.smartcity.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+//import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+//import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import mx.infotec.smartcity.backend.service.RoleService;
@@ -21,7 +21,8 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.roles.SelfRole;
  * @author Benjamin Vander Stichelen
  */
 @RestController
-@RequestMapping("/roles")
+//@RequestMapping("/roles
+@Deprecated
 public class RoleController {
 
   @Autowired
@@ -30,7 +31,7 @@ public class RoleController {
 
 
 
-  @RequestMapping(method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> getUsers(@RequestHeader(value = "token-auth") String token) {
     try {
       return ResponseEntity.accepted().body(roleService.getAllRoles(token));
@@ -40,7 +41,7 @@ public class RoleController {
   }
 
 
-  @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> createRole(@RequestHeader(value = "token-auth") String token,
       @RequestBody SelfRole role) {
     try {
@@ -52,8 +53,8 @@ public class RoleController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/{roleid}",
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.GET, value = "/{roleid}",
+  //    consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> buscarRolePorId(@RequestHeader(value = "token-auth") String authToken,
       @PathVariable("roleid") String roleid) {
     try {
@@ -63,8 +64,8 @@ public class RoleController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/{name}/byName",
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.GET, value = "/{name}/byName",
+  //    consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> buscarRolePorNombre(
       @RequestHeader(value = "token-auth") String authToken, @PathVariable("name") String name) {
     try {
@@ -85,8 +86,8 @@ public class RoleController {
    * (Exception ex) { return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage()); }
    * }
    */
-  @RequestMapping(method = RequestMethod.DELETE, value = "/{roleid}",
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.DELETE, value = "/{roleid}",
+  //    consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> deleteRolePorId(@RequestHeader(value = "token-auth") String authToken,
       @PathVariable("roleid") String roleid) {
     try {
@@ -96,8 +97,8 @@ public class RoleController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.PATCH, value = "/{roleid}",
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  //@RequestMapping(method = RequestMethod.PATCH, value = "/{roleid}",
+  //    consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public ResponseEntity<?> updateRolePorId(@RequestHeader(value = "token-auth") String authToken,
       @PathVariable("roleid") String roleid, @RequestBody SelfRole role) {
     try {

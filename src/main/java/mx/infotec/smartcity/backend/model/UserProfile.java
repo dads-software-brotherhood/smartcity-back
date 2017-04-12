@@ -39,6 +39,7 @@ public class UserProfile implements Serializable {
     private List<Address> addresses;
     private List<Vehicle> vehicles;
     
+    @Indexed(unique = true)
     private String keystoneId;
     
     /**

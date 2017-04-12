@@ -15,5 +15,8 @@ public interface TokenRecoveryService {
   boolean updatePassword(String tokenRecovery, TokenRequest request) throws ServiceException;
   
   TokenRecovery getTokenById(String token) throws ServiceException;
+  
+  void deleteById(String id);
+  void deleteAllByEmail(String email);
  
 }

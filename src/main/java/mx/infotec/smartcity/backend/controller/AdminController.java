@@ -2,6 +2,8 @@ package mx.infotec.smartcity.backend.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.UserModel;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
-import mx.infotec.smartcity.backend.utils.TemplatesEnum;
+import mx.infotec.smartcity.backend.utils.Constants;
 
 @RestController
 @RequestMapping("/admin")
@@ -26,8 +30,10 @@ public class AdminController {
 
     @RequestMapping(value = "/user/register", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> userRegistration(@RequestBody UserModel model) {
+    public ResponseEntity<?> userRegistration(@RequestBody UserModel model, HttpServletRequest request) {
+        
         try {
+            
             if (!keystoneUserService.isRegisteredUser(model.getEmail())) {
 
                 if (keystoneUserService.createUserByAdmin(model)) {
@@ -36,6 +42,7 @@ public class AdminController {
 
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
             }
+            
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Registered User");
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
