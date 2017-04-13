@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
-import mx.infotec.smartcity.backend.model.VehicleTypes;
+import mx.infotec.smartcity.backend.model.VehicleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +21,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import mx.infotec.smartcity.backend.persistence.VehicleTypesRepository;
-/**
- *
+import mx.infotec.smartcity.backend.persistence.VehicleTypeRepository;
+ /*
  * @author jose.gomez
  */
 
 @RestController
-@RequestMapping("/vehiclesType")
+@RequestMapping("/vehicletype")
 public class VehiclesTypeController {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(VehiclesTypeController.class);
     
     @Autowired
-    private VehicleTypesRepository vehicleTypesRepository;
+    private VehicleTypeRepository vehicleTypesRepository;
     
     @RequestMapping(method = RequestMethod.GET)    
-    public List<VehicleTypes> getAll() {
-        List<VehicleTypes> res = vehicleTypesRepository.findAll();   
+    public List<VehicleType> getAll() {
+        List<VehicleType> res = vehicleTypesRepository.findAll();   
         if (res == null)
             return new ArrayList<>();
         else
@@ -46,19 +45,19 @@ public class VehiclesTypeController {
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public VehicleTypes getById(@PathVariable String id) {
+    public VehicleType getById(@PathVariable String id) {
         return vehicleTypesRepository.findOne(id);
     }
     
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> add(@Valid @RequestBody VehicleTypes vehicleType) {
+    public ResponseEntity<?> add(@Valid @RequestBody VehicleType vehicleType) {
     if (vehicleType.getId() != null)
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID must be null");
     else {
       try {
         vehicleType.setDateCreated(new Date());
         vehicleType.setDateModified(new Date());
-        VehicleTypes VehicleRepro = vehicleTypesRepository.insert(vehicleType);
+        VehicleType VehicleRepro = vehicleTypesRepository.insert(vehicleType);
         return ResponseEntity.accepted().body(VehicleRepro);
       } catch (Exception ex) {
         LOGGER.error("Error at insert", ex);
@@ -69,7 +68,7 @@ public class VehiclesTypeController {
     
   @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
   value = "/{id}")
-  public ResponseEntity<?> update(@RequestBody VehicleTypes vehiclesType, @PathVariable("id") String id) {
+  public ResponseEntity<?> update(@RequestBody VehicleType vehiclesType, @PathVariable("id") String id) {
     try {
       if (vehicleTypesRepository.exists(id)) {
         if (vehiclesType.getId() != null)
