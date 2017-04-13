@@ -8,6 +8,7 @@ import mx.infotec.smartcity.backend.utils.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,24 +29,31 @@ public class RecoverPasswordController {
   private static final Logger LOGGER = LoggerFactory.getLogger(RecoverPasswordController.class);
 
   @Autowired
-  TokenRecoveryService        recoveryService;
+  private TokenRecoveryService        recoveryService;
+  
+  @Value("${idm.admin.username}")
+  private String                      idmUser;
 
-  /**
-   * Method used to start password recovery.
-   * 
-   * @param tokenRequest Object with user's email
-   * @return Response
-   */
-  @RequestMapping(method = RequestMethod.POST, value = "/forgot-password")
-  public ResponseEntity<?> forgotPassword(@RequestBody TokenRequest tokenRequest) {
-    try {
-      recoveryService.recoveryPassword(tokenRequest.getUsername());
-    } catch (ServiceException e) {
-      LOGGER.error("forgotPassword error, cause: ", e);
+    /**
+     * Method used to start password recovery.
+     *
+     * @param tokenRequest Object with user's email
+     * @return Response
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody TokenRequest tokenRequest) {
+        if (tokenRequest.getUsername().equals(idmUser)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't change password");
+        } else {
+            try {
+                recoveryService.recoveryPassword(tokenRequest.getUsername());
+            } catch (ServiceException e) {
+                LOGGER.error("forgotPassword error, cause: ", e);
+            }
+
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("success");
+        }
     }
-    
-    return ResponseEntity.status(HttpStatus.ACCEPTED).body("success");
-  }
 
   /**
    * 

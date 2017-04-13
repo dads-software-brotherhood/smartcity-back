@@ -9,6 +9,7 @@ import mx.infotec.smartcity.backend.model.Address;
 import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.HealthProfile;
 import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.model.Vehicle;
 import mx.infotec.smartcity.backend.model.VehicleType;
@@ -23,6 +24,7 @@ import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +56,9 @@ public class UserProfileController {
     @Autowired
     private TokenRecoveryService tokenRecoveryService;
 
+    @Value("${idm.admin.username}")
+    private String idmUser;
+
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getByEmail(@RequestParam("email") String email) {
         UserProfile userProfile = userProfileRepository.findByEmail(email);
@@ -72,18 +77,18 @@ public class UserProfileController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public ResponseEntity<?> deleteByID(@PathVariable String id, HttpServletRequest request) {
-        try {
-            UserProfile userProfile = userProfileRepository.findOne(id);
-            userProfileRepository.delete(id);
+        IdentityUser identityUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
 
-            IdentityUser identityUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
+        if (identityUser == null || identityUser.getUsername().equals(idmUser) || (identityUser.getRoles() != null && identityUser.getRoles().contains(Role.SA))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't delete this account");
+        } else {
+            try {
+                UserProfile userProfile = userProfileRepository.findOne(id);
+                userProfileRepository.delete(id);
 
-            if (identityUser == null) {
-                LOGGER.warn("IdentityUser is null");
-            } else {
                 String adminToken = adminUtilsService.getAdmintoken();
                 userService.deleteUser(identityUser.getIdmId(), adminToken);
-                
+
                 tokenRecoveryService.deleteAllByEmail(identityUser.getUsername());
 
                 try {
@@ -105,12 +110,11 @@ public class UserProfileController {
                     LOGGER.error("Error at send mail", ex);
                 }
 
+                return ResponseEntity.accepted().body("deleted");
+            } catch (Exception ex) {
+                LOGGER.error("Error at delete", ex);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
             }
-
-            return ResponseEntity.accepted().body("deleted");
-        } catch (Exception ex) {
-            LOGGER.error("Error at delete", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
         }
     }
 
