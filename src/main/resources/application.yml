@@ -5,7 +5,8 @@ spring:
         mongodb:
             database: smartcity
     mail:
-        active: false
+        support: smartcityapp@smartsdk.eu
+        active: true
         host: smtp.gmail.com
         port: 587
         protocol: smtp

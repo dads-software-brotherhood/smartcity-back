@@ -93,14 +93,14 @@ public class UserProfileController {
                     Map<String, Object> map = new HashMap<>();
 
                     if (userProfile == null) {
-                        map.put("userName", "User");
+                        map.put(Constants.GENERAL_PARAM_NAME, "User");
                     } else {
-                        map.put("userName", userProfile.getName());
+                        map.put(Constants.GENERAL_PARAM_NAME, userProfile.getName());
                     }
 
                     email.setContent(map);
 
-                    mailService.sendMail(TemplatesEnum.DELETE_ACCOUNT_MAIL, email);
+                    mailService.sendMail(TemplatesEnum.DELETE_SIMPLE_ACCOUNT, email);
                 } catch (Exception ex) {
                     LOGGER.error("Error at send mail", ex);
                 }

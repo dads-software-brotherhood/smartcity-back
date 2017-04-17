@@ -26,6 +26,9 @@ public interface Constants {
     public static final String URL_PROFILE = "user-profile";
     public static final String URL_TRANSPORT = "public-transports";
     public static final String URL_RULES = "rules";
+   
+    public static final String GENERAL_PARAM_NAME = "name";
+    public static final String GENERAL_PARAM_ID = "id";
     
     
 }

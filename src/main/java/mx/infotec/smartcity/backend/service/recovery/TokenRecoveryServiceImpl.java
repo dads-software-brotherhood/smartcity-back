@@ -1,6 +1,8 @@
 package mx.infotec.smartcity.backend.service.recovery;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Calendar;
 
 import org.slf4j.Logger;
@@ -12,16 +14,17 @@ import org.springframework.stereotype.Service;
 import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.TokenRecovery;
 import mx.infotec.smartcity.backend.model.TokenRequest;
+import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.persistence.TokenRecoveryRepository;
+import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.LoginService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
-import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.ChangeUserPassword;
-import mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.keystone.pojo.user.User;
 import mx.infotec.smartcity.backend.service.mail.MailService;
+import mx.infotec.smartcity.backend.utils.Constants;
 import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 
 
@@ -47,6 +50,9 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
   @Qualifier("keystoneLoginService")
   private LoginService loginService;
 
+  @Autowired
+  UserProfileRepository profileRepository;
+  
   @Override
   public TokenRecovery generateToken(String email, String idUser) throws ServiceException {
     TokenRecovery recovery = new TokenRecovery();
@@ -90,14 +96,18 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
     try {
       adminToken = adminUtils.getAdmintoken();
       User user = userService.getUserByName(email, adminToken);
-      if (user == null) {
+      UserProfile userProfile = profileRepository.findByEmail(email);
+      if (user == null && userProfile == null) {
         return false;
       }
       TokenRecovery recovery = generateToken(email, user.getId());
+      Map<String, Object> otherParams = new HashMap<>();
+      otherParams.put(Constants.GENERAL_PARAM_NAME, String.format("%s %s", userProfile.getName(), userProfile.getFamilyName()));
       emailObj.setTo(email);
       emailObj.setMessage(recovery.getId());
+      emailObj.setContent(otherParams);
       LOG.info("TokenRecovery:  " +  recovery.getId());
-      mailService.sendMail(TemplatesEnum.MAIL_SAMPLE, emailObj);
+      mailService.sendMail(TemplatesEnum.RECOVERY_PASSWORD_EMAIL, emailObj);
       return true;
     } catch (Exception e) {
       LOG.error("Error trying to recovery password, cause: ", e);
