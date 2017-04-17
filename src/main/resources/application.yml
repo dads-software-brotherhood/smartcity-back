@@ -6,7 +6,7 @@ spring:
             database: smartcity
     mail:
         support: smartcityapp@smartsdk.eu
-        active: true
+        active: false
         host: smtp.gmail.com
         port: 587
         protocol: smtp
