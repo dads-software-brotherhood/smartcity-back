@@ -2,8 +2,10 @@ package mx.infotec.smartcity.backend.service.keystone;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -429,10 +431,13 @@ public class KeystoneUserServiceImpl implements UserService {
             TokenRecovery recovery = recoveryService.generateToken(createdUser.getUser().getName(),
                     createdUser.getUser().getId());
             LOGGER.info("Token recovery: " + recovery.getId());
+            Map<String, Object> otherParams = new HashMap<>();
+            otherParams.put(Constants.GENERAL_PARAM_NAME, String.format("%s %s", userProfile.getName(), userProfile.getFamilyName()));
             Email email = new Email();
             email.setTo(createUser.getUser().getName());
             email.setMessage(recovery.getId());
-            mailService.sendMail(TemplatesEnum.MAIL_SAMPLE, email);
+            email.setContent(otherParams);
+            mailService.sendMail(TemplatesEnum.CREATE_USER_BY_ADMIN, email);
             return true;
         } catch (Exception e) {
             LOGGER.error("Error trying to create user by admin, cause: ", e);
@@ -482,6 +487,12 @@ public class KeystoneUserServiceImpl implements UserService {
             UserProfile profile = userRepository.findByEmail(model.getEmail());
             deleteUser(profile.getKeystoneId(), adminToken);
             userRepository.delete(profile.getId());
+            Map<String, Object> otherParams = new HashMap<>();
+            otherParams.put(Constants.GENERAL_PARAM_NAME, String.format("%s %s", profile.getName(), profile.getFamilyName()));
+            Email email = new Email();
+            email.setTo(model.getEmail());
+            email.setContent(otherParams);
+            mailService.sendMail(TemplatesEnum.DELETE_ACCOUNT_MAIL, email);
             return true;
         } catch (Exception e) {
             LOGGER.error("Error trying delete user, cause: ", e);

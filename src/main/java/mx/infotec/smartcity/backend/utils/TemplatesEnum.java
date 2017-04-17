@@ -2,10 +2,11 @@ package mx.infotec.smartcity.backend.utils;
 
 public enum TemplatesEnum {
 
-    RECOVERY_PASSWORD_EMAIL("recovery_password_email.ftl", "notification"),
-    MAIL_SAMPLE("mailSample.html", "notification"),
-    MAIL_SAMPLE2("mailSample.html", "notification"),
-    DELETE_ACCOUNT_MAIL("cancelAccountMail.ftl", "Cancel account");
+    RECOVERY_PASSWORD_EMAIL("recovery_password.html", "Notification"),
+    CREATE_USER_BY_ADMIN("create_user_admin.html", "Notification"),
+    DELETE_SIMPLE_ACCOUNT("cancel_account.html", "Cancel account"),
+    DELETE_ACCOUNT_MAIL("cancel_account_admin.html", "Cancel account"),
+    CREATE_SIMPLE_ACCOUNT("create_user.html","Notification");
 
     private final String value;
     private final String title;

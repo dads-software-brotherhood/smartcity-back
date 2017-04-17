@@ -56,7 +56,7 @@ public class RegisterController {
       user.setEnabled(false);
       CreateUser createUser = new CreateUser(user);
       if (!keystoneUserService.isRegisteredUser(user.getName())
-          && keystoneUserService.createUserAndSendMail(createUser, TemplatesEnum.MAIL_SAMPLE2)) {
+          && keystoneUserService.createUserAndSendMail(createUser, TemplatesEnum.CREATE_SIMPLE_ACCOUNT)) {
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
       }
