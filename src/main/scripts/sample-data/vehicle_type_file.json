@@ -1,0 +1,3 @@
+{"name":"CAR", "includeBrandModel":true}
+{"name":"MOTORCYCLE", "includeBrandModel":true}
+{"name":"BYCICLE", "includeBrandModel":false}
