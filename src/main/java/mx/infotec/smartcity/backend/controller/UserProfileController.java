@@ -17,6 +17,7 @@ import mx.infotec.smartcity.backend.persistence.TokenRecoveryRepository;
 import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.UserService;
+import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.mail.MailService;
 import mx.infotec.smartcity.backend.service.recovery.TokenRecoveryService;
 import mx.infotec.smartcity.backend.utils.Constants;
@@ -417,6 +418,39 @@ public class UserProfileController {
         }
     }
 
+    
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{id}")
+    public ResponseEntity<?> updateEmail(@RequestBody UserProfile userProfile, @PathVariable("id") String id) {
+        if (isValid(userProfile)) {
+            try {
+                String tokenAdmin = adminUtilsService.getAdmintoken();
+                UserProfile original = userProfileRepository.findOne(id);
+                if (original != null) {
+                    if (userProfile.getId() != null) {
+                        LOGGER.warn("ID from object is ignored");
+                    }
+
+                    userProfile.setId(id);
+                    userProfileRepository.save(userProfile);
+                    CreateUser user = new CreateUser();
+                    user.getUser().setId(original.getKeystoneId());
+                    user.getUser().setName(userProfile.getEmail());
+                    userService.updateUser(original.getKeystoneId(), tokenAdmin, user);
+
+                    return ResponseEntity.accepted().body("updated");
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
+                }
+            } catch (Exception ex) {
+                LOGGER.error("Error at update", ex);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+            }
+        } else {
+            LOGGER.error("Invalid userProfile: {}", userProfile);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
+        }
+    }
+    
     private boolean isValid(UserProfile userProfile) {
         Date currentDate = new Date();
 
