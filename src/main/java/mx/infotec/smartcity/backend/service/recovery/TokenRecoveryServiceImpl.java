@@ -99,18 +99,23 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
       adminToken = adminUtils.getAdmintoken();
       User user = userService.getUserByName(email, adminToken);
       UserProfile userProfile = profileRepository.findByEmail(email);
-      if (user == null && userProfile == null) {
+      if (user == null) {
         return false;
+      } else {
+        TokenRecovery recovery = generateToken(email, user.getId());
+        Map<String, Object> otherParams = new HashMap<>();
+        if (userProfile == null || userProfile.getName() == null || userProfile.getFamilyName() == null) {
+            otherParams.put(Constants.GENERAL_PARAM_NAME, "User");
+        } else {
+            otherParams.put(Constants.GENERAL_PARAM_NAME, String.format("%s %s", userProfile.getName(), userProfile.getFamilyName()));
+        }
+        emailObj.setTo(email);
+        emailObj.setMessage(recovery.getId());
+        emailObj.setContent(otherParams);
+        LOG.info("TokenRecovery:  {}", recovery.getId());
+        mailService.sendMail(TemplatesEnum.RECOVERY_PASSWORD_EMAIL, emailObj);
+        return true;
       }
-      TokenRecovery recovery = generateToken(email, user.getId());
-      Map<String, Object> otherParams = new HashMap<>();
-      otherParams.put(Constants.GENERAL_PARAM_NAME, String.format("%s %s", userProfile.getName(), userProfile.getFamilyName()));
-      emailObj.setTo(email);
-      emailObj.setMessage(recovery.getId());
-      emailObj.setContent(otherParams);
-      LOG.info("TokenRecovery:  " +  recovery.getId());
-      mailService.sendMail(TemplatesEnum.RECOVERY_PASSWORD_EMAIL, emailObj);
-      return true;
     } catch (Exception e) {
       LOG.error("Error trying to recovery password, cause: ", e);
       throw new ServiceException(e);

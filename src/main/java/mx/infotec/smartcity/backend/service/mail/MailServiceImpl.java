@@ -101,7 +101,7 @@ public class MailServiceImpl implements MailService {
 
                     break;
                 case CREATE_USER_BY_ADMIN:
-                    url = String.format("%s%s%s", frontUrl, Constants.VALIDATE_ACCOUNT_URL, email.getMessage());
+                    url = String.format("%s%s%s", frontUrl, Constants.RECOVERY_PASSWORD_URL, email.getMessage());
                     values.put("name", email.getContent().get(Constants.GENERAL_PARAM_NAME));
                     values.put("recoveryLink", url);
 
