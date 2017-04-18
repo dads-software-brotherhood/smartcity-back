@@ -421,7 +421,7 @@ public class UserProfileController {
     
     @RequestMapping(method = RequestMethod.PATCH, value = "/{id}")
     public ResponseEntity<?> updateEmail(@RequestBody UserProfile userProfile, @PathVariable("id") String id) {
-        if (isValid(userProfile)) {
+        if (userProfile.getEmail() != null) {
             try {
                 String tokenAdmin = adminUtilsService.getAdmintoken();
                 UserProfile original = userProfileRepository.findOne(id);
@@ -447,7 +447,7 @@ public class UserProfileController {
             }
         } else {
             LOGGER.error("Invalid userProfile: {}", userProfile);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required field email not present in request");
         }
     }
     
