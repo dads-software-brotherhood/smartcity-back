@@ -2,7 +2,9 @@ package mx.infotec.smartcity.backend.service.recovery;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.slf4j.Logger;
@@ -164,6 +166,33 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
     @Override
     public void deleteAllByEmail(String email) {
         tokenRepository.deleteTokenRecoveryByEmail(email);
+    }
+
+    @Override
+    public void deleteExpiredToken() {
+                
+        List<TokenRecovery> tokens = tokenRepository.findAll();
+        List<TokenRecovery> tokensToDelete = new ArrayList<>();
+        
+        if (tokens != null && tokens.size() > 0) {
+            for (TokenRecovery token : tokens) {
+                Date compareDate = new Date(token.getRegisterDate().getTime());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(compareDate);
+                calendar.add(Calendar.DATE, 1);
+                compareDate = calendar.getTime();
+                
+                Date now = new Date();
+                if (compareDate.before(now)) {
+                    tokensToDelete.add(token);
+                }
+                
+            }
+        }
+        
+        if (tokensToDelete.size() > 0) {
+            tokenRepository.delete(tokensToDelete);
+        }
     }
 
 }
