@@ -12,8 +12,6 @@ import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.model.Vehicle;
-import mx.infotec.smartcity.backend.model.VehicleType;
-import mx.infotec.smartcity.backend.persistence.TokenRecoveryRepository;
 import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.UserService;
