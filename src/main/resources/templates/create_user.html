@@ -1,75 +1,34 @@
-<!DOCTYPE html>
-
-<html lang="en">
-<style type="text/css">
-
-	.btn{
-	    display: inline-block;
-	    font-weight: normal;
-	    text-align: center;
-	    white-space: nowrap;
-	    vertical-align: middle;
-	    cursor: pointer;
-	    -webkit-user-select: none;
-	    -moz-user-select: none;
-	    -ms-user-select: none;
-	    user-select: none;
-	    border: 1px solid transparent;
-	    padding: 0.375rem 1rem;
-	    font-size: 1rem;
-	    line-height: 1.5;
-	    border-radius: 0.25rem;
-	    -webkit-transition: all 0.2s ease-in-out;
-	    transition: all 0.2s ease-in-out;
-	}
-	.btn-smart {
-	    color: #fff;
-	    background-color: #00D3DE;
-	    border-color: #00D3DE;
-	}
-	.btn-smart:hover {
-	    color: #fff;
-	    background-color: #00a3ab;
-	    border-color: #0099a1;
-	}
-	.btn-danger {
-	    color: #fff;
-	    background-color: #d9534f;
-	    border-color: #d9534f;
-	}
-	.btn-danger:hover {
-	    color: #fff;
-	    background-color: #c9302c;
-	    border-color: #c12e2a;
-	}
-
-</style>
-
-<body style="background-image: url('http://localhost:4200/bg_login.009bc52eeb9617af382e.png');">
-	<div class="container" style="width: 500px;
-		margin: 10px auto;">
-		<div style="text-align: center;">
-			<a href="#" style="text-decoration: none;">
-				<img src="http://localhost:4200/assets/img/smart-sdk.png">
-			</a>
-		</div>
-		<div style="margin: 15px 0;
-	    background-color: #fff;
-	    border: 1px solid transparent;
-	    border-radius: 4px;
-	    box-shadow: 0 1px 1px rgba(0,0,0,.05);
-	    padding: 25px;
-	    border: 1px solid #6cc4d3;
-	    overflow: hidden;">
-	    
-			<p>Welcome to Smart City App! By clicking on the link "I accept" below, you state that you have read and accepted the Terms and Conditions and the creation of your account will be confirmed:</p>
-			<p><a href="${recoveryUrl}">I accept</a></p>
-
-		</div>
-		<p>&copy; 2017 SmartSDK</p>
-
-	</div>
-
-</body>
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Create account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <body style="background-image: url('${frontUrl}/bg_login.009bc52eeb9617af382e.png');">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse;">
+      <tr>
+        <td>
+          <table align="center" border="1" cellpadding="0" cellspacing="0" width="450" style="border-collapse: collapse; background-color:  #fff; border-color: #6cc4d3;" >
+            <tr>
+              <td style="padding: 25px;">
+                <p>Welcome to Smart City App! By clicking on the link "I accept" below, you state that you have read and accepted the Terms and Conditions and the creation of your account will be confirmed:</p>
+                <p><a href="${recoveryUrl}">I accept</a></p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td align="center" style="padding: 30px;">
+          <p>&copy; 2017 SmartSDK</p>
+        </td>
+      </tr>
+      <tr>
+        <td align="center">
+          <img src="${frontUrl}/assets/img/smart-sdk.png" alt="logo"/>
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>
