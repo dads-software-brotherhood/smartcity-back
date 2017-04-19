@@ -420,22 +420,23 @@ public class UserProfileController {
 
     
     @RequestMapping(method = RequestMethod.PATCH, value = "/{id}")
-    public ResponseEntity<?> updateEmail(@RequestBody UserProfile userProfile, @PathVariable("id") String id) {
+    public ResponseEntity<?> updateEmail(@RequestBody UserProfile userProfile, 
+            @PathVariable("id") String id, HttpServletRequest request) {
         if (userProfile.getEmail() != null) {
             try {
+                IdentityUser logedUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
                 String tokenAdmin = adminUtilsService.getAdmintoken();
-                UserProfile original = userProfileRepository.findOne(id);
-                if (original != null) {
+                if (logedUser != null) {
                     if (userProfile.getId() != null) {
                         LOGGER.warn("ID from object is ignored");
                     }
 
-                    userProfile.setId(id);
+                    userProfile.setId(logedUser.getMongoId());
                     userProfileRepository.save(userProfile);
                     CreateUser user = new CreateUser();
-                    user.getUser().setId(original.getKeystoneId());
+                    user.getUser().setId(logedUser.getIdmId());
                     user.getUser().setName(userProfile.getEmail());
-                    userService.updateUser(original.getKeystoneId(), tokenAdmin, user);
+                    userService.updateUser(logedUser.getIdmId(), tokenAdmin, user);
 
                     return ResponseEntity.accepted().body("updated");
                 } else {
