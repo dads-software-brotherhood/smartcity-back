@@ -90,6 +90,7 @@ public class MailServiceImpl implements MailService {
     private String getTemplate(TemplatesEnum templateEnum, Email email) throws ServiceException {
         email.setFrom(from);
         Map<String, Object> values = new HashMap<>();
+        values.put("frontUrl", frontUrl);
         String url = "";
         try {
             Template template = freemarkerConfiguration.getTemplate(templateEnum.value(), Constants.ENCODING); //Habria que ver la optimizacion, solo se debe pedir una vez
