@@ -369,7 +369,7 @@ public class KeystoneUserServiceImpl implements UserService {
             List<mx.infotec.smartcity.backend.service.keystone.pojo.token.Role> roles) {
         Set<Role> rolesEnum = new HashSet<>();
         for (mx.infotec.smartcity.backend.service.keystone.pojo.token.Role role : roles) {
-            Role roleEnum = RoleUtil.validateRole(role.getName().toUpperCase());
+            Role roleEnum = RoleUtil.validateRole(role.getName());
             if (roleEnum != null) {
                 rolesEnum.add(roleEnum);
             }
