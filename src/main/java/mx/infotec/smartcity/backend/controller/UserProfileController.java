@@ -12,11 +12,10 @@ import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.model.Vehicle;
-import mx.infotec.smartcity.backend.model.VehicleType;
-import mx.infotec.smartcity.backend.persistence.TokenRecoveryRepository;
 import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.UserService;
+import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.mail.MailService;
 import mx.infotec.smartcity.backend.service.recovery.TokenRecoveryService;
 import mx.infotec.smartcity.backend.utils.Constants;
@@ -417,6 +416,40 @@ public class UserProfileController {
         }
     }
 
+    
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{id}")
+    public ResponseEntity<?> updateEmail(@RequestBody UserProfile userProfile, 
+            @PathVariable("id") String id, HttpServletRequest request) {
+        if (userProfile.getEmail() != null) {
+            try {
+                IdentityUser logedUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
+                String tokenAdmin = adminUtilsService.getAdmintoken();
+                if (logedUser != null) {
+                    if (userProfile.getId() != null) {
+                        LOGGER.warn("ID from object is ignored");
+                    }
+
+                    userProfile.setId(logedUser.getMongoId());
+                    userProfileRepository.save(userProfile);
+                    CreateUser user = new CreateUser();
+                    user.getUser().setId(logedUser.getIdmId());
+                    user.getUser().setName(userProfile.getEmail());
+                    userService.updateUser(logedUser.getIdmId(), tokenAdmin, user);
+
+                    return ResponseEntity.accepted().body("updated");
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
+                }
+            } catch (Exception ex) {
+                LOGGER.error("Error at update", ex);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+            }
+        } else {
+            LOGGER.error("Invalid userProfile: {}", userProfile);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required field email not present in request");
+        }
+    }
+    
     private boolean isValid(UserProfile userProfile) {
         Date currentDate = new Date();
 

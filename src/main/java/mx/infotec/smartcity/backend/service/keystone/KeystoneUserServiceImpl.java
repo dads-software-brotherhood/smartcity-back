@@ -457,6 +457,8 @@ public class KeystoneUserServiceImpl implements UserService {
                 for (UserProfile item : usersProfileList) {
                     if (item.getName().equals(idmUsr)) {
                         continue;
+                    } else if (item.getKeystoneId() == null) {
+                        continue;
                     }
                     UserModel model = setUserModelProperties(item);
                     Roles rolesByUser =
