@@ -1,0 +1,263 @@
+{
+	"type": "Alert",
+	"alertType": "TrafficJam",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Paseo de la Reforma",
+	"dataTime": {$date:"2017-01-02T09:25:55.00Z"},
+	"severity": 1,
+	"description": "Traffic jam in Paseo de la Reforma. Emergency services at place",
+	"refUser": "https://account.lab.fiware.org/users/8"
+}
+{
+	"type": "Alert",
+	"alertType": "TrafficJam",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Tlalpan",
+	"dataTime": {$date:"2017-01-03T09:25:55.00Z"},
+	"severity": 2,
+	"description": "Traffic Jam in Calzada Tlalpan from south to north near Azteca stadium",
+	"refDevice": "Device:2"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Universidad",
+	"dataTime": {$date:"2017-01-04T09:25:55.00Z"},
+	"severity": 3,
+	"description": "Reported accident in Universidad avenue, slow transit",
+	"refUser": "https://account.lab.fiware.org/users/3"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Tacuba",
+	"dataTime": {$date:"2017-01-05T09:25:55.00Z"},
+	"severity": 1,
+	"description": "Accident reported on Tacuba road, ambulances stop traffic",
+	"refDevice": "Device:3"
+}
+{
+	"type": "Alert",
+	"alertType": "WeatherConditions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"CDMX",
+	"dataTime": {$date:"2017-01-06T09:25:55.00Z"},
+	"severity": 2,
+	"description": "Sunny with no chance of rain",
+	"refUser": "https://account.lab.fiware.org/users/4"
+}
+{
+	"type": "Alert",
+	"alertType": "WeatherConditions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"CDMX",
+	"dataTime": {$date:"2017-01-07T09:25:55.00Z"},
+	"severity": 3,
+	"description": "High probability of rain in the Valley of Mexico",
+	"refDevice": "Device:4"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollutions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Tlalpan",
+	"dataTime": {$date:"2017-01-08T09:25:55.00Z"},
+	"severity":1,
+	"description": "Low levels of pollution at the exit of Cuernavaca",
+	"refUser": "https://account.lab.fiware.org/users/5"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollutions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"CDMX",
+	"dataTime": {$date:"2017-01-09T09:25:55.00Z"},
+	"severity": 2,
+	"description": "Contamination in maximum level, avoid to transit near the center of the city",
+	"refDevice": "Device:5"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Paseo de la Reforma",
+	"dataTime": {$date:"2017-01-10T09:25:55.00Z"},
+	"severity": 3,
+	"description": "High level of pollen in Paseo de la Reforma",
+	"refUser": "https://account.lab.fiware.org/users/6"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Polanco",
+	"dataTime": {$date:"2017-01-11T09:25:55.00Z"},
+	"severity": 1,
+	"description": "High level of pollen in Polanco",
+	"refDevice": "Device:6"
+}
+{
+	"type": "Alert",
+	"alertType": "TrafficJam",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Insurgentes avenue",
+	"dataTime": {$date:"2017-01-05T09:25:55.00Z"},
+	"severity": 1,
+	"description": "Traffic jam in Insurgentes avenue. Police at place",
+	"refUser": "https://account.lab.fiware.org/users/7"
+}
+{
+	"type": "Alert",
+	"alertType": "TrafficJam",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Montevideo avenue",
+	"dataTime": {$date:"2017-01-07T09:25:55.00Z"},
+	"severity": 2,
+	"description": "Traffic Jam in Montevideo avenue from south to north near Politecnico",
+	"refDevice": "Device:7"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Chapultepec avenue",
+	"dataTime": {$date:"2017-01-10T09:25:55.00Z"},
+	"severity": 3,
+	"description": "Reported accident in Chapultepec avenue, slow transit",
+	"refUser": "https://account.lab.fiware.org/users/8"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Tacuba",
+	"dataTime": {$date:"2017-01-15T09:25:55.00Z"},
+	"severity": 1,
+	"description": "Accident reported on Tacuba road, ambulances stop traffic",
+	"refDevice": "Device:8"
+}
+{
+	"type": "Alert",
+	"alertType": "WeatherConditions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"CDMX",
+	"dataTime": {$date:"2017-01-18T09:25:55.00Z"},
+	"severity": 2,
+	"description": "Sunny with no chance of rain",
+	"refUser": "https://account.lab.fiware.org/users/9"
+}
+{
+	"type": "Alert",
+	"alertType": "WeatherConditions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"CDMX",
+	"dataTime": {$date:"2017-01-19T09:25:55.00Z"},
+	"severity": 3,
+	"description": "High probability of rain in the Valley of Mexico",
+	"refDevice": "Device:9"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollutions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Tlalpan Sur",
+	"dataTime": {$date:"2017-01-19T10:25:55.00Z"},
+	"severity":1,
+	"description": "Low levels of pollution at the exit of Cuernavaca",
+	"refUser": "https://account.lab.fiware.org/users/10"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollutions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Centro CDMX",
+	"dataTime": {$date:"2017-01-04T09:25:55.00Z"},
+	"severity": 2,
+	"description": "Contamination in maximum level, avoid to transit near the center of the city",
+	"refDevice": "Device:10"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Paseo de la Reforma",
+	"dataTime": {$date:"2017-01-01T09:25:55.00Z"},
+	"severity": 3,
+	"description": "High level of pollen in Paseo de la Reforma",
+	"refUser": "https://account.lab.fiware.org/users/8"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Polanco",
+	"dataTime": {$date:"2017-01-06T09:25:55.00Z"},
+	"severity": 1,
+	"description": "High level of pollen in Polanco",
+	"refDevice": "Device:1"
+}
+
+
+
