@@ -8,6 +8,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import mx.infotec.smartcity.backend.filter.AdminFilter;
 import mx.infotec.smartcity.backend.filter.LoggedUserFilter;
 import mx.infotec.smartcity.backend.filter.SelfDataEditFilter;
 
@@ -23,6 +25,7 @@ import mx.infotec.smartcity.backend.filter.SelfDataEditFilter;
  * @author infotec
  */
 @SpringBootApplication
+@EnableScheduling
 public class Application extends SpringBootServletInitializer {
 
     @Bean
@@ -91,7 +94,23 @@ public class Application extends SpringBootServletInitializer {
     public Filter selfDataEditFilter() {
         return new SelfDataEditFilter();
     }
+    
+    @Bean
+    public FilterRegistrationBean adminFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(adminFilter());
+        registration.addServletNames("adminFilter");
+//        registration.addUrlPatterns("/admin/*","/user-profile/*", "/public-transports/*", "/groups/*", "/rules/*");
+        registration.addUrlPatterns("/rules/*");
+        registration.setOrder(3);
+        return registration;
+    }
 
+    @Bean
+    public Filter adminFilter() {
+        return new AdminFilter();
+    }
+    
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }

@@ -3,6 +3,7 @@ package mx.infotec.smartcity.backend.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.Date;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 /**
  *
@@ -15,6 +16,7 @@ public class Vehicle implements Serializable {
     
     private String name;
     private String description;
+    @DBRef
     private VehicleType vehicleType;
     private String brandName;
     private String modelName;

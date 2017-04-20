@@ -9,13 +9,13 @@ import mx.infotec.smartcity.backend.model.Address;
 import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.HealthProfile;
 import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.model.Vehicle;
-import mx.infotec.smartcity.backend.model.VehicleType;
-import mx.infotec.smartcity.backend.persistence.TokenRecoveryRepository;
 import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.UserService;
+import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
 import mx.infotec.smartcity.backend.service.mail.MailService;
 import mx.infotec.smartcity.backend.service.recovery.TokenRecoveryService;
 import mx.infotec.smartcity.backend.utils.Constants;
@@ -23,6 +23,7 @@ import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +55,9 @@ public class UserProfileController {
     @Autowired
     private TokenRecoveryService tokenRecoveryService;
 
+    @Value("${idm.admin.username}")
+    private String idmUser;
+
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getByEmail(@RequestParam("email") String email) {
         UserProfile userProfile = userProfileRepository.findByEmail(email);
@@ -72,18 +76,18 @@ public class UserProfileController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public ResponseEntity<?> deleteByID(@PathVariable String id, HttpServletRequest request) {
-        try {
-            UserProfile userProfile = userProfileRepository.findOne(id);
-            userProfileRepository.delete(id);
+        IdentityUser identityUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
 
-            IdentityUser identityUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
+        if (identityUser == null || identityUser.getUsername().equals(idmUser) || (identityUser.getRoles() != null && identityUser.getRoles().contains(Role.SA))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't delete this account");
+        } else {
+            try {
+                UserProfile userProfile = userProfileRepository.findOne(id);
+                userProfileRepository.delete(id);
 
-            if (identityUser == null) {
-                LOGGER.warn("IdentityUser is null");
-            } else {
                 String adminToken = adminUtilsService.getAdmintoken();
                 userService.deleteUser(identityUser.getIdmId(), adminToken);
-                
+
                 tokenRecoveryService.deleteAllByEmail(identityUser.getUsername());
 
                 try {
@@ -93,24 +97,23 @@ public class UserProfileController {
                     Map<String, Object> map = new HashMap<>();
 
                     if (userProfile == null) {
-                        map.put("userName", "User");
+                        map.put(Constants.GENERAL_PARAM_NAME, "User");
                     } else {
-                        map.put("userName", userProfile.getName());
+                        map.put(Constants.GENERAL_PARAM_NAME, userProfile.getName());
                     }
 
                     email.setContent(map);
 
-                    mailService.sendMail(TemplatesEnum.DELETE_ACCOUNT_MAIL, email);
+                    mailService.sendMail(TemplatesEnum.DELETE_SIMPLE_ACCOUNT, email);
                 } catch (Exception ex) {
                     LOGGER.error("Error at send mail", ex);
                 }
 
+                return ResponseEntity.accepted().body("deleted");
+            } catch (Exception ex) {
+                LOGGER.error("Error at delete", ex);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
             }
-
-            return ResponseEntity.accepted().body("deleted");
-        } catch (Exception ex) {
-            LOGGER.error("Error at delete", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
         }
     }
 
@@ -413,6 +416,40 @@ public class UserProfileController {
         }
     }
 
+    
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{id}")
+    public ResponseEntity<?> updateEmail(@RequestBody UserProfile userProfile, 
+            @PathVariable("id") String id, HttpServletRequest request) {
+        if (userProfile.getEmail() != null) {
+            try {
+                IdentityUser logedUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
+                String tokenAdmin = adminUtilsService.getAdmintoken();
+                if (logedUser != null) {
+                    if (userProfile.getId() != null) {
+                        LOGGER.warn("ID from object is ignored");
+                    }
+
+                    userProfile.setId(logedUser.getMongoId());
+                    userProfileRepository.save(userProfile);
+                    CreateUser user = new CreateUser();
+                    user.getUser().setId(logedUser.getIdmId());
+                    user.getUser().setName(userProfile.getEmail());
+                    userService.updateUser(logedUser.getIdmId(), tokenAdmin, user);
+
+                    return ResponseEntity.accepted().body("updated");
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
+                }
+            } catch (Exception ex) {
+                LOGGER.error("Error at update", ex);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+            }
+        } else {
+            LOGGER.error("Invalid userProfile: {}", userProfile);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required field email not present in request");
+        }
+    }
+    
     private boolean isValid(UserProfile userProfile) {
         Date currentDate = new Date();
 
@@ -430,7 +467,7 @@ public class UserProfileController {
             return false;
         } else if (vehicle.getName() == null || vehicle.getVehicleType() == null || vehicle.getFuelType() == null) {
             return false;
-        } else if (vehicle.getVehicleType() == VehicleType.CAR || vehicle.getVehicleType() == VehicleType.MOTORCYCLE) {
+        } else if (vehicle.getVehicleType().getIncludeBrandModel()) {
             return vehicle.getBrandName() != null && vehicle.getModelName() != null;
         } else {
             return true;

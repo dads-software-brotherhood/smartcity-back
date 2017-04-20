@@ -26,6 +26,7 @@ import mx.infotec.smartcity.backend.utils.Constants;
 import mx.infotec.smartcity.backend.utils.TemplatesEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 @RestController
 public class RegisterController {
@@ -40,6 +41,10 @@ public class RegisterController {
 
   @Autowired
   private AdminUtilsService    adminUtils;
+
+  @Value("${idm.admin.username}")
+  private String              idmUser;
+  
   
   @RequestMapping(value = "/register", method = RequestMethod.POST,
       consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -51,7 +56,7 @@ public class RegisterController {
       user.setEnabled(false);
       CreateUser createUser = new CreateUser(user);
       if (!keystoneUserService.isRegisteredUser(user.getName())
-          && keystoneUserService.createUserAndSendMail(createUser, TemplatesEnum.MAIL_SAMPLE2)) {
+          && keystoneUserService.createUserAndSendMail(createUser, TemplatesEnum.CREATE_SIMPLE_ACCOUNT)) {
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
       }
@@ -88,23 +93,29 @@ public class RegisterController {
     }
   }
   
-  @RequestMapping(value = "/register/update-password", method = RequestMethod.POST,
-      consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public ResponseEntity<?> updatePassword(@RequestHeader(name = Constants.AUTH_TOKEN_HEADER) String token,
-      @RequestBody mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_ user,
+    @RequestMapping(value = "/register/update-password", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<?> updatePassword(@RequestHeader(name = Constants.AUTH_TOKEN_HEADER) String token,
+            @RequestBody mx.infotec.smartcity.backend.service.keystone.pojo.changePassword.User_ user,
             HttpServletRequest request) {
-    try {
-        if (keystoneUserService.changePassword(user, token)) {
-            //El usuario logueado
-            IdentityUser identityUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
-          return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
+        //The logged user
+        IdentityUser identityUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
+
+        // Can't change idm password
+        if (identityUser == null || identityUser.getUsername().equals(idmUser)) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
         } else {
-          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad password"); //Nunca llega a este paso
+            try {
+                if (keystoneUserService.changePassword(user, token)) {
+                    return ResponseEntity.status(HttpStatus.ACCEPTED).body("Success");
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad password"); //Nunca llega a este paso
+                }
+            } catch (ServiceException e) {
+                LOGGER.error(null, e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+            }
         }
-    } catch (ServiceException e) {
-        LOGGER.error(null, e);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
     }
-  }
 
 }

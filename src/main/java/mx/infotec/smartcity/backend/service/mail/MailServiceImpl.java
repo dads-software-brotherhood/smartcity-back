@@ -34,8 +34,6 @@ public class MailServiceImpl implements MailService {
     
     private final static Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
 
-//  @Autowired
-//  private MailSender mailsernder;
     private JavaMailSender mailSender;
 
     @Autowired
@@ -54,6 +52,9 @@ public class MailServiceImpl implements MailService {
     
     @Value("${spring.mail.active}")
     private boolean active;
+    
+    @Value(value = "spring.mail.support")
+    private String supportEmail;
     
     @Override
     public boolean sendMail(TemplatesEnum templateId, Email email) {
@@ -89,25 +90,36 @@ public class MailServiceImpl implements MailService {
     private String getTemplate(TemplatesEnum templateEnum, Email email) throws ServiceException {
         email.setFrom(from);
         Map<String, Object> values = new HashMap<>();
+        values.put("frontUrl", frontUrl);
         String url = "";
         try {
             Template template = freemarkerConfiguration.getTemplate(templateEnum.value(), Constants.ENCODING); //Habria que ver la optimizacion, solo se debe pedir una vez
             switch (templateEnum) {
-                case MAIL_SAMPLE:
+                case RECOVERY_PASSWORD_EMAIL:
                     url = String.format("%s%s%s", frontUrl, Constants.RECOVERY_PASSWORD_URL, email.getMessage());
-                    values.put("from", email.getFrom());
-                    values.put("to", email.getTo());
-                    values.put("message", url);
+                    values.put("name", email.getContent().get(Constants.GENERAL_PARAM_NAME));
+                    values.put("recoveryLink", url);
 
                     break;
-                case MAIL_SAMPLE2:
+                case CREATE_USER_BY_ADMIN:
+                    url = String.format("%s%s%s", frontUrl, Constants.RECOVERY_PASSWORD_URL, email.getMessage());
+                    values.put("name", email.getContent().get(Constants.GENERAL_PARAM_NAME));
+                    values.put("recoveryLink", url);
+
+                    break;
+                case DELETE_ACCOUNT_MAIL:
+                    values.put("name", email.getContent().get(Constants.GENERAL_PARAM_NAME));
+                    values.put("support_email", supportEmail);
+                    
+                    break;
+                case CREATE_SIMPLE_ACCOUNT:
                     url = String.format("%s%s%s", frontUrl, Constants.VALIDATE_ACCOUNT_URL, email.getMessage());
-                    values.put("from", email.getFrom());
-                    values.put("to", email.getTo());
-                    values.put("message", url);
-
+                    values.put("recoveryUrl", url);
                     break;
-
+                    
+                case DELETE_SIMPLE_ACCOUNT:
+                    values.put("name", email.getContent().get(Constants.GENERAL_PARAM_NAME));
+                    break;
                 default:
                     values.put("message", email.getMessage());
                     values.put("content", email.getContent());

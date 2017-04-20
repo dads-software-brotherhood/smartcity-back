@@ -19,8 +19,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.service.LoginService;
-import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
-import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.utils.Constants;
 
 /**

@@ -9,14 +9,15 @@ spring:
         host: smtp.gmail.com
         port: 587
         protocol: smtp
-        from: gitlab.infotec@gmail.com
-        username: gitlab.infotec@gmail.com
-        password: 
+        from: test.smartcity.sdk@gmail.com
+        username: test.smartcity.sdk@gmail.com
+        password:
         tls: true
         properties.mail.smtp:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
+        support: smartcityapp@smartsdk.eu
     jackson:
         date-format: yyyy-MM-dd
 
@@ -45,18 +46,19 @@ spring:
         mongodb:
             database: smartcity
     mail:
-        active: false
+        active: true
         host: smtp.gmail.com
         port: 587
         protocol: smtp
-        from: gitlab.infotec@gmail.com
-        username: gitlab.infotec@gmail.com
-        password: 
+        from: test.smartcity.sdk@gmail.com
+        username: test.smartcity.sdk@gmail.com
+        password:
         tls: true
         properties.mail.smtp:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
+        support: smartcityapp@smartsdk.eu
     jackson:
         date-format: yyyy-MM-dd
 
@@ -89,14 +91,15 @@ spring:
         host: smtp.gmail.com
         port: 587
         protocol: smtp
-        from: gitlab.infotec@gmail.com
-        username: gitlab.infotec@gmail.com
+        from: test.smartcity.sdk@gmail.com
+        username: test.smartcity.sdk@gmail.com
         password: 
         tls: true
         properties.mail.smtp:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
+        support: smartcityapp@smartsdk.eu
     jackson:
         date-format: yyyy-MM-dd
 
@@ -130,14 +133,15 @@ spring:
         host: smtp.gmail.com
         port: 587
         protocol: smtp
-        from: gitlab.infotec@gmail.com
-        username: gitlab.infotec@gmail.com
-        password: 
+        from: test.smartcity.sdk@gmail.com
+        username: test.smartcity.sdk@gmail.com
+        password:
         tls: true
         properties.mail.smtp:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
+        support: smartcityapp@smartsdk.eu
     jackson:
         date-format: yyyy-MM-dd
 

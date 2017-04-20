@@ -18,5 +18,7 @@ public interface TokenRecoveryService {
   
   void deleteById(String id);
   void deleteAllByEmail(String email);
+  
+  void deleteExpiredToken();
  
 }
