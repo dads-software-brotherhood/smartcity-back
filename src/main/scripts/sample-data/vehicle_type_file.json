@@ -1,3 +1,3 @@
-{"id": "58f68a6f49f69624dc0c4bd4","name": "CAR","includeBrandModel": true}
-{"id": "58f68a7749f69624dc0c4bd5","name": "MOTORCYCLE","includeBrandModel": true}
-{"id": "58f68a8349f69624dc0c4bd6","name": "BYCICLE","includeBrandModel": false}
+{"_id": 1,"name": "CAR","includeBrandModel": true}
+{"_id": 2,"name": "MOTORCYCLE","includeBrandModel": true}
+{"_id": 3,"name": "BYCICLE","includeBrandModel": false}

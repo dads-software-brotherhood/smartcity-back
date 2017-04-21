@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import mx.infotec.smartcity.backend.persistence.VehicleTypeRepository;
+import org.springframework.data.domain.Sort;
  /*
  * @author jose.gomez
  */
@@ -45,7 +46,7 @@ public class VehiclesTypeController {
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public VehicleType getById(@PathVariable String id) {
+    public VehicleType getById(@PathVariable Integer id) {
         return vehicleTypesRepository.findOne(id);
     }
     
@@ -57,6 +58,11 @@ public class VehiclesTypeController {
       try {
         vehicleType.setDateCreated(new Date());
         vehicleType.setDateModified(new Date());
+        //Add this code lines to set numeric id to vehicle type////////////////////////////////////////
+        Integer newId = 0;
+        newId = vehicleTypesRepository.findAll(new Sort(Sort.Direction.DESC, "id")).get(0).getId();
+        vehicleType.setId(newId + 1);
+        //////////////////////////////////////////////////////////////////////////////////////////////
         VehicleType VehicleRepro = vehicleTypesRepository.insert(vehicleType);
         return ResponseEntity.accepted().body(VehicleRepro);
       } catch (Exception ex) {
@@ -68,7 +74,7 @@ public class VehiclesTypeController {
     
   @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
   value = "/{id}")
-  public ResponseEntity<?> update(@RequestBody VehicleType vehiclesType, @PathVariable("id") String id) {
+  public ResponseEntity<?> update(@RequestBody VehicleType vehiclesType, @PathVariable("id") Integer id) {
     try {
       if (vehicleTypesRepository.exists(id)) {
         if (vehiclesType.getId() != null)
@@ -89,7 +95,7 @@ public class VehiclesTypeController {
   }
   
   @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-  public ResponseEntity<?> deleteByID(@PathVariable String id) {
+  public ResponseEntity<?> deleteByID(@PathVariable Integer id) {
     try {
       vehicleTypesRepository.delete(id);
       return ResponseEntity.accepted().body("deleted");

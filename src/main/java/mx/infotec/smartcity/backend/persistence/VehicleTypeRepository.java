@@ -12,6 +12,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  *
  * @author jose.gomez
  */
-public interface VehicleTypeRepository extends MongoRepository<VehicleType, String> {
+public interface VehicleTypeRepository extends MongoRepository<VehicleType, Integer> {
     VehicleType findByName(String vehicleTypeName);
 }

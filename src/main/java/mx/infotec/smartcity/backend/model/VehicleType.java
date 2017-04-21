@@ -19,18 +19,18 @@ public class VehicleType implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
-    private String id;
+    private Integer id;
     @Indexed(unique = true)
     private String name;
     private Boolean includeBrandModel;
     private Date dateCreated;
     private Date dateModified;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -65,5 +65,5 @@ public class VehicleType implements Serializable {
     public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
     }
-
+    
 }
