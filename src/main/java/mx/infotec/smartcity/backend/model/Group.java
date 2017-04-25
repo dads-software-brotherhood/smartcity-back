@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Group {
 
   @JsonProperty("id")
-  private String id;
+  private Integer id;
   @JsonProperty("type")
   @NotEmpty
   private String type;
@@ -30,12 +30,12 @@ public class Group {
   
 
   @JsonProperty("id")
-  public String getId() {
+  public Integer getId() {
     return id;
   }
 
   @JsonProperty("id")
-  public void setId(String id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
