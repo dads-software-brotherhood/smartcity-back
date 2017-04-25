@@ -26,7 +26,6 @@ import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.TokenInfo;
 import mx.infotec.smartcity.backend.model.TokenType;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
-import mx.infotec.smartcity.backend.service.RoleService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
@@ -58,20 +57,11 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
     private AdminUtilsService adminUtils;
 
     @Autowired
-    @Qualifier("keystoneRoleService")
-    private RoleService roleService;
-    @Autowired
     @Qualifier("keystoneUserService")
     private UserService userService;
 
     @Value("${idm.servers.keystone}")
     private String keystonUrl;
-
-    @Value("${idm.default.domain}")
-    private String defaultDomain;
-
-    @Value("${idm.admin.username}")
-    private String adminUser;
 
     private String tokenRequestUrl;
 
@@ -145,25 +135,6 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
         } else {
             return null;
         }
-
-        // RestTemplate restTemplate = new RestTemplate();
-        // restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-        // if (isValidToken(token)) {
-        // HttpHeaders headers = new HttpHeaders();
-        // headers.add(Constants.AUTH_TOKEN_HEADER, token);
-        // headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
-        // HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
-        // try {
-        // HttpEntity<Response> responseEntity =
-        // restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
-        // return convert(responseEntity);
-        // } catch (RestClientException e) {
-        // LOGGER.error("Error al buscar la inforación del token, causa: ", e);
-        // throw new RestClientException("Error al buscar la inforación del token, causa: ", e);
-        // }
-        // } else {
-        // return null;
-        // }
     }
 
     @Override
@@ -253,7 +224,7 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
                 Set<Role> roles = new HashSet<>();
 
                 response.getToken().getRoles().forEach((role) -> {
-                    Role roleKey = RoleUtil.getInstance().validateRole(role.getName());
+                    Role roleKey = RoleUtil.validateRole(role.getName());
                     if (roleKey != null) {
                         roles.add(roleKey);
                     }
