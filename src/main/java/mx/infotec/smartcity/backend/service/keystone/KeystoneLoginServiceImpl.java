@@ -26,6 +26,7 @@ import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.TokenInfo;
 import mx.infotec.smartcity.backend.model.TokenType;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
+import mx.infotec.smartcity.backend.service.RoleService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException;
 import mx.infotec.smartcity.backend.service.exception.InvalidTokenException;
@@ -36,6 +37,7 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.Identity;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Response;
 import mx.infotec.smartcity.backend.service.keystone.pojo.User;
+import mx.infotec.smartcity.backend.service.keystone.pojo.roles.Roles;
 import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token_;
 import mx.infotec.smartcity.backend.utils.Constants;
 import mx.infotec.smartcity.backend.utils.RoleUtil;
@@ -60,6 +62,9 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
     @Qualifier("keystoneUserService")
     private UserService userService;
 
+    @Autowired
+    private RoleService roleService;
+    
     @Value("${idm.servers.keystone}")
     private String keystonUrl;
 
@@ -231,6 +236,30 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
                 });
 
                 idmUser.setRoles(roles);
+            } else {
+                // TODO: Eliminar esta opcion cuando se corrija la asignacion de roles
+                
+                LOGGER.warn("Try find roles by admin method");
+                
+                try {
+                    String adminToken = adminUtils.getAdmintoken();
+                    Set<Role> roleSet = new HashSet<>();
+                    
+                    Roles roles = roleService.getRoleUserDefaultDomain(response.getToken().getUser().getId(), adminToken);
+                    
+                    if (roles != null && roles.getRoles() != null) {
+                        roles.getRoles().forEach((role) -> {
+                            Role roleKey = RoleUtil.validateRole(role.getName());
+                            if (roleKey != null) {
+                                roleSet.add(roleKey);
+                            }
+                        });
+                    }
+                    
+                    idmUser.setRoles(roleSet);
+                } catch (Exception ex) {
+                    LOGGER.error("Error", ex);
+                }
             }
 
             TokenInfo token = new TokenInfo();
