@@ -12,7 +12,4 @@ public interface KeystoneLoginService extends LoginService {
 
     AuthTokenInfo performAuthToken(String username, char[] password) throws InvalidCredentialsException;
 
-    public AuthTokenInfo performAuthToken(String username, char[] password, boolean isAdmin)
-            throws InvalidCredentialsException;
-
 }

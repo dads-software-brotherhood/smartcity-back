@@ -71,6 +71,11 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
 
     private String tokenRequestUrl;
 
+    // TODO remove this once the sistem has his own admin and not using anymore
+    // idm
+    @Value("${idm.admin.username}")
+    private String idmUser;
+
     @PostConstruct
     protected void init() {
         tokenRequestUrl = keystonUrl + "/v3/auth/tokens";
@@ -89,33 +94,9 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
     }
 
     @Override
-    @Deprecated
     public AuthTokenInfo performAuthToken(String username, char[] password) throws InvalidCredentialsException {
         try {
-            HttpEntity<Response> responseEntity = performRestLogin(username, password);
-
-            AuthTokenInfo authTokenInfo = new AuthTokenInfo();
-            authTokenInfo.setTokenResponse(responseEntity.getBody().getToken());
-
-            HttpHeaders headers = responseEntity.getHeaders();
-
-            List<String> tmp = headers.get(Constants.SUBJECT_TOKEN_HEADER);
-
-            if (!tmp.isEmpty()) {
-                authTokenInfo.setAuthToken(tmp.get(0));
-            }
-
-            return authTokenInfo;
-        } catch (Exception ex) {
-            throw new InvalidCredentialsException(ex);
-        }
-    }
-
-    @Override
-    public AuthTokenInfo performAuthToken(String username, char[] password, boolean isAdmin)
-            throws InvalidCredentialsException {
-        try {
-            HttpEntity<Response> responseEntity = performRestLogin(username, password, isAdmin);
+            HttpEntity<Response> responseEntity = performRestLogin(username, password, true);
 
             AuthTokenInfo authTokenInfo = new AuthTokenInfo();
             authTokenInfo.setTokenResponse(responseEntity.getBody().getToken());
@@ -141,7 +122,8 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
         Request request;
         // not logging in with scope for idm user because else getting error
         // not authorized
-        if (isAdmin) {
+        // TODO remove username.equals(idmUser) should not be used in the future
+        if (isAdmin || username.equals(idmUser)) {
             request = new Request(new User(username, new String(password)));
         } else {
             request = new Request(new User(username, new String(password)), this.defaultDomain);

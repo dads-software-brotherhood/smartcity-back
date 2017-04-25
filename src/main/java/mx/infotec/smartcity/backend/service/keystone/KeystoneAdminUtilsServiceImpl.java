@@ -38,7 +38,7 @@ public class KeystoneAdminUtilsServiceImpl implements AdminUtilsService {
     @Override
     public String getAdmintoken() throws ServiceException {
         try {
-            AuthTokenInfo authTokenInfo = loginService.performAuthToken(idmUser, idmPassword, true);
+            AuthTokenInfo authTokenInfo = loginService.performAuthToken(idmUser, idmPassword);
             return authTokenInfo.getAuthToken();
         } catch (InvalidCredentialsException e) {
             LOGGER.error("No se pudo validar el usuario admin, causa: ", e);
