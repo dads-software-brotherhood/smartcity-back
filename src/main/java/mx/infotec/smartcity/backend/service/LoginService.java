@@ -23,7 +23,7 @@ public interface LoginService extends Serializable {
    * @throws mx.infotec.smartcity.backend.service.exception.InvalidCredentialsException
    */
   IdentityUser performLogin(String username, char[] password) throws InvalidCredentialsException;
-
+  
   IdentityUser findUserByValidToken(String token) throws InvalidTokenException, ServiceException;
 
   TokenInfo refreshToken(String token) throws InvalidTokenException;
