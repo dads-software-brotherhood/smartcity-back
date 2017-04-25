@@ -100,8 +100,8 @@ public class Application extends SpringBootServletInitializer {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(adminFilter());
         registration.addServletNames("adminFilter");
-//        registration.addUrlPatterns("/admin/*","/user-profile/*", "/public-transports/*", "/groups/*", "/rules/*");
-        registration.addUrlPatterns("/rules/*");
+        registration.addUrlPatterns("/admin/*","/user-profile/*", "/public-transports/*", "/groups/*", "/rules/*");
+//        registration.addUrlPatterns("/rules/*");
         registration.setOrder(3);
         return registration;
     }

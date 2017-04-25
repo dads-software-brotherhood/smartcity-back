@@ -44,7 +44,7 @@ public class AdminFilter implements Filter {
             switch (defaultRole) {
                 case ADMIN:
 
-                    if (!uri.contains(Constants.URL_GROUPS) || !uri.contains(Constants.URL_RULES)) {
+                    if (uri.contains(Constants.URL_GROUPS) || uri.contains(Constants.URL_RULES)) {
                         httpResponse.sendError(HttpStatus.SC_UNAUTHORIZED, "Unauthorized");
                     } else {
                         filterChain.doFilter(request, response);
@@ -69,7 +69,9 @@ public class AdminFilter implements Filter {
                     }
 
                     break;
-
+                case SA:
+                    filterChain.doFilter(request, response);                    
+                    break;
                 default:
                     break;
             }
