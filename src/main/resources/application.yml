@@ -33,7 +33,7 @@ idm:
         username: idm
         password: idm
     default:
-        domain: default
+        project.id: idm_project
 front:
     url: http://localhost:4200/#
     image-url: http://localhost:4200
@@ -75,7 +75,7 @@ idm:
         username: idm
         password: idm
     default:
-        domain: default
+        project.id: idm_project
 front:
     url: http://localhost:4200/#
     image-url: http://localhost:4200
@@ -118,7 +118,7 @@ idm:
         username: idm
         password: idm
     default:
-        domain: default
+        project.id: idm_project
 front:
     url: http://207.249.127.180/#
     image-url: http://207.249.127.180
@@ -161,7 +161,7 @@ idm:
         username: idm
         password: idm
     default:
-        domain: default
+        project.id: idm_project
 front:
     url: http://207.249.127.91/#
     image-url: http://207.249.127.180

@@ -59,7 +59,7 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
     @Autowired
     @Qualifier("keystoneUserService")
     private UserService userService;
-
+    
     @Value("${idm.servers.keystone}")
     private String keystonUrl;
 
@@ -219,7 +219,7 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
             return null;
         } else {
             IdentityUser idmUser = new IdentityUser();
-
+            
             if (response.getToken().getRoles() != null) {
                 Set<Role> roles = new HashSet<>();
 
@@ -257,5 +257,5 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
             return idmUser;
         }
     }
-
+    
 }

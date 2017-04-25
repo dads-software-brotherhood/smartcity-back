@@ -98,6 +98,9 @@ public class KeystoneUserServiceImpl implements UserService {
     @Value("${idm.servers.keystone}")
     private String                keystonUrl;
 
+    @Value("${idm.default.project.id}")
+    private String              projectId;
+    
     private String                userUrl;
     private String                changePasswordUrl;
     private String                updateUserUrl;
@@ -140,6 +143,7 @@ public class KeystoneUserServiceImpl implements UserService {
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        user.getUser().setDefaultProjectId(projectId);        
         try {
             String tokenAdmin = adminUtils.getAdmintoken();
             headers.set(Constants.AUTH_TOKEN_HEADER, tokenAdmin);
@@ -158,6 +162,7 @@ public class KeystoneUserServiceImpl implements UserService {
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        user.getUser().setDefaultProjectId(projectId);        
         try {
             String tokenAdmin = adminUtils.getAdmintoken();
             headers.set(Constants.AUTH_TOKEN_HEADER, tokenAdmin);
@@ -167,7 +172,7 @@ public class KeystoneUserServiceImpl implements UserService {
             CreateUser createdUser = httpCreatedUser.getBody();
             String userId = createdUser.getUser().getId();
             String adminToken = this.adminUtils.getAdmintoken();
-            roleService.assignRoleToUserOnDefaultDomain(RoleUtil.getInstance().getIdRole(role),
+            roleService.assignRoleToUserOnDefaultProject(RoleUtil.getInstance().getIdRole(role),
                     userId, adminToken);
             return createdUser;
         } catch (Exception e) {
@@ -342,7 +347,7 @@ public class KeystoneUserServiceImpl implements UserService {
                 rolesEnum.addAll(roles);
             }
             Set<Role> roles2 = convertRolesFromRoles(
-                    this.roleService.getRoleUserDefaultDomain(token.getUser().getId(), tokenAdmin).getRoles());
+                    this.roleService.getRoleUserDefaultProject(token.getUser().getId(), tokenAdmin).getRoles());
 
             rolesEnum.addAll(roles2);
             idu.setRoles(rolesEnum);
@@ -462,8 +467,8 @@ public class KeystoneUserServiceImpl implements UserService {
                     }
                     UserModel model = setUserModelProperties(item);
                     Roles rolesByUser =
-                            roleService.getRoleUserDefaultDomain(item.getKeystoneId(), tokenAdmin);
-                    if (rolesByUser == null || item.getKeystoneId() == null) {
+                            roleService.getRoleUserDefaultProject(item.getKeystoneId(), tokenAdmin);
+                    if (rolesByUser == null || rolesByUser.getRoles().isEmpty() || item.getKeystoneId() == null) {
                         model.setRole(null);
                     } else {
                         model.setRole(RoleUtil.getInstance().validateRole(
@@ -549,7 +554,7 @@ public class KeystoneUserServiceImpl implements UserService {
                 rolesByUser = new Roles();
                 rolesByUser.setRoles(roles);
                 List<RoleAssignments> roleAssignments =
-                        roleService.getUsersByRoleId(role.getRole().getId(), adminToken);
+                        roleService.getUsersByRoleIdOnDefaultProject(role.getRole().getId(), adminToken);
                 if (roleAssignments != null && !roleAssignments.isEmpty()) {
                     userModels = new ArrayList<>();
                     for (RoleAssignments item : roleAssignments) {
@@ -578,7 +583,7 @@ public class KeystoneUserServiceImpl implements UserService {
                     userModels = new ArrayList<>();
                     for (UserProfile item : users) {
                         rolesByUser =
-                                roleService.getRoleUserDefaultDomain(item.getKeystoneId(), adminToken);
+                                roleService.getRoleUserDefaultProject(item.getKeystoneId(), adminToken);
                         UserModel userModel = setUserModelProperties(item);
                         userModel.setRole(RoleUtil.getInstance().validateRole(
                                 rolesByUser.getRoles().get(0).getName().toUpperCase()));

@@ -19,6 +19,8 @@ public class User_ {
   private String  id;
   private String  username;
   private Roles   role;
+  @JsonProperty("default_project_id ")
+  private String defaultProjectId; 
 
   @JsonProperty("password_expires_at")
   private Date    passwordExpiresAt;
@@ -63,6 +65,22 @@ public class User_ {
   public void setUsername(String username) {
     this.username = username;
   }
+
+    public Roles getRole() {
+        return role;
+    }
+
+    public void setRole(Roles role) {
+        this.role = role;
+    }
+
+    public String getDefaultProjectId() {
+        return defaultProjectId;
+    }
+
+    public void setDefaultProjectId(String defaultProjectId) {
+        this.defaultProjectId = defaultProjectId;
+    }
 
   public Links getLinks() {
     return links;

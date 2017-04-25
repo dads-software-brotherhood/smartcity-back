@@ -2,6 +2,7 @@ package mx.infotec.smartcity.backend.service;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role;
@@ -38,22 +39,21 @@ public interface RoleService extends Serializable {
   Roles getRoleUser(String domainId, String userId, String authToken);
 
   // Assign user role to domain
-  void assignRoleToUserOnDomain(String roleId, String userId, String domain, String authToken);
+  void assignRoleToUserOnProject(String roleId, String userId, String project, String authToken);
 
   // Delete Role of a user on domain
-  void deleteRoleFromUserOnDomain(String roleId, String userId, String domain, String authToken);
+  void deleteRoleFromUserOnProject(String roleId, String userId, String domain, String authToken);
 
-  void assignRoleToUserOnDefaultDomain(String roleId, String userId, String authToken);
+  void assignRoleToUserOnDefaultProject(String roleId, String userId, String authToken);
 
-  void deleteRoleFromUserDefaultDomain(String roleId, String userId, String authToken);
+  void deleteRoleFromUserDefaultProject(String roleId, String userId, String authToken);
 
   Roles getAllRolesLikeRoles(String authToken);
 
-  Roles getRoleUserDefaultDomain(String userId, String authToken);
+  Roles getRoleUserDefaultProject(String userId, String authToken);
   
-  List<RoleAssignments>  getUsersByRoleId(String idRole, String authToken) throws ServiceException;
+  List<RoleAssignments>  getUsersByRoleIdOnDefaultProject(String idRole, String authToken) throws ServiceException;
   
-  
-
+  Set<String> getUserIdmIdByRole(String idRole, String authToken);
 
 }
