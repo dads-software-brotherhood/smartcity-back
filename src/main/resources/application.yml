@@ -37,7 +37,11 @@ idm:
 front:
     url: http://localhost:4200/#
     image-url: http://localhost:4200
-
+    
+sa:
+  account: admin@localhost.mx
+  passwd: adminadmin
+  
 ---
 spring:
     profiles: development
@@ -80,6 +84,10 @@ front:
     url: http://localhost:4200/#
     image-url: http://localhost:4200
 
+sa:
+  account: admin@localhost.mx
+  passwd: adminadmin
+  
 ---
 spring:
     profiles: qa
@@ -123,6 +131,10 @@ front:
     url: http://207.249.127.180/#
     image-url: http://207.249.127.180
 
+sa:
+  account: admin@localhost.mx
+  passwd: adminadmin
+  
 ---
 spring:
     profiles: production
@@ -165,3 +177,7 @@ idm:
 front:
     url: http://207.249.127.91/#
     image-url: http://207.249.127.180
+
+sa:
+  account: admin@localhost.mx
+  passwd: adminadmin
