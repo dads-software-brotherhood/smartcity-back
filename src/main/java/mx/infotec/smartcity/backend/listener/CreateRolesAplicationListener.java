@@ -75,6 +75,15 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
 
   }
 
+  private void createDefaultAdmin() {
+      // TODO: Crear cuenta default de super usuario
+      // 1. Ver si hay cuentas con rol SA
+      // 2. Si no hay cuentas con rol SA, crear una cuenta de la siguiente forma:
+      //    a. Tomar el correo desde una propiedad del application.properties
+      //    b. Usar como password algo como: adminadmin (fijo hardcodeado)
+      //    c. El usuario debe tener los roles: SA y USER
+  }
+  
   /*
    * @Override public void run(String... args) throws Exception { createRoles();
    * 
@@ -83,7 +92,7 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
   @Override
   public void onApplicationEvent(ApplicationReadyEvent arg0) {
     createRoles();
-
+    createDefaultAdmin();
   }
 
 }
