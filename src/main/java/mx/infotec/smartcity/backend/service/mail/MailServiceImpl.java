@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import javax.annotation.PostConstruct;
 import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import mx.infotec.smartcity.backend.utils.Constants;
@@ -50,12 +51,15 @@ public class MailServiceImpl implements MailService {
     @Value(value = "${front.url}")
     private String frontUrl;
     
+    @Value(value = "${front.image-url}")
+    private String frontImageUrl;
+    
     @Value("${spring.mail.active}")
     private boolean active;
     
     @Value(value = "spring.mail.support")
     private String supportEmail;
-    
+        
     @Override
     public boolean sendMail(TemplatesEnum templateId, Email email) {
         try {
@@ -91,6 +95,7 @@ public class MailServiceImpl implements MailService {
         email.setFrom(from);
         Map<String, Object> values = new HashMap<>();
         values.put("frontUrl", frontUrl);
+        values.put("frontImageUrl", frontImageUrl);
         String url = "";
         try {
             Template template = freemarkerConfiguration.getTemplate(templateEnum.value(), Constants.ENCODING); //Habria que ver la optimizacion, solo se debe pedir una vez

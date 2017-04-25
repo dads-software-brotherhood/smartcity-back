@@ -96,10 +96,17 @@ public class UserProfileController {
 
                     Map<String, Object> map = new HashMap<>();
 
-                    if (userProfile == null) {
+                    if (userProfile == null || userProfile.getName() == null) {
                         map.put(Constants.GENERAL_PARAM_NAME, "User");
                     } else {
-                        map.put(Constants.GENERAL_PARAM_NAME, userProfile.getName());
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(userProfile.getName());
+                        
+                        if (userProfile.getFamilyName() == null) {
+                            sb.append(' ').append(userProfile.getFamilyName());
+                        }
+                        
+                        map.put(Constants.GENERAL_PARAM_NAME, sb.toString());
                     }
 
                     email.setContent(map);

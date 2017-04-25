@@ -95,21 +95,22 @@ public class Application extends SpringBootServletInitializer {
         return new SelfDataEditFilter();
     }
     
-    @Bean
-    public FilterRegistrationBean adminFilterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(adminFilter());
-        registration.addServletNames("adminFilter");
-//        registration.addUrlPatterns("/admin/*","/user-profile/*", "/public-transports/*", "/groups/*", "/rules/*");
-        registration.addUrlPatterns("/rules/*");
-        registration.setOrder(3);
-        return registration;
-    }
 
-    @Bean
-    public Filter adminFilter() {
-        return new AdminFilter();
-    }
+//    @Bean
+//    public FilterRegistrationBean adminFilterRegistration() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean();
+//        registration.setFilter(adminFilter());
+//        registration.addServletNames("adminFilter");
+////        registration.addUrlPatterns("/admin/*","/user-profile/*", "/public-transports/*", "/groups/*", "/rules/*");
+//        registration.addUrlPatterns("/rules/*");
+//        registration.setOrder(3);
+//        return registration;
+//    }
+//
+//    @Bean
+//    public Filter adminFilter() {
+//        return new AdminFilter();
+//    }
     
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

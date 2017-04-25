@@ -2,7 +2,6 @@ package mx.infotec.smartcity.backend.service.keystone.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import mx.infotec.smartcity.backend.service.keystone.KeystoneLoginServiceImpl;
 
 /**
  *
