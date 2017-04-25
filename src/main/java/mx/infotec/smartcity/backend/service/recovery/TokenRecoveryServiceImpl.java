@@ -104,11 +104,7 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
       } else {
         TokenRecovery recovery = generateToken(email, user.getId());
         Map<String, Object> otherParams = new HashMap<>();
-        if (userProfile == null || userProfile.getName() == null || userProfile.getFamilyName() == null) {
-            otherParams.put(Constants.GENERAL_PARAM_NAME, "User");
-        } else {
-            otherParams.put(Constants.GENERAL_PARAM_NAME, String.format("%s %s", userProfile.getName(), userProfile.getFamilyName()));
-        }
+        otherParams.put(Constants.GENERAL_PARAM_NAME, getName(userProfile));
         emailObj.setTo(email);
         emailObj.setMessage(recovery.getId());
         emailObj.setContent(otherParams);
@@ -125,6 +121,16 @@ public class TokenRecoveryServiceImpl implements TokenRecoveryService {
     }
   }
 
+    private String getName(UserProfile profile) {
+        if (profile == null || profile.getName() == null) {
+            return "User";
+        } else if (profile.getFamilyName() == null) {
+            return profile.getName();
+        } else {
+            return String.format("%s %s", profile.getName(), profile.getFamilyName());
+        }
+    }
+    
   @Override
   public boolean updatePassword(String tokenRecovery, TokenRequest request)
       throws ServiceException {

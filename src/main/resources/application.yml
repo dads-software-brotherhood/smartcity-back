@@ -36,6 +36,7 @@ idm:
         domain: default
 front:
     url: http://localhost:4200/#
+    image-url: http://localhost:4200
 
 ---
 spring:
@@ -77,6 +78,7 @@ idm:
         domain: default
 front:
     url: http://localhost:4200/#
+    image-url: http://localhost:4200
 
 ---
 spring:
@@ -119,6 +121,7 @@ idm:
         domain: default
 front:
     url: http://207.249.127.180/#
+    image-url: http://207.249.127.180
 
 ---
 spring:
@@ -158,6 +161,7 @@ idm:
         username: idm
         password: idm
     default:
-        domain: default        
+        domain: default
 front:
     url: http://207.249.127.91/#
+    image-url: http://207.249.127.180

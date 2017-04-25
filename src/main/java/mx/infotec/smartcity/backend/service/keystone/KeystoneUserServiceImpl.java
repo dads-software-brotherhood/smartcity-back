@@ -432,7 +432,7 @@ public class KeystoneUserServiceImpl implements UserService {
                     createdUser.getUser().getId());
             LOGGER.info("Token recovery: " + recovery.getId());
             Map<String, Object> otherParams = new HashMap<>();
-            otherParams.put(Constants.GENERAL_PARAM_NAME, String.format("%s %s", userProfile.getName(), userProfile.getFamilyName()));
+            otherParams.put(Constants.GENERAL_PARAM_NAME, getName(userProfile));
             Email email = new Email();
             email.setTo(createUser.getUser().getName());
             email.setMessage(recovery.getId());
@@ -490,7 +490,7 @@ public class KeystoneUserServiceImpl implements UserService {
             deleteUser(profile.getKeystoneId(), adminToken);
             userRepository.delete(profile.getId());
             Map<String, Object> otherParams = new HashMap<>();
-            otherParams.put(Constants.GENERAL_PARAM_NAME, String.format("%s %s", profile.getName(), profile.getFamilyName()));
+            otherParams.put(Constants.GENERAL_PARAM_NAME, getName(profile));
             Email email = new Email();
             email.setTo(model.getEmail());
             email.setContent(otherParams);
@@ -499,6 +499,16 @@ public class KeystoneUserServiceImpl implements UserService {
         } catch (Exception e) {
             LOGGER.error("Error trying delete user, cause: ", e);
             throw new ServiceException(e);
+        }
+    }
+    
+    private String getName(UserProfile profile) {
+        if (profile == null || profile.getName() == null) {
+            return "User";
+        } else if (profile.getFamilyName() == null) {
+            return profile.getName();
+        } else {
+            return String.format("%s %s", profile.getName(), profile.getFamilyName());
         }
     }
 
