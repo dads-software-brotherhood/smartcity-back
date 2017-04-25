@@ -24,8 +24,7 @@ public class KeystoneAdminUtilsServiceImpl implements AdminUtilsService {
      */
     private static final long serialVersionUID = 1L;
 
-    private static final Logger LOGGER
-            = LoggerFactory.getLogger(KeystoneAdminUtilsServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeystoneAdminUtilsServiceImpl.class);
 
     @Value("${idm.admin.username}")
     private String idmUser;
@@ -39,7 +38,7 @@ public class KeystoneAdminUtilsServiceImpl implements AdminUtilsService {
     @Override
     public String getAdmintoken() throws ServiceException {
         try {
-            AuthTokenInfo authTokenInfo = loginService.performAuthToken(idmUser, idmPassword);
+            AuthTokenInfo authTokenInfo = loginService.performAuthToken(idmUser, idmPassword, true);
             return authTokenInfo.getAuthToken();
         } catch (InvalidCredentialsException e) {
             LOGGER.error("No se pudo validar el usuario admin, causa: ", e);

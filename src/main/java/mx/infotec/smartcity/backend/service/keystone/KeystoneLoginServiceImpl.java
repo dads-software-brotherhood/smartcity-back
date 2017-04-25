@@ -37,7 +37,6 @@ import mx.infotec.smartcity.backend.service.keystone.pojo.Identity;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Request;
 import mx.infotec.smartcity.backend.service.keystone.pojo.Response;
 import mx.infotec.smartcity.backend.service.keystone.pojo.User;
-import mx.infotec.smartcity.backend.service.keystone.pojo.roles.Roles;
 import mx.infotec.smartcity.backend.service.keystone.pojo.token.Token_;
 import mx.infotec.smartcity.backend.utils.Constants;
 import mx.infotec.smartcity.backend.utils.RoleUtil;
@@ -51,8 +50,7 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger LOGGER
-            = LoggerFactory.getLogger(KeystoneLoginServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeystoneLoginServiceImpl.class);
 
     @Autowired
     @Qualifier("adminUtils")
@@ -64,9 +62,12 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
 
     @Autowired
     private RoleService roleService;
-    
+
     @Value("${idm.servers.keystone}")
     private String keystonUrl;
+
+    @Value("${idm.default.domain}")
+    private String defaultDomain;
 
     private String tokenRequestUrl;
 
@@ -78,10 +79,9 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
     }
 
     @Override
-    public IdentityUser performLogin(String username, char[] password)
-            throws InvalidCredentialsException {
+    public IdentityUser performLogin(String username, char[] password) throws InvalidCredentialsException {
         try {
-            HttpEntity<Response> responseEntity = performRestLogin(username, password);
+            HttpEntity<Response> responseEntity = performRestLogin(username, password, false);
             return convert(responseEntity);
         } catch (Exception ex) {
             throw new InvalidCredentialsException(ex);
@@ -89,8 +89,8 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
     }
 
     @Override
-    public AuthTokenInfo performAuthToken(String username, char[] password)
-            throws InvalidCredentialsException {
+    @Deprecated
+    public AuthTokenInfo performAuthToken(String username, char[] password) throws InvalidCredentialsException {
         try {
             HttpEntity<Response> responseEntity = performRestLogin(username, password);
 
@@ -111,21 +111,64 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
         }
     }
 
+    @Override
+    public AuthTokenInfo performAuthToken(String username, char[] password, boolean isAdmin)
+            throws InvalidCredentialsException {
+        try {
+            HttpEntity<Response> responseEntity = performRestLogin(username, password, isAdmin);
+
+            AuthTokenInfo authTokenInfo = new AuthTokenInfo();
+            authTokenInfo.setTokenResponse(responseEntity.getBody().getToken());
+
+            HttpHeaders headers = responseEntity.getHeaders();
+
+            List<String> tmp = headers.get(Constants.SUBJECT_TOKEN_HEADER);
+
+            if (!tmp.isEmpty()) {
+                authTokenInfo.setAuthToken(tmp.get(0));
+            }
+
+            return authTokenInfo;
+        } catch (Exception ex) {
+            throw new InvalidCredentialsException(ex);
+        }
+    }
+
+    private HttpEntity<Response> performRestLogin(String username, char[] password, boolean isAdmin) {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        Request request;
+        // not logging in with scope for idm user because else getting error
+        // not authorized
+        if (isAdmin) {
+            request = new Request(new User(username, new String(password)));
+        } else {
+            request = new Request(new User(username, new String(password)), this.defaultDomain);
+        }
+        HttpEntity<Request> requestEntity = new HttpEntity<>(request);
+        HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity,
+                Response.class);
+
+        return responseEntity;
+
+    }
+
+    @Deprecated
     private HttpEntity<Response> performRestLogin(String username, char[] password) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        Request request = new Request(new User(username, new String(password)));
+        Request request = new Request(new User(username, new String(password)), this.defaultDomain);
         HttpEntity<Request> requestEntity = new HttpEntity<>(request);
-        HttpEntity<Response> responseEntity
-                = restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity, Response.class);
+        HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity,
+                Response.class);
 
         return responseEntity;
     }
 
     @Override
-    public IdentityUser findUserByValidToken(String token)
-            throws InvalidTokenException, ServiceException {
+    public IdentityUser findUserByValidToken(String token) throws InvalidTokenException, ServiceException {
         if (token != null) {
             String tokenAdmin = adminUtils.getAdmintoken();
             IdentityUser idu = null;
@@ -160,8 +203,8 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
         request.setAuth(auth);
         try {
             HttpEntity<Request> requestEntity = new HttpEntity<>(request);
-            HttpEntity<Response> responseEntity
-                    = restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity, Response.class);
+            HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.POST, requestEntity,
+                    Response.class);
             IdentityUser user = convert(responseEntity);
             return user.getTokenInfo();
         } catch (RestClientException e) {
@@ -182,8 +225,8 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
             headers.add(Constants.AUTH_TOKEN_HEADER, adminToken);
             headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
             HttpEntity<Request> requestEntity = new HttpEntity<>(headers);
-            HttpEntity<Response> responseEntity
-                    = restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity, Response.class);
+            HttpEntity<Response> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.GET, requestEntity,
+                    Response.class);
             IdentityUser user = convert(responseEntity);
             if (user.getTokenInfo() != null && !user.getTokenInfo().getToken().isEmpty()) {
                 invalidToken(adminToken);
@@ -207,8 +250,8 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
         headers.add(Constants.SUBJECT_TOKEN_HEADER, token);
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
         try {
-            HttpEntity<String> responseEntity
-                    = restTemplate.exchange(tokenRequestUrl, HttpMethod.DELETE, requestEntity, String.class);
+            HttpEntity<String> responseEntity = restTemplate.exchange(tokenRequestUrl, HttpMethod.DELETE, requestEntity,
+                    String.class);
             return responseEntity.toString().contains(HttpStatus.NO_CONTENT.toString());
         } catch (RestClientException e) {
             return false;
@@ -225,42 +268,16 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
         } else {
             IdentityUser idmUser = new IdentityUser();
 
-            if (response.getToken().getRoles() != null) {
-                Set<Role> roles = new HashSet<>();
+            Set<Role> roles = new HashSet<>();
 
-                response.getToken().getRoles().forEach((role) -> {
-                    Role roleKey = RoleUtil.validateRole(role.getName());
-                    if (roleKey != null) {
-                        roles.add(roleKey);
-                    }
-                });
-
-                idmUser.setRoles(roles);
-            } else {
-                // TODO: Eliminar esta opcion cuando se corrija la asignacion de roles
-                
-                LOGGER.warn("Try find roles by admin method");
-                
-                try {
-                    String adminToken = adminUtils.getAdmintoken();
-                    Set<Role> roleSet = new HashSet<>();
-                    
-                    Roles roles = roleService.getRoleUserDefaultDomain(response.getToken().getUser().getId(), adminToken);
-                    
-                    if (roles != null && roles.getRoles() != null) {
-                        roles.getRoles().forEach((role) -> {
-                            Role roleKey = RoleUtil.validateRole(role.getName());
-                            if (roleKey != null) {
-                                roleSet.add(roleKey);
-                            }
-                        });
-                    }
-                    
-                    idmUser.setRoles(roleSet);
-                } catch (Exception ex) {
-                    LOGGER.error("Error", ex);
+            response.getToken().getRoles().forEach((role) -> {
+                Role roleKey = RoleUtil.validateRole(role.getName());
+                if (roleKey != null) {
+                    roles.add(roleKey);
                 }
-            }
+            });
+
+            idmUser.setRoles(roles);
 
             TokenInfo token = new TokenInfo();
 

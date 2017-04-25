@@ -19,6 +19,10 @@ public class Request implements Serializable {
         this.auth = new Auth(user);
     }
 
+    public Request(User user, String idDomain) {
+        this.auth = new Auth(user, idDomain);
+    }
+
     public Auth getAuth() {
         return auth;
     }
