@@ -103,26 +103,9 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
         String adminToken = "";
         try {
             adminToken = adminUtils.getAdmintoken();
-            mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role saRole = null;
-            mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role userRole = null;
-            
-            List<mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role> allRoles = roleService.getAllRoles(adminToken);
-            
-            for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role item : allRoles) {
-                if (item.getName().equals(Role.SA.name().toLowerCase())) {
-                    saRole = item;
-                } else if (item.getName().equals(Role.USER.name().toLowerCase())) {
-                    userRole = item;
-                } else {
-                    if (saRole != null && userRole != null) {
-                        break;
-                    }
-                }
-                
-            }
             
             List<RoleAssignments> roleAssignamentList =
-                    roleService.getUsersByRoleId(saRole.getId(), adminToken);
+                    roleService.getUsersByRoleId(RoleUtil.getIdRole(Role.SA), adminToken);
             if (roleAssignamentList == null || roleAssignamentList.isEmpty()) {
                 User_ user = new User_();
                 user.setEnabled(true);
@@ -131,7 +114,7 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
                 CreateUser createUser = new CreateUser(user);
                 CreateUser createdUser = userService.createUserWithRole(createUser , Role.SA);
                 if (createdUser != null) {
-                    roleService.assignRoleToUserOnDefaultDomain(userRole.getId(), createdUser.getUser().getId(), adminToken);
+                    roleService.assignRoleToUserOnDefaultDomain(RoleUtil.getIdRole(Role.USER), createdUser.getUser().getId(), adminToken);
                 } else {
                     throw new ServiceException("Error to create new user");
                 }
