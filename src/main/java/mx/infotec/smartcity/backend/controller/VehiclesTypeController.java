@@ -60,8 +60,14 @@ public class VehiclesTypeController {
         vehicleType.setDateModified(new Date());
         //Add this code lines to set numeric id to vehicle type////////////////////////////////////////
         Integer newId = 0;
+        long countVehicleType = vehicleTypesRepository.count();
+        if(countVehicleType > 0)
+        {
         newId = vehicleTypesRepository.findAll(new Sort(Sort.Direction.DESC, "id")).get(0).getId();
         vehicleType.setId(newId + 1);
+        }
+        else 
+            vehicleType.setId(1);
         //////////////////////////////////////////////////////////////////////////////////////////////
         VehicleType VehicleRepro = vehicleTypesRepository.insert(vehicleType);
         return ResponseEntity.accepted().body(VehicleRepro);

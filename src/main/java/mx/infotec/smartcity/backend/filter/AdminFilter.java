@@ -40,7 +40,20 @@ public class AdminFilter implements Filter {
         if (loggedUser == null) {
             httpResponse.sendError(HttpStatus.SC_UNAUTHORIZED, "Unauthorized");
         } else {
-            Role defaultRole = loggedUser.getRoles().iterator().next();
+            Role defaultRole = null;
+            if (loggedUser.getRoles().size() > 1) {
+                // Se iteran los roles para obtener solo al SA hasta que se definan nas nuevas reglas.
+                for (Role item : loggedUser.getRoles()) {
+                    if (item == Role.SA) {
+                        defaultRole = item;
+                    } else {
+                        // Se eiliminan los demas roles del objeto para que valide en el front hasta que se definana las nuevas reglas
+                        loggedUser.getRoles().remove(item);
+                    }
+                }
+            } else {
+                defaultRole = loggedUser.getRoles().iterator().next();
+            }
             switch (defaultRole) {
                 case ADMIN:
 
