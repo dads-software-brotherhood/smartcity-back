@@ -73,7 +73,7 @@ public class AlertController {
         return res;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/alert/{alertType}/page/{page}/items/{size}")    
+    @RequestMapping(method = RequestMethod.GET, value = "/type/{alertType}/page/{page}/items/{size}")    
     public List<Alert> getAllByAlert(@PathVariable("alertType") String alertType, 
                                     @PathVariable("page") String page,
                                     @PathVariable("size") String size, 
@@ -83,7 +83,7 @@ public class AlertController {
         return res;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/alert/{alertType}/subtype/{subtype}/page/{page}/items/{size}")    
+    @RequestMapping(method = RequestMethod.GET, value = "/type/{alertType}/subtype/{subtype}/page/{page}/items/{size}")    
     public List<Alert> getAllByAlertAndSubalert(@PathVariable("alertType") String alertType, 
                                                 @PathVariable("subtype") String subtype, 
                                                 @PathVariable("page") String page,
@@ -104,7 +104,7 @@ public class AlertController {
         return res;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/my-events/{id}/alert/{alertType}/page/{page}/items/{size}")    
+    @RequestMapping(method = RequestMethod.GET, value = "/my-events/{id}/type/{alertType}/page/{page}/items/{size}")    
     public List<Alert> getAllEventsByUserAndAlertType(@PathVariable("id") String id, 
                                     @PathVariable("alertType") String alertType,
                                     @PathVariable("page") String page,
@@ -115,7 +115,7 @@ public class AlertController {
         return res;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/my-events/{id}/alert/{alertType}/subtype/{subtype}/page/{page}/items/{size}")    
+    @RequestMapping(method = RequestMethod.GET, value = "/my-events/{id}/type/{alertType}/subtype/{subtype}/page/{page}/items/{size}")    
     public List<Alert> getAllEventsByUserAndAlertTypeAndSubtype(@PathVariable("id") String id, 
                                     @PathVariable("alertType") String alertType,
                                     @PathVariable("subtype") String subtype,
