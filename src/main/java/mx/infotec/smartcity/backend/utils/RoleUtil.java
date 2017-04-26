@@ -41,7 +41,7 @@ public class RoleUtil {
         }
     }
 
-    public String getIdRole(Role role) {
+    public static String getIdRole(Role role) {
         return roles.get(role.name()).getId();
     }
 
