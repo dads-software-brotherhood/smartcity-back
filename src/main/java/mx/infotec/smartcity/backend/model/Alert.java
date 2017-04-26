@@ -20,7 +20,6 @@ public class Alert implements Serializable {
     private String subtypeAlert;
     private String locationDescription;
     private Date dateTime;
-    private Integer severity;
     private String description;
     private String refUser;
     private String refDevice;
@@ -63,16 +62,6 @@ public class Alert implements Serializable {
 
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
-    }
-
-    
-
-    public Integer getSeverity() {
-        return severity;
-    }
-
-    public void setSeverity(Integer severity) {
-        this.severity = severity;
     }
 
     public String getDescription() {
