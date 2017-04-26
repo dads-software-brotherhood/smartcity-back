@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -38,6 +39,8 @@ public class UserProfile implements Serializable {
     private HealthProfile healthProfile;
     private List<Address> addresses;
     private List<Vehicle> vehicles;
+    @DBRef
+    private List<Group> groups;
     
     @Indexed(unique = true)
     private String keystoneId;
@@ -192,6 +195,14 @@ public class UserProfile implements Serializable {
 
     public void setKeystoneId(String keystoneId) {
       this.keystoneId = keystoneId;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 
     

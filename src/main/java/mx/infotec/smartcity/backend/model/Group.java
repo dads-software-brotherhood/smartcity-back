@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "type", "group", "dateCreated", "dateModified"})
@@ -26,7 +27,7 @@ public class Group {
   @JsonProperty("dateModified")
   private Date   dateModified;
   @JsonProperty("notificationIds")
-  private String[] notificationIds;
+  private List<String> notificationIds;
   
 
   @JsonProperty("id")
@@ -80,11 +81,11 @@ public class Group {
   }
 
     @JsonProperty("notificationIds")
-    public String[] getNotificationIds() {
+    public List<String> getNotificationIds() {
         return notificationIds;
     }
     @JsonProperty("notificationIds")
-    public void setNotificationIds(String[] notificationIds) {
+    public void setNotificationIds(List<String> notificationIds) {
         this.notificationIds = notificationIds;
     }
   

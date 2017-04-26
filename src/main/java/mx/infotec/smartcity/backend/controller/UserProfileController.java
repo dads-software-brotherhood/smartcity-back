@@ -3,10 +3,12 @@ package mx.infotec.smartcity.backend.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import mx.infotec.smartcity.backend.model.Address;
 import mx.infotec.smartcity.backend.model.Email;
+import mx.infotec.smartcity.backend.model.Group;
 import mx.infotec.smartcity.backend.model.HealthProfile;
 import mx.infotec.smartcity.backend.model.IdentityUser;
 import mx.infotec.smartcity.backend.model.Role;
@@ -387,6 +389,27 @@ public class UserProfileController {
         } else {
             LOGGER.error("Invalid vehicle: {}", vehicle);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
+        }
+    }
+    @RequestMapping(method = RequestMethod.POST, value = "/{id}/groups")
+    public ResponseEntity<?> addGroups(@RequestBody List<Group> groups, @PathVariable("id") String id) {
+            
+        UserProfile userProfile = userProfileRepository.findOne(id);
+
+        if (userProfile != null) {
+            
+            List<Group> gg = userProfile.getGroups();
+            if (userProfile.getGroups()== null) {
+                userProfile.setGroups(new ArrayList<>());
+            }
+
+            userProfile.setGroups(groups);
+
+            userProfileRepository.save(userProfile);
+
+            return ResponseEntity.accepted().body(userProfile.getGroups());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
         }
     }
 
