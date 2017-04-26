@@ -19,7 +19,7 @@ public class Alert implements Serializable {
     private String alertType;
     private String subtypeAlert;
     private String locationDescription;
-    private Date dataTime;
+    private Date dateTime;
     private Integer severity;
     private String description;
     private String refUser;
@@ -57,13 +57,15 @@ public class Alert implements Serializable {
         this.locationDescription = locationDescription;
     }
 
-    public Date getDataTime() {
-        return dataTime;
+    public Date getDateTime() {
+        return dateTime;
     }
 
-    public void setDataTime(Date dataTime) {
-        this.dataTime = dataTime;
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
+
+    
 
     public Integer getSeverity() {
         return severity;

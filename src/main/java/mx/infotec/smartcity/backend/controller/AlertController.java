@@ -1,6 +1,7 @@
 package mx.infotec.smartcity.backend.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import mx.infotec.smartcity.backend.model.Alert;
@@ -37,7 +38,7 @@ public class AlertController {
     
     @RequestMapping(method = RequestMethod.GET)    
     public List<Alert> getAll() {
-        List<Alert> res = alertRepository.findAllByOrderByDataTimeDesc();
+        List<Alert> res = alertRepository.findAllByOrderByDateTimeDesc();
         
         if (res == null) {
             return new ArrayList<>();
@@ -47,10 +48,10 @@ public class AlertController {
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/page/{page}/{size}")
-    public Page<Alert> getByPageSize(@PathVariable("page") String page,
+    public List<Alert> getByPageSize(@PathVariable("page") String page,
     @PathVariable("size") String size) {
         Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size), new Sort(Sort.Direction.DESC, "id"));
-        return alertRepository.findAll(pageable);
+        return alertRepository.findAll(pageable).getContent();
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
@@ -69,7 +70,7 @@ public class AlertController {
         profile.getGroups().forEach((group) -> {
             alertTypes.addAll(group.getNotificationIds());
         });
-        List<Alert> res = alertRepository.findByAlertTypeInOrderByDataTimeDesc(alertTypes, pageable);
+        List<Alert> res = alertRepository.findByAlertTypeInOrderByDateTimeDesc(alertTypes, pageable);
         return res;
     }
     
@@ -79,7 +80,7 @@ public class AlertController {
                                     @PathVariable("size") String size, 
                                     HttpServletRequest request) {
         Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
-        List<Alert> res = alertRepository.findByAlertTypeOrderByDataTimeDesc(alertType, pageable);
+        List<Alert> res = alertRepository.findByAlertTypeOrderByDateTimeDesc(alertType, pageable);
         return res;
     }
     
@@ -90,7 +91,7 @@ public class AlertController {
                                                 @PathVariable("size") String size, 
                                                 HttpServletRequest request) {
         Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
-        List<Alert> res = alertRepository.findByAlertTypeAndSubtypeAlertOrderByDataTimeDesc(alertType, subtype, pageable);
+        List<Alert> res = alertRepository.findByAlertTypeAndSubtypeAlertOrderByDateTimeDesc(alertType, subtype, pageable);
         return res;
     }
     
@@ -100,7 +101,7 @@ public class AlertController {
                                     @PathVariable("size") String size, 
                                     HttpServletRequest request) {
         Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
-        List<Alert> res = alertRepository.findByRefUserOrderByDataTimeDesc(id, pageable);
+        List<Alert> res = alertRepository.findByRefUserOrderByDateTimeDesc(id, pageable);
         return res;
     }
     
@@ -111,7 +112,7 @@ public class AlertController {
                                     @PathVariable("size") String size, 
                                     HttpServletRequest request) {
         Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
-        List<Alert> res = alertRepository.findByRefUserAndAlertTypeOrderByDataTimeDesc(id, alertType, pageable);
+        List<Alert> res = alertRepository.findByRefUserAndAlertTypeOrderByDateTimeDesc(id, alertType, pageable);
         return res;
     }
     
@@ -123,7 +124,43 @@ public class AlertController {
                                     @PathVariable("size") String size, 
                                     HttpServletRequest request) {
         Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
-        List<Alert> res = alertRepository.findByRefUserAndAlertTypeAndSubtypeAlertOrderByDataTimeDesc(id, alertType, subtype, pageable);
+        List<Alert> res = alertRepository.findByRefUserAndAlertTypeAndSubtypeAlertOrderByDateTimeDesc(id, alertType, subtype, pageable);
         return res;
     }
+    
+//    @RequestMapping(method = RequestMethod.GET, value = "/my-events/{id}/date/{date}/page/{page}/items/{size}")    
+//    public List<Alert> getAllEventsByUserAndDate(@PathVariable("id") String id, 
+//                                    @PathVariable("date") Date date, 
+//                                    @PathVariable("page") String page,
+//                                    @PathVariable("size") String size, 
+//                                    HttpServletRequest request) {
+//        Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
+//        List<Alert> res = alertRepository.findByRefUserAndDateTimeOrderByDateTimeDesc(id, date, pageable);
+//        return res;
+//    }
+//    
+//    @RequestMapping(method = RequestMethod.GET, value = "/my-events/{id}/type/{alertType}/date/{date}/page/{page}/items/{size}")    
+//    public List<Alert> getAllEventsByUserAndAlertTypeAndDate(@PathVariable("id") String id, 
+//                                    @PathVariable("date") Date date, 
+//                                    @PathVariable("alertType") String alertType,
+//                                    @PathVariable("page") String page,
+//                                    @PathVariable("size") String size, 
+//                                    HttpServletRequest request) {
+//        Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
+//        List<Alert> res = alertRepository.findByRefUserAndAlertTypeAndDateTimeOrderByDateTimeDesc(id, alertType, date, pageable);
+//        return res;
+//    }
+//    
+//    @RequestMapping(method = RequestMethod.GET, value = "/my-events/{id}/type/{alertType}/subtype/{subtype}/date/{date}/page/{page}/items/{size}")    
+//    public List<Alert> getAllEventsByUserAndAlertTypeAndSubtypeAndDate(@PathVariable("id") String id, 
+//                                    @PathVariable("date") Date date, 
+//                                    @PathVariable("alertType") String alertType,
+//                                    @PathVariable("subtype") String subtype,
+//                                    @PathVariable("page") String page,
+//                                    @PathVariable("size") String size, 
+//                                    HttpServletRequest request) {
+//        Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
+//        List<Alert> res = alertRepository.findByRefUserAndAlertTypeAndSubtypeAlertAndDateTimeOrderByDateTimeDesc(id, alertType, subtype, date, pageable);
+//        return res;
+//    }
 }
