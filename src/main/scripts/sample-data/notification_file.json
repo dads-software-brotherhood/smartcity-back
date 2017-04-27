@@ -1,6 +1,66 @@
-{"_id":1,"name":"Traffic jam"}
-{"_id":2,"name":"Accidents"}
-{"_id":3,"name":"Weather conditions"}
-{"_id":4,"name":"Pollutions"}
-{"_id":5,"name":"Pollen"}
-{"_id":6,"name":"Asthma attacks"}
+{
+	"_id":"TrafficJam",
+	"name":"Traffic jam",
+	"subnotifications":["Standstill Traffic Jam",
+						"Heavy Traffic Jam",
+						"Bumper to bumper traffic",
+						"Moderate Traffic Jam",
+						"Car Stopped On Road",
+						"Roadworks",
+						"Road closed",
+						"Pothole",
+						"Congestion on road",
+						"Car in opposite way",
+						"When a car suddenly stops"]
+}
+{
+	"_id":"Accidents",
+	"name":"Accidents",
+	"subnotifications":["Minor Accident",
+						"Car Accident",
+						"Hazard on Road",
+						"Assaults",
+						"Bikers injured",
+						"Car crashes",
+						"Car Accident",
+						"Suspicious activities"]
+}
+{
+	"_id":"WeatherConditions",
+	"name":"Weather conditions",
+	"subnotifications":["Rain",
+						"Sunny",
+						"Cloud",
+						"Foggy",
+						"Temperature (low, high)",
+						"Heat alert",
+						"Wind chill alert",
+						"Wind advisories",
+						"Flood watch",
+						"Flood warning",
+						"Dense fog",
+						"Tornado warning",
+						"Tornado watch",
+						"Severe storm warning"]
+}
+{
+	"_id":"Pollutions",
+	"name":"Pollutions",
+	"subnotifications":["Visible pollution (smog)",
+						"Level of emissions",
+						"Level of pollutants, such as O3",
+						"Pre-contingency alert",
+						"Contingency alert"]
+}
+{
+	"_id":"Pollen",
+	"name":"Pollen",
+	"subnotifications":["Symptoms or discomforts of users",
+						"Level of pollen on air",
+						"Pollen concentration"]
+}
+{
+	"_id":"AsthmaAttacks",
+	"name":"Asthma attacks",
+	"subnotifications":["People with asthma attacks at specific point"]
+}
