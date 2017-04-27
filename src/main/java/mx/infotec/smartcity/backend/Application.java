@@ -16,9 +16,10 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import mx.infotec.smartcity.backend.filter.AdminFilter;
 import mx.infotec.smartcity.backend.filter.LoggedUserFilter;
+import mx.infotec.smartcity.backend.filter.RoleFilter;
 import mx.infotec.smartcity.backend.filter.SelfDataEditFilter;
+import mx.infotec.smartcity.backend.model.Role;
 
 /**
  *
@@ -63,11 +64,9 @@ public class Application extends SpringBootServletInitializer {
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(loggedUserFilter());
-        registration.addUrlPatterns("/user-profile/*", "/public-transports/*", "/register/update-password", "/admin/*",
-                  "/alerts/*");
-        // registration.addInitParameter("paramName", "paramValue");
+        registration.addUrlPatterns("/user-profile/*", "/public-transport/*", "/register/update-password", "/admin/*",
+                  "/alerts/*", "/vehicletype/*", "/groups/*", "/notifications/*");
         registration.setName("loggedUserFilter");
-
         registration.setOrder(1);
 
         return registration;
@@ -87,7 +86,6 @@ public class Application extends SpringBootServletInitializer {
         registration.setOrder(2);
 
         return registration;
-
     }
 
     @Bean(name = "selfDataEditFilter")
@@ -95,21 +93,36 @@ public class Application extends SpringBootServletInitializer {
         return new SelfDataEditFilter();
     }
     
-
     @Bean
-    public FilterRegistrationBean adminFilterRegistration() {
+    public FilterRegistrationBean selfAdminRoleFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(adminFilter());
-        registration.addServletNames("adminFilter");
-        registration.addUrlPatterns("/admin/*","/user-profile/*", "/public-transports/*",  "/rules/*");
-//        registration.addUrlPatterns("/rules/*");
+        registration.setFilter(adminRoleFilter());
+        registration.addUrlPatterns("/admin/*", "/groups/*", "/vehicletype/*");
+        registration.addServletNames("adminRoleFilter");
         registration.setOrder(3);
+
         return registration;
     }
-
+    
     @Bean
-    public Filter adminFilter() {
-        return new AdminFilter();
+    public Filter adminRoleFilter() {
+        return new RoleFilter(Role.SA, Role.ADMIN);
+    }
+    
+    @Bean
+    public FilterRegistrationBean selfTransportAdminRoleFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(transportAdminRoleFilter());
+        registration.addUrlPatterns("/public-transport/*");
+        registration.addServletNames("transportAdminRoleFilter");
+        registration.setOrder(3);
+
+        return registration;
+    }
+    
+    @Bean
+    public Filter transportAdminRoleFilter() {
+        return new RoleFilter(Role.SA, Role.TRANSPORT_ADMIN);
     }
     
     public static void main(String[] args) {

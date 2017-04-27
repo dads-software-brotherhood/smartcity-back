@@ -30,7 +30,7 @@ import mx.infotec.smartcity.backend.persistence.PublicTransportRepository;
  * @author Benjamin Vander Stichelen
  */
 @RestController
-@RequestMapping("/public-transports")
+@RequestMapping("/public-transport")
 public class PublicTransportController {
 
   private static final Logger              LOGGER    =
