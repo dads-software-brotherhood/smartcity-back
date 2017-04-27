@@ -1,6 +1,6 @@
-{"_id":"TrafficJam","name":"Traffic jam"}
-{"_id":"Accidents","name":"Accidents"}
-{"_id":"WeatherConditions","name":"Weather conditions"}
-{"_id":"Pollutions","name":"Pollutions"}
-{"_id":"Pollen","name":"Pollen"}
-{"_id":"AsthmaAttacks","name":"Asthma attacks"}
+{"_id":1,"name":"Traffic jam"}
+{"_id":2,"name":"Accidents"}
+{"_id":3,"name":"Weather conditions"}
+{"_id":4,"name":"Pollutions"}
+{"_id":5,"name":"Pollen"}
+{"_id":6,"name":"Asthma attacks"}
