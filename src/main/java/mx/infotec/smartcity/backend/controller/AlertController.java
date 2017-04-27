@@ -99,7 +99,7 @@ public class AlertController {
                                                 @PathVariable("size") String size, 
                                                 HttpServletRequest request) {
         Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
-        List<Alert> res = alertRepository.findByAlertTypeAndSubtypeAlertOrderByDateTimeDesc(alertType, subtype, pageable);
+        List<Alert> res = alertRepository.findByAlertTypeAndEventObservedOrderByDateTimeDesc(alertType, subtype, pageable);
         return res;
     }
     
@@ -130,7 +130,7 @@ public class AlertController {
         c.setTime(date);
         c.add(Calendar.DATE, 1);
         c.add(Calendar.SECOND, -1);
-        List<Alert> res = alertRepository.findByAlertTypeAndSubtypeAlertAndDateTimeBetweenOrderByDateTimeDesc(alertType, subtype, date, c.getTime(), pageable);
+        List<Alert> res = alertRepository.findByAlertTypeAndEventObservedAndDateTimeBetweenOrderByDateTimeDesc(alertType, subtype, date, c.getTime(), pageable);
         return res;
     }
     
@@ -163,7 +163,7 @@ public class AlertController {
                                     @PathVariable("size") String size, 
                                     HttpServletRequest request) {
         Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
-        List<Alert> res = alertRepository.findByRefUserAndAlertTypeAndSubtypeAlertOrderByDateTimeDesc(id, alertType, subtype, pageable);
+        List<Alert> res = alertRepository.findByRefUserAndAlertTypeAndEventObservedOrderByDateTimeDesc(id, alertType, subtype, pageable);
         return res;
     }
     
@@ -211,7 +211,7 @@ public class AlertController {
         c.setTime(date);
         c.add(Calendar.DATE, 1);
         c.add(Calendar.SECOND, -1);
-        List<Alert> res = alertRepository.findByRefUserAndAlertTypeAndSubtypeAlertAndDateTimeBetweenOrderByDateTimeDesc(id, alertType, subtype, date, c.getTime(), pageable);
+        List<Alert> res = alertRepository.findByRefUserAndAlertTypeAndEventObservedAndDateTimeBetweenOrderByDateTimeDesc(id, alertType, subtype, date, c.getTime(), pageable);
         return res;
     }
 }

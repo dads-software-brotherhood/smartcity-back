@@ -17,7 +17,7 @@ public class Alert implements Serializable {
     private String id;
     private String type;
     private String alertType;
-    private String subtypeAlert;
+    private String eventObserved;
     private String locationDescription;
     private Date dateTime;
     private String description;
@@ -88,13 +88,15 @@ public class Alert implements Serializable {
         this.refDevice = refDevice;
     }
 
-    public String getSubtypeAlert() {
-        return subtypeAlert;
+    public String getEventObserved() {
+        return eventObserved;
     }
 
-    public void setSubtypeAlert(String subtypeAlert) {
-        this.subtypeAlert = subtypeAlert;
+    public void setEventObserved(String eventObserved) {
+        this.eventObserved = eventObserved;
     }
+
+   
 
     
     
