@@ -248,18 +248,20 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
         if (response.getToken() == null && response.getToken().getUser() == null) {
             return null;
         } else {
-            IdentityUser idmUser = new IdentityUser();
+            IdentityUser identityUser = new IdentityUser();
 
-            Set<Role> roles = new HashSet<>();
+            if (response.getToken().getRoles() != null) {
+                Set<Role> roles = new HashSet<>();
+                
+                response.getToken().getRoles().forEach((role) -> {
+                    Role roleKey = RoleUtil.validateRole(role.getName());
+                    if (roleKey != null) {
+                        roles.add(roleKey);
+                    }
+                });
 
-            response.getToken().getRoles().forEach((role) -> {
-                Role roleKey = RoleUtil.validateRole(role.getName());
-                if (roleKey != null) {
-                    roles.add(roleKey);
-                }
-            });
-
-            idmUser.setRoles(roles);
+                identityUser.setRoles(roles);
+            }
 
             TokenInfo token = new TokenInfo();
 
@@ -271,7 +273,7 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
                 long tmp = token.getEnd().getTime() - token.getStart().getTime();
                 token.setTime((int) tmp / 1000);
             }
-            idmUser.setTokenInfo(token);
+            identityUser.setTokenInfo(token);
 
             List<String> tmp = headers.get(Constants.SUBJECT_TOKEN_HEADER);
 
@@ -279,10 +281,10 @@ public class KeystoneLoginServiceImpl implements KeystoneLoginService {
                 token.setToken(tmp.get(0));
             }
 
-            idmUser.setUsername(response.getToken().getUser().getName());
-            idmUser.setIdmId(response.getToken().getUser().getId());
+            identityUser.setUsername(response.getToken().getUser().getName());
+            identityUser.setIdmId(response.getToken().getUser().getId());
 
-            return idmUser;
+            return identityUser;
         }
     }
 
