@@ -81,7 +81,7 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
         } catch (ServiceException e) {
             LOGGER.error("Error at roles creation", e);
         } finally {
-            if (adminToken != null && !adminToken.equals("")) {
+            if (adminToken != null && !adminToken.isEmpty()) {
                 loginService.invalidToken(adminToken);
             }
         }
