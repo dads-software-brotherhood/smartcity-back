@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "type",
     "coordinates"
 })
+@Deprecated
 public class Stops {
 
     @JsonProperty("type")

@@ -9,14 +9,15 @@ spring:
         host: smtp.gmail.com
         port: 587
         protocol: smtp
-        from: gitlab.infotec@gmail.com
-        username: gitlab.infotec@gmail.com
-        password: 
+        from: test.smartcity.sdk@gmail.com
+        username: test.smartcity.sdk@gmail.com
+        password:
         tls: true
         properties.mail.smtp:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
+        support: smartcityapp@smartsdk.eu
     jackson:
         date-format: yyyy-MM-dd
 
@@ -27,19 +28,20 @@ server:
 idm:
     servers:
         keystone: http://localhost:5000
-        horizon: http://localhost:8000
         orion: http://localhost:1026
     admin:
         username: idm
         password: idm
-    oauth:
-        clientId: 
-        clientSecret: 
     default:
         domain: default
 front:
     url: http://localhost:4200/#
-
+    image-url: http://localhost:4200
+    
+sa:
+  account: admin@localhost.mx
+  passwd: adminadmin
+  
 ---
 spring:
     profiles: development
@@ -49,18 +51,19 @@ spring:
         mongodb:
             database: smartcity
     mail:
-        active: false
+        active: true
         host: smtp.gmail.com
         port: 587
         protocol: smtp
-        from: gitlab.infotec@gmail.com
-        username: gitlab.infotec@gmail.com
-        password: 
+        from: test.smartcity.sdk@gmail.com
+        username: test.smartcity.sdk@gmail.com
+        password:
         tls: true
         properties.mail.smtp:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
+        support: smartcityapp@smartsdk.eu
     jackson:
         date-format: yyyy-MM-dd
 
@@ -71,19 +74,20 @@ server:
 idm:
     servers:
         keystone: http://localhost:5000
-        horizon: http://localhost:8000
         orion: http://localhost:1026
     admin:
         username: idm
         password: idm
-    oauth:
-        clientId: 
-        clientSecret: 
     default:
         domain: default
 front:
     url: http://localhost:4200/#
+    image-url: http://localhost:4200
 
+sa:
+  account: admin@localhost.mx
+  passwd: adminadmin
+  
 ---
 spring:
     profiles: qa
@@ -97,14 +101,15 @@ spring:
         host: smtp.gmail.com
         port: 587
         protocol: smtp
-        from: gitlab.infotec@gmail.com
-        username: gitlab.infotec@gmail.com
+        from: test.smartcity.sdk@gmail.com
+        username: test.smartcity.sdk@gmail.com
         password: 
         tls: true
         properties.mail.smtp:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
+        support: smartcityapp@smartsdk.eu
     jackson:
         date-format: yyyy-MM-dd
 
@@ -116,19 +121,20 @@ server:
 idm:
     servers:
         keystone: http://191.168.186.252:5000
-        horizon: http://191.168.186.252:8000
         orion: http://192.168.56.11:1026
     admin:
         username: idm
         password: idm
-    oauth:
-        clientId: 
-        clientSecret: 
     default:
         domain: default
 front:
     url: http://207.249.127.180/#
+    image-url: http://207.249.127.180
 
+sa:
+  account: admin@localhost.mx
+  passwd: adminadmin
+  
 ---
 spring:
     profiles: production
@@ -142,14 +148,15 @@ spring:
         host: smtp.gmail.com
         port: 587
         protocol: smtp
-        from: gitlab.infotec@gmail.com
-        username: gitlab.infotec@gmail.com
-        password: 
+        from: test.smartcity.sdk@gmail.com
+        username: test.smartcity.sdk@gmail.com
+        password:
         tls: true
         properties.mail.smtp:
             auth: true
             starttls.enable: true
             ssl.trust: smtp.gmail.com
+        support: smartcityapp@smartsdk.eu
     jackson:
         date-format: yyyy-MM-dd
 
@@ -161,15 +168,16 @@ server:
 idm:
     servers:
         keystone: http://localhost:5000
-        horizon: http://localhost:8000
         orion: http://localhost:1026
     admin:
         username: idm
         password: idm
-    oauth:
-        clientId:
-        clientSecret:
     default:
-        domain: default        
+        domain: default
 front:
     url: http://207.249.127.91/#
+    image-url: http://207.249.127.180
+
+sa:
+  account: admin@localhost.mx
+  passwd: adminadmin

@@ -8,6 +8,9 @@ import org.springframework.data.annotation.Id;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import mx.infotec.smartcity.backend.model.VehicleType;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "type", "name", "vehicleType", "category", "stops", "areaServed",
@@ -21,11 +24,12 @@ public class PublicTransport {
   @JsonProperty("name")
   private String       name;
   @JsonProperty("vehicleType")
-  private String       vehicleType;
+  @DBRef
+  private VehicleType       vehicleType;
   @JsonProperty("category")
-  private List<String> category = null;
+  private List<PublicTransportCategory> category = null;
   @JsonProperty("stops")
-  private Stops        stops;
+  private List<GeoJsonPoint>        stops;
   @JsonProperty("areaServed")
   private String       areaServed;
   @JsonProperty("arrivalTime")
@@ -71,32 +75,32 @@ public class PublicTransport {
   }
 
   @JsonProperty("vehicleType")
-  public String getVehicleType() {
+  public VehicleType getVehicleType() {
     return vehicleType;
   }
 
   @JsonProperty("vehicleType")
-  public void setVehicleType(String vehicleType) {
+  public void setVehicleType(VehicleType vehicleType) {
     this.vehicleType = vehicleType;
   }
 
   @JsonProperty("category")
-  public List<String> getCategory() {
+  public List<PublicTransportCategory> getCategory() {
     return category;
   }
 
   @JsonProperty("category")
-  public void setCategory(List<String> category) {
+  public void setCategory(List<PublicTransportCategory> category) {
     this.category = category;
   }
 
   @JsonProperty("stops")
-  public Stops getStops() {
+  public List<GeoJsonPoint> getStops() {
     return stops;
   }
 
   @JsonProperty("stops")
-  public void setStops(Stops stops) {
+  public void setStops(List<GeoJsonPoint> stops) {
     this.stops = stops;
   }
 

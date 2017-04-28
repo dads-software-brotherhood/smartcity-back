@@ -14,7 +14,7 @@ import mx.infotec.smartcity.backend.model.Group;
  *
  * @author Benjamin Vander Stichelen
  */
-public interface GroupRepository extends MongoRepository<Group, String> {
+public interface GroupRepository extends MongoRepository<Group, Integer> {
 
   List<Group> findAllById(List<String> listId, Pageable pageable);
 

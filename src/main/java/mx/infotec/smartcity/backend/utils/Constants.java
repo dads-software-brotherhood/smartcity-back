@@ -21,4 +21,14 @@ public interface Constants {
     public static final String RECOVERY_PASSWORD_URL = "/restore-password/";
     public static final String VALIDATE_ACCOUNT_URL = "/account-verification/";
     
+    public static final String URL_ADMIN = "admin";
+    public static final String URL_GROUPS = "groups";
+    public static final String URL_PROFILE = "user-profile";
+    public static final String URL_TRANSPORT = "public-transports";
+    public static final String URL_RULES = "rules";
+   
+    public static final String GENERAL_PARAM_NAME = "name";
+    public static final String GENERAL_PARAM_ID = "id";
+    
+    
 }

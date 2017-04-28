@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import mx.infotec.smartcity.backend.model.Group;
 import mx.infotec.smartcity.backend.persistence.GroupRepository;
+import org.springframework.data.domain.Sort;
 
 
 /**
@@ -30,7 +31,7 @@ import mx.infotec.smartcity.backend.persistence.GroupRepository;
  * @author Benjamin Vander Stichelen
  */
 @RestController
-@RequestMapping("/groupss")
+@RequestMapping("/groups")
 public class GroupController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GroupController.class);
@@ -50,8 +51,9 @@ public class GroupController {
 
 
   @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-  public Group getById(@PathVariable("id") String id) {
-    return groupRepository.findOne(id);
+  public Group getById(@PathVariable("id") Integer id) {
+    Group grupo = groupRepository.findOne(id);
+    return grupo;
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/page/{page}/{size}")
@@ -70,7 +72,7 @@ public class GroupController {
 
 
   @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-  public ResponseEntity<?> deleteByID(@PathVariable String id) {
+  public ResponseEntity<?> deleteByID(@PathVariable Integer id) {
     try {
       groupRepository.delete(id);
       return ResponseEntity.accepted().body("deleted");
@@ -86,6 +88,19 @@ public class GroupController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID must be null");
     } else {
       try {
+        //Add this code lines to set numeric id to vehicle type////////////////////////////////////////
+        Pageable pageable = new PageRequest(0, 1, new Sort(Sort.Direction.DESC, "id"));
+        List<Group> max = groupRepository.findAll(pageable).getContent();
+        if (max.size() > 0)
+        {
+            group.setId(max.get(0).getId() + 1);
+        }
+        else
+        {
+            group.setId(1);
+        }
+        //////////////////////////////////////////////////////////////////////////////////////////////
+          
         group.setDateCreated(new Date());
         group.setDateModified(new Date());
         Group GroupRepro = groupRepository.insert(group);
@@ -99,7 +114,7 @@ public class GroupController {
 
   @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
       value = "/{id}")
-  public ResponseEntity<?> update(@RequestBody Group group, @PathVariable("id") String id) {
+  public ResponseEntity<?> update(@RequestBody Group group, @PathVariable("id") Integer id) {
     try {
       if (groupRepository.exists(id)) {
         if (group.getId() != null) {

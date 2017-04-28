@@ -2,8 +2,10 @@ package mx.infotec.smartcity.backend.service.keystone;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -205,7 +207,7 @@ public class KeystoneUserServiceImpl implements UserService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-auth-token", authToken);
-        LOGGER.info("user url: {}", String.format(updateUserUrl, userId));
+        LOGGER.debug("user url: {}", String.format(updateUserUrl, userId));
         HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(headers);
         HttpEntity<CreateUser> responseEntity =
                 restTemplate.exchange(String.format(updateUserUrl, userId), HttpMethod.DELETE,
@@ -225,8 +227,8 @@ public class KeystoneUserServiceImpl implements UserService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-auth-token", authToken);
         HttpEntity<ChangeUserPassword> requestEntity = new HttpEntity<>(user, headers);
-        System.out.println(requestEntity.getBody());
-        LOGGER.info("user url: {}", String.format(changePasswordUrl, userid));
+        LOGGER.debug("body: {}", requestEntity.getBody());
+        LOGGER.debug("user url: {}", String.format(changePasswordUrl, userid));
         HttpEntity<ChangeUserPassword> responseEntity =
                 restTemplate.exchange(String.format(changePasswordUrl, userid), HttpMethod.POST,
                         requestEntity, ChangeUserPassword.class);
@@ -242,7 +244,7 @@ public class KeystoneUserServiceImpl implements UserService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-auth-token", authToken);
-        LOGGER.info("user url: {}", String.format(updateUserUrl, userId));
+        LOGGER.debug("user url: {}", String.format(updateUserUrl, userId));
         HttpEntity<CreateUser> requestEntity = new HttpEntity<CreateUser>(headers);
         HttpEntity<CreateUser> responseEntity =
                 restTemplate.exchange(String.format(updateUserUrl, userId), HttpMethod.GET,
@@ -316,10 +318,15 @@ public class KeystoneUserServiceImpl implements UserService {
         if (tokenM.getToken() != null) {
             Token_ token = tokenM.getToken();
             if (token.getUser() != null) {
+                UserProfile userProfile = userRepository.findByKeystoneId(token.getUser().getId());
+                
                 // idu.setName(token.getUser().getName());
-                idu.setId(token.getUser().getId());
+                idu.setIdmId(token.getUser().getId());
                 idu.setUsername(token.getUser().getName());
-
+                
+                if (userProfile != null) {
+                    idu.setMongoId(userProfile.getId());
+                }
             }
             tokenInfo.setStart(token.getIssuedAt());
             tokenInfo.setEnd(token.getExpiresAt());
@@ -335,7 +342,7 @@ public class KeystoneUserServiceImpl implements UserService {
                 rolesEnum.addAll(roles);
             }
             Set<Role> roles2 = convertRolesFromRoles(
-                    this.roleService.getRoleUserDefaultDomain(idu.getId(), tokenAdmin).getRoles());
+                    this.roleService.getRoleUserDefaultDomain(token.getUser().getId(), tokenAdmin).getRoles());
 
             rolesEnum.addAll(roles2);
             idu.setRoles(rolesEnum);
@@ -390,9 +397,9 @@ public class KeystoneUserServiceImpl implements UserService {
     public boolean createUserAndSendMail(CreateUser user, TemplatesEnum template)
             throws ServiceException {
         try {
-            createUserWithRole(user, Role.USER);
+            CreateUser userRegistered = createUserWithRole(user, Role.USER);
             TokenRecovery recovery =
-                    recoveryService.generateToken(user.getUser().getName(), user.getUser().getId());
+                    recoveryService.generateToken(userRegistered.getUser().getName(), userRegistered.getUser().getId());
             LOGGER.info("Create User token: " + recovery.getId());
             Email email = new Email();
             email.setTo(user.getUser().getName());
@@ -421,13 +428,16 @@ public class KeystoneUserServiceImpl implements UserService {
             userProfile.setRegisterDate(new Date());
             userProfile.setKeystoneId(createdUser.getUser().getId());
             userRepository.save(userProfile);
-            TokenRecovery recovery = recoveryService.generateToken(createUser.getUser().getName(),
-                    createUser.getUser().getId());
+            TokenRecovery recovery = recoveryService.generateToken(createdUser.getUser().getName(),
+                    createdUser.getUser().getId());
             LOGGER.info("Token recovery: " + recovery.getId());
+            Map<String, Object> otherParams = new HashMap<>();
+            otherParams.put(Constants.GENERAL_PARAM_NAME, getName(userProfile));
             Email email = new Email();
             email.setTo(createUser.getUser().getName());
             email.setMessage(recovery.getId());
-            mailService.sendMail(TemplatesEnum.MAIL_SAMPLE, email);
+            email.setContent(otherParams);
+            mailService.sendMail(TemplatesEnum.CREATE_USER_BY_ADMIN, email);
             return true;
         } catch (Exception e) {
             LOGGER.error("Error trying to create user by admin, cause: ", e);
@@ -446,6 +456,8 @@ public class KeystoneUserServiceImpl implements UserService {
                 List<UserModel> usersModelList = new ArrayList<>();
                 for (UserProfile item : usersProfileList) {
                     if (item.getName().equals(idmUsr)) {
+                        continue;
+                    } else if (item.getKeystoneId() == null) {
                         continue;
                     }
                     UserModel model = setUserModelProperties(item);
@@ -477,10 +489,26 @@ public class KeystoneUserServiceImpl implements UserService {
             UserProfile profile = userRepository.findByEmail(model.getEmail());
             deleteUser(profile.getKeystoneId(), adminToken);
             userRepository.delete(profile.getId());
+            Map<String, Object> otherParams = new HashMap<>();
+            otherParams.put(Constants.GENERAL_PARAM_NAME, getName(profile));
+            Email email = new Email();
+            email.setTo(model.getEmail());
+            email.setContent(otherParams);
+            mailService.sendMail(TemplatesEnum.DELETE_ACCOUNT_MAIL, email);
             return true;
         } catch (Exception e) {
             LOGGER.error("Error trying delete user, cause: ", e);
             throw new ServiceException(e);
+        }
+    }
+    
+    private String getName(UserProfile profile) {
+        if (profile == null || profile.getName() == null) {
+            return "User";
+        } else if (profile.getFamilyName() == null) {
+            return profile.getName();
+        } else {
+            return String.format("%s %s", profile.getName(), profile.getFamilyName());
         }
     }
 
@@ -492,7 +520,7 @@ public class KeystoneUserServiceImpl implements UserService {
             ChangeUserPassword password = new ChangeUserPassword();
             password.setUser(user);
             IdentityUser identity = loginService.findUserByValidToken(token);
-            changePassword(identity.getId(), password, token);
+            changePassword(identity.getIdmId(), password, token);
             return true;
         } catch (Exception e) {
             LOGGER.error("Error to trying update password, cause: ", e);

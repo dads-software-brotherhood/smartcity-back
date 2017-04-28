@@ -16,3 +16,6 @@ function loadFile() {
 loadFile 'country' 'country_file.json'
 loadFile 'region' 'region_file.json'
 loadFile 'locality' 'locality_file.json'
+loadFile 'notification' 'notification_file.json'
+loadFile 'vehicleType' 'vehicle_type_file.json'
+loadFile 'alert' 'alert_file.json'

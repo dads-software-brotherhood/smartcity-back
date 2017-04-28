@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,9 @@ public class AuthController {
     @Autowired
     private UserProfileRepository profileRepository;
 
+    @Value("${idm.admin.username}")
+    private String idmUser;
+    
     /**
      * Method used to perform the user authentication.
      *
@@ -53,39 +57,44 @@ public class AuthController {
      */
     @RequestMapping(method = RequestMethod.POST, value = "/login", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> login(@RequestBody TokenRequest tokenRequest) {
-        try {
-            IdentityUser identityUser = loginService.performLogin(tokenRequest.getUsername(), tokenRequest.getPassword());
+        if (tokenRequest.getUsername() != null && tokenRequest.getPassword() != null && !tokenRequest.getUsername().equalsIgnoreCase(idmUser)) {
+            try {
+                IdentityUser identityUser = loginService.performLogin(tokenRequest.getUsername(), tokenRequest.getPassword());
 
-            UserProfile userProfile = profileRepository.findByEmail(tokenRequest.getUsername());
+                UserProfile userProfile = profileRepository.findByKeystoneId(identityUser.getIdmId());
 
-            //TODO: Pasar al servicio del user profile
-            if (userProfile == null) {
-                LOGGER.warn("Local user don't  found. It will be create a new one");
-                userProfile = new UserProfile();
-                userProfile.setEmail(tokenRequest.getUsername());
-                userProfile.setName(tokenRequest.getUsername());
-                userProfile.setRegisterDate(new Date());
+                //TODO: Pasar al servicio del user profile
+                if (userProfile == null) {
+                    LOGGER.warn("Local user don't  found. It will be create a new one");
 
-                profileRepository.insert(userProfile);
+                    userProfile = new UserProfile();
+                    userProfile.setKeystoneId(identityUser.getIdmId());
+                    userProfile.setEmail(tokenRequest.getUsername());
+                    userProfile.setName(tokenRequest.getUsername());
+                    userProfile.setRegisterDate(new Date());
+
+                    profileRepository.insert(userProfile);
+                }
+
+                StringBuilder sb = new StringBuilder();
+                sb.append(userProfile.getName());
+
+                if (userProfile.getFamilyName() != null) {
+                    sb.append(' ').append(userProfile.getFamilyName());
+                }
+
+                identityUser.setMongoId(userProfile.getId());
+                identityUser.setName(sb.toString());
+
+                return ResponseEntity.accepted().body(identityUser);
+            } catch (InvalidCredentialsException ex) {
+                //TODO: Debe agregar el error a la bitacora (es un acceso erroneo)
+
+                LOGGER.error("Error at perform authentication", ex);
             }
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(userProfile.getName());
-
-            if (userProfile.getFamilyName() != null) {
-                sb.append(' ').append(userProfile.getFamilyName());
-            }
-
-            identityUser.setId(userProfile.getId());
-            identityUser.setName(sb.toString());
-
-            return ResponseEntity.accepted().body(identityUser);
-        } catch (InvalidCredentialsException ex) {
-            //TODO: Debe agregar el error a la bitacora (es un acceso erroneo)
-
-            LOGGER.error("Error at perform authentication", ex);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password invalid");
         }
+        
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Username or password invalid");
     }
 
     /**
@@ -143,6 +152,7 @@ public class AuthController {
             token = loginService.refreshToken(tokenAuth);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(token);
         } catch (InvalidTokenException e) {
+            LOGGER.error("Error at refresh token", e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error or invalid token");
         }
     }
