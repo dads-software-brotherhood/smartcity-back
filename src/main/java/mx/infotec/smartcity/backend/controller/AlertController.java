@@ -33,16 +33,16 @@ public class AlertController {
     @Autowired
     private UserProfileRepository userProfileRepository;
     
-    @RequestMapping(method = RequestMethod.GET)    
-    public List<Alert> getAll() {
-        List<Alert> res = alertRepository.findAllByOrderByDateTimeDesc();
-        
-        if (res == null) {
-            return new ArrayList<>();
-        } else {
-            return res;
-        }
-    }
+//    @RequestMapping(method = RequestMethod.GET)    
+//    public List<Alert> getAll() {
+//        List<Alert> res = alertRepository.findAllByOrderByDateTimeDesc();
+//        
+//        if (res == null) {
+//            return new ArrayList<>();
+//        } else {
+//            return res;
+//        }
+//    }
     
     @RequestMapping(method = RequestMethod.GET, value = "/page/{page}/items/{size}")
     public Page<Alert> getByPageSize(@PathVariable("page") String page,
