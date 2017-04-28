@@ -1,6 +1,7 @@
 package mx.infotec.smartcity.backend.model;
 
 import java.io.Serializable;
+import java.util.List;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -14,6 +15,7 @@ public class Notification implements Serializable {
     @Id
     private String id;
     private String name;
+    private List<String> subnotifications;
 
     public String getId() {
         return id;
@@ -31,4 +33,13 @@ public class Notification implements Serializable {
         this.name = name;
     }
 
+    public List<String> getSubnotifications() {
+        return subnotifications;
+    }
+
+    public void setSubnotifications(List<String> subnotifications) {
+        this.subnotifications = subnotifications;
+    }
+
+    
 }

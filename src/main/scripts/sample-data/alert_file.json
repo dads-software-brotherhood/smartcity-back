@@ -6,8 +6,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Paseo de la Reforma",
-	"dataTime": {$date:"2017-01-02T09:25:55.00Z"},
-	"severity": 1,
+	"dateTime": {$date:"2017-01-02T09:25:55.00Z"},
+	"eventObserved": "Heavy Traffic Jam",
 	"description": "Traffic jam in Paseo de la Reforma. Emergency services at place",
 	"refUser": "https://account.lab.fiware.org/users/8"
 }
@@ -19,8 +19,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Tlalpan",
-	"dataTime": {$date:"2017-01-03T09:25:55.00Z"},
-	"severity": 2,
+	"dateTime": {$date:"2017-01-03T09:25:55.00Z"},
+	"eventObserved": "Car Stopped On Road",
 	"description": "Traffic Jam in Calzada Tlalpan from south to north near Azteca stadium",
 	"refDevice": "Device:2"
 }
@@ -32,8 +32,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Universidad",
-	"dataTime": {$date:"2017-01-04T09:25:55.00Z"},
-	"severity": 3,
+	"dateTime": {$date:"2017-01-04T09:25:55.00Z"},
+	"eventObserved": "Car crashes",
 	"description": "Reported accident in Universidad avenue, slow transit",
 	"refUser": "https://account.lab.fiware.org/users/3"
 }
@@ -45,8 +45,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Tacuba",
-	"dataTime": {$date:"2017-01-05T09:25:55.00Z"},
-	"severity": 1,
+	"dateTime": {$date:"2017-01-05T09:25:55.00Z"},
+	"eventObserved": "Bikers injured",
 	"description": "Accident reported on Tacuba road, ambulances stop traffic",
 	"refDevice": "Device:3"
 }
@@ -58,8 +58,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"CDMX",
-	"dataTime": {$date:"2017-01-06T09:25:55.00Z"},
-	"severity": 2,
+	"dateTime": {$date:"2017-01-06T09:25:55.00Z"},
+	"eventObserved": "Foggy",
 	"description": "Sunny with no chance of rain",
 	"refUser": "https://account.lab.fiware.org/users/4"
 }
@@ -70,9 +70,9 @@
 		"type": "Point",
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
-	"locationDescription":"CDMX",
-	"dataTime": {$date:"2017-01-07T09:25:55.00Z"},
-	"severity": 3,
+	"locationDescription":"San Cristobal, Ecatepec",
+	"dateTime": {$date:"2017-01-07T09:25:55.00Z"},
+	"eventObserved": "Tornado warning",
 	"description": "High probability of rain in the Valley of Mexico",
 	"refDevice": "Device:4"
 }
@@ -83,9 +83,9 @@
 		"type": "Point",
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
-	"locationDescription":"Tlalpan",
-	"dataTime": {$date:"2017-01-08T09:25:55.00Z"},
-	"severity":1,
+	"locationDescription":"Bosques de Aragon",
+	"dateTime": {$date:"2017-01-08T09:25:55.00Z"},
+	"eventObserved":"Contingency alert",
 	"description": "Low levels of pollution at the exit of Cuernavaca",
 	"refUser": "https://account.lab.fiware.org/users/5"
 }
@@ -96,9 +96,9 @@
 		"type": "Point",
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
-	"locationDescription":"CDMX",
-	"dataTime": {$date:"2017-01-09T09:25:55.00Z"},
-	"severity": 2,
+	"locationDescription":"Oceania, CDMX",
+	"dateTime": {$date:"2017-01-09T09:25:55.00Z"},
+	"eventObserved": "Level of emissions",
 	"description": "Contamination in maximum level, avoid to transit near the center of the city",
 	"refDevice": "Device:5"
 }
@@ -109,9 +109,9 @@
 		"type": "Point",
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
-	"locationDescription":"Paseo de la Reforma",
-	"dataTime": {$date:"2017-01-10T09:25:55.00Z"},
-	"severity": 3,
+	"locationDescription":"Paseo de Palmas, Polanco",
+	"dateTime": {$date:"2017-01-10T09:25:55.00Z"},
+	"eventObserved": "Pollen concentration",
 	"description": "High level of pollen in Paseo de la Reforma",
 	"refUser": "https://account.lab.fiware.org/users/6"
 }
@@ -122,10 +122,10 @@
 		"type": "Point",
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
-	"locationDescription":"Polanco",
-	"dataTime": {$date:"2017-01-11T09:25:55.00Z"},
-	"severity": 1,
-	"description": "High level of pollen in Polanco",
+	"locationDescription":"Xochimilco",
+	"dateTime": {$date:"2017-01-11T09:25:55.00Z"},
+	"eventObserved": "Level of pollen on air",
+	"description": "High level of pollen in Xochimilco",
 	"refDevice": "Device:6"
 }
 {
@@ -136,8 +136,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Insurgentes avenue",
-	"dataTime": {$date:"2017-01-05T09:25:55.00Z"},
-	"severity": 1,
+	"dateTime": {$date:"2017-01-05T09:25:55.00Z"},
+	"eventObserved": "Pothole",
 	"description": "Traffic jam in Insurgentes avenue. Police at place",
 	"refUser": "https://account.lab.fiware.org/users/7"
 }
@@ -149,8 +149,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Montevideo avenue",
-	"dataTime": {$date:"2017-01-07T09:25:55.00Z"},
-	"severity": 2,
+	"dateTime": {$date:"2017-01-07T09:25:55.00Z"},
+	"eventObserved": "Roadworks",
 	"description": "Traffic Jam in Montevideo avenue from south to north near Politecnico",
 	"refDevice": "Device:7"
 }
@@ -162,8 +162,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Chapultepec avenue",
-	"dataTime": {$date:"2017-01-10T09:25:55.00Z"},
-	"severity": 3,
+	"dateTime": {$date:"2017-01-10T09:25:55.00Z"},
+	"eventObserved": "Minor Accident",
 	"description": "Reported accident in Chapultepec avenue, slow transit",
 	"refUser": "https://account.lab.fiware.org/users/8"
 }
@@ -175,8 +175,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Tacuba",
-	"dataTime": {$date:"2017-01-15T09:25:55.00Z"},
-	"severity": 1,
+	"dateTime": {$date:"2017-01-15T09:25:55.00Z"},
+	"eventObserved": "Hazard on Road",
 	"description": "Accident reported on Tacuba road, ambulances stop traffic",
 	"refDevice": "Device:8"
 }
@@ -188,8 +188,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"CDMX",
-	"dataTime": {$date:"2017-01-18T09:25:55.00Z"},
-	"severity": 2,
+	"dateTime": {$date:"2017-01-18T09:25:55.00Z"},
+	"eventObserved": "Rain",
 	"description": "Sunny with no chance of rain",
 	"refUser": "https://account.lab.fiware.org/users/9"
 }
@@ -200,9 +200,9 @@
 		"type": "Point",
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
-	"locationDescription":"CDMX",
-	"dataTime": {$date:"2017-01-19T09:25:55.00Z"},
-	"severity": 3,
+	"locationDescription":"Chilangolandia",
+	"dateTime": {$date:"2017-01-19T09:25:55.00Z"},
+	"eventObserved": "Flood watch",
 	"description": "High probability of rain in the Valley of Mexico",
 	"refDevice": "Device:9"
 }
@@ -213,9 +213,9 @@
 		"type": "Point",
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
-	"locationDescription":"Tlalpan Sur",
-	"dataTime": {$date:"2017-01-19T10:25:55.00Z"},
-	"severity":1,
+	"locationDescription":"Insurgente sur",
+	"dateTime": {$date:"2017-01-19T10:25:55.00Z"},
+	"eventObserved": "Visible pollution (smog)",
 	"description": "Low levels of pollution at the exit of Cuernavaca",
 	"refUser": "https://account.lab.fiware.org/users/10"
 }
@@ -227,8 +227,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Centro CDMX",
-	"dataTime": {$date:"2017-01-04T09:25:55.00Z"},
-	"severity": 2,
+	"dateTime": {$date:"2017-01-04T09:25:55.00Z"},
+	"eventObserved": "Pre-contingency alert",
 	"description": "Contamination in maximum level, avoid to transit near the center of the city",
 	"refDevice": "Device:10"
 }
@@ -240,8 +240,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Paseo de la Reforma",
-	"dataTime": {$date:"2017-01-01T09:25:55.00Z"},
-	"severity": 3,
+	"dateTime": {$date:"2017-01-01T09:25:55.00Z"},
+	"eventObserved": "Symptoms or discomforts of users",
 	"description": "High level of pollen in Paseo de la Reforma",
 	"refUser": "https://account.lab.fiware.org/users/8"
 }
@@ -253,8 +253,8 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Polanco",
-	"dataTime": {$date:"2017-01-06T09:25:55.00Z"},
-	"severity": 1,
+	"dateTime": {$date:"2017-01-06T09:25:55.00Z"},
+	"eventObserved": "Pollen concentration",
 	"description": "High level of pollen in Polanco",
 	"refDevice": "Device:1"
 }

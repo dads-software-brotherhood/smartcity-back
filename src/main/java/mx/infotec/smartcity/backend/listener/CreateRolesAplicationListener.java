@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.ThrowsAdvice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,7 +59,7 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
         try {
             adminToken = adminUtils.getAdmintoken();
             Roles roles = roleService.getAllRolesLikeRoles(adminToken);
-            HashMap<String, RoleId> rolesId = new HashMap<String, RoleId>();
+            HashMap<String, RoleId> rolesId = new HashMap<>();
             for (Role role : Role.values()) {
                 Boolean create = true;
                 for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role roleKey : roles
@@ -93,48 +92,29 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
     }
 
     private void createDefaultAdmin() {
-        // TODO: Crear cuenta default de super usuario
-        // 1. Ver si hay cuentas con rol SA
-        // 2. Si no hay cuentas con rol SA, crear una cuenta de la siguiente forma:
-        // a. Tomar el correo desde una propiedad del application.properties
-        // b. Usar como password algo como: adminadmin (fijo hardcodeado)
-        // c. El usuario debe tener los roles: SA y USER
-
         String adminToken = "";
         try {
             adminToken = adminUtils.getAdmintoken();
-            mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role saRole = null;
-            mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role userRole = null;
-            
-            List<mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role> allRoles = roleService.getAllRoles(adminToken);
-            
-            for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role item : allRoles) {
-                if (item.getName().equals(Role.SA.name().toLowerCase())) {
-                    saRole = item;
-                } else if (item.getName().equals(Role.USER.name().toLowerCase())) {
-                    userRole = item;
-                } else {
-                    if (saRole != null && userRole != null) {
-                        break;
-                    }
-                }
-                
-            }
             
             List<RoleAssignments> roleAssignamentList =
-                    roleService.getUsersByRoleId(saRole.getId(), adminToken);
+                    roleService.getUsersByRoleId(RoleUtil.getIdRole(Role.SA), adminToken);
             if (roleAssignamentList == null || roleAssignamentList.isEmpty()) {
+                LOGGER.debug("It will be create a default SA user, with username: {}", saName);
+                    
                 User_ user = new User_();
                 user.setEnabled(true);
                 user.setName(saName);
                 user.setPassword(saPasswd);
                 CreateUser createUser = new CreateUser(user);
                 CreateUser createdUser = userService.createUserWithRole(createUser , Role.SA);
-                if (createdUser != null) {
-                    roleService.assignRoleToUserOnDefaultDomain(userRole.getId(), createdUser.getUser().getId(), adminToken);
-                } else {
-                    throw new ServiceException("Error to create new user");
-                }
+                
+                // Temporal disable
+                
+//                if (createdUser != null) {
+//                    roleService.assignRoleToUserOnDefaultDomain(RoleUtil.getIdRole(Role.USER), createdUser.getUser().getId(), adminToken);
+//                } else {
+//                    throw new ServiceException("Error to create new user");
+//                }
                 
             }
         } catch (ServiceException e) {
