@@ -5,7 +5,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import mx.infotec.smartcity.backend.model.Address;
 import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.Group;
@@ -22,18 +37,6 @@ import mx.infotec.smartcity.backend.service.mail.MailService;
 import mx.infotec.smartcity.backend.service.recovery.TokenRecoveryService;
 import mx.infotec.smartcity.backend.utils.Constants;
 import mx.infotec.smartcity.backend.utils.TemplatesEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * RestService for user-profile.
@@ -80,7 +83,8 @@ public class UserProfileController {
     public ResponseEntity<?> deleteByID(@PathVariable String id, HttpServletRequest request) {
         IdentityUser identityUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
 
-        if (identityUser == null || identityUser.getUsername().equals(idmUser) || (identityUser.getRoles() != null && identityUser.getRoles().contains(Role.SA))) {
+        if (identityUser == null || identityUser.getUsername().equals(idmUser)
+                || (identityUser.getRoles() != null && identityUser.getRoles().contains(Role.SA))) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't delete this account");
         } else {
             try {
@@ -103,11 +107,11 @@ public class UserProfileController {
                     } else {
                         StringBuilder sb = new StringBuilder();
                         sb.append(userProfile.getName());
-                        
+
                         if (userProfile.getFamilyName() == null) {
                             sb.append(' ').append(userProfile.getFamilyName());
                         }
-                        
+
                         map.put(Constants.GENERAL_PARAM_NAME, sb.toString());
                     }
 
@@ -190,7 +194,7 @@ public class UserProfileController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/health-profile")
     public ResponseEntity<?> addHeathProfile(@RequestBody HealthProfile healthProfile, @PathVariable("id") String id) {
-        //TODO: Agregar validaciones y bloques de try/catch
+        // TODO: Agregar validaciones y bloques de try/catch
         UserProfile userProfile = userProfileRepository.findOne(id);
 
         if (userProfile != null) {
@@ -206,8 +210,9 @@ public class UserProfileController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/health-profile")
-    public ResponseEntity<?> updateHeathProfile(@RequestBody HealthProfile healthProfile, @PathVariable("id") String id) {
-        //TODO: Agregar validaciones y bloques de try/catch
+    public ResponseEntity<?> updateHeathProfile(@RequestBody HealthProfile healthProfile,
+            @PathVariable("id") String id) {
+        // TODO: Agregar validaciones y bloques de try/catch
         UserProfile userProfile = userProfileRepository.findOne(id);
 
         if (userProfile != null) {
@@ -221,7 +226,7 @@ public class UserProfileController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}/health-profile")
     public ResponseEntity<?> deleteHeathProfile(@PathVariable("id") String id) {
-        //TODO: Agregar validaciones y bloques de try/catch
+        // TODO: Agregar validaciones y bloques de try/catch
         UserProfile userProfile = userProfileRepository.findOne(id);
 
         if (userProfile != null) {
@@ -296,11 +301,13 @@ public class UserProfileController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/address/{index}")
-    public ResponseEntity<?> updateAddress(@RequestBody Address address, @PathVariable("id") String id, @PathVariable("index") int index) {
+    public ResponseEntity<?> updateAddress(@RequestBody Address address, @PathVariable("id") String id,
+            @PathVariable("index") int index) {
         if (isValid(address)) {
             UserProfile userProfile = userProfileRepository.findOne(id);
 
-            if (userProfile != null && userProfile.getAddresses() != null && userProfile.getAddresses().size() > index) {
+            if (userProfile != null && userProfile.getAddresses() != null
+                    && userProfile.getAddresses().size() > index) {
                 userProfile.getAddresses().set(index, address);
                 userProfileRepository.save(userProfile);
                 return ResponseEntity.accepted().body(userProfile.getAddresses());
@@ -315,7 +322,7 @@ public class UserProfileController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}/address/{index}")
     public ResponseEntity<?> deleteAddress(@PathVariable("id") String id, @PathVariable("index") int index) {
-        //TODO: Agregar validaciones y bloques de try/catch
+        // TODO: Agregar validaciones y bloques de try/catch
         UserProfile userProfile = userProfileRepository.findOne(id);
 
         if (userProfile != null && userProfile.getAddresses() != null && userProfile.getAddresses().size() > index) {
@@ -391,15 +398,16 @@ public class UserProfileController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
         }
     }
+
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/groups")
     public ResponseEntity<?> addGroups(@RequestBody List<Group> groups, @PathVariable("id") String id) {
-            
+
         UserProfile userProfile = userProfileRepository.findOne(id);
 
         if (userProfile != null) {
-            
+
             List<Group> gg = userProfile.getGroups();
-            if (userProfile.getGroups()== null) {
+            if (userProfile.getGroups() == null) {
                 userProfile.setGroups(new ArrayList<>());
             }
 
@@ -414,7 +422,8 @@ public class UserProfileController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}/vehicle/{index}")
-    public ResponseEntity<?> updateVehicle(@RequestBody Vehicle vehicle, @PathVariable("id") String id, @PathVariable("index") int index) {
+    public ResponseEntity<?> updateVehicle(@RequestBody Vehicle vehicle, @PathVariable("id") String id,
+            @PathVariable("index") int index) {
         if (isValid(vehicle)) {
             UserProfile userProfile = userProfileRepository.findOne(id);
 
@@ -434,7 +443,7 @@ public class UserProfileController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}/vehicle/{index}")
     public ResponseEntity<?> deleteVehicle(@PathVariable("id") String id, @PathVariable("index") int index) {
-        //TODO: Agregar validaciones y bloques de try/catch
+        // TODO: Agregar validaciones y bloques de try/catch
         UserProfile userProfile = userProfileRepository.findOne(id);
 
         if (userProfile != null && userProfile.getVehicles() != null && userProfile.getVehicles().size() > index) {
@@ -446,10 +455,9 @@ public class UserProfileController {
         }
     }
 
-    
     @RequestMapping(method = RequestMethod.PATCH, value = "/{id}")
-    public ResponseEntity<?> updateEmail(@RequestBody UserProfile userProfile, 
-            @PathVariable("id") String id, HttpServletRequest request) {
+    public ResponseEntity<?> updateEmail(@RequestBody UserProfile userProfile, @PathVariable("id") String id,
+            HttpServletRequest request) {
         if (userProfile.getEmail() != null) {
             try {
                 IdentityUser logedUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
@@ -479,13 +487,13 @@ public class UserProfileController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required field email not present in request");
         }
     }
-    
+
     private boolean isValid(UserProfile userProfile) {
         Date currentDate = new Date();
 
-        return userProfile != null && userProfile.getName() != null
-                && userProfile.getFamilyName() != null && (userProfile.getBirthDate() == null
-                || (userProfile.getBirthDate() != null && userProfile.getBirthDate().before(currentDate)));
+        return userProfile != null && userProfile.getName() != null && userProfile.getFamilyName() != null
+                && (userProfile.getBirthDate() == null
+                        || (userProfile.getBirthDate() != null && userProfile.getBirthDate().before(currentDate)));
     }
 
     private boolean isValid(Address address) {
