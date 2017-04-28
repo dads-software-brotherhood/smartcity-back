@@ -107,11 +107,14 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
                 user.setPassword(saPasswd);
                 CreateUser createUser = new CreateUser(user);
                 CreateUser createdUser = userService.createUserWithRole(createUser , Role.SA);
-                if (createdUser != null) {
-                    roleService.assignRoleToUserOnDefaultDomain(RoleUtil.getIdRole(Role.USER), createdUser.getUser().getId(), adminToken);
-                } else {
-                    throw new ServiceException("Error to create new user");
-                }
+                
+                // Temporal disable
+                
+//                if (createdUser != null) {
+//                    roleService.assignRoleToUserOnDefaultDomain(RoleUtil.getIdRole(Role.USER), createdUser.getUser().getId(), adminToken);
+//                } else {
+//                    throw new ServiceException("Error to create new user");
+//                }
                 
             }
         } catch (ServiceException e) {
