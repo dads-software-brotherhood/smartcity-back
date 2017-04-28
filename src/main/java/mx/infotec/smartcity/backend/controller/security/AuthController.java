@@ -145,6 +145,7 @@ public class AuthController {
             token = loginService.refreshToken(tokenAuth);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(token);
         } catch (InvalidTokenException e) {
+            LOGGER.error("Error at refresh token", e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error or invalid token");
         }
     }
