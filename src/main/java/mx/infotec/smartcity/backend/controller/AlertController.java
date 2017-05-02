@@ -185,7 +185,7 @@ public class AlertController {
     
     @RequestMapping(method = RequestMethod.GET, value = "/my-events/{id}/type/{alertType}/date/{date}/page/{page}/items/{size}")    
     public Page<Alert> getAllEventsByUserAndAlertTypeAndDate(@PathVariable("id") String id, 
-                                    @PathVariable("date") Date date, 
+                                    @DateTimeFormat(pattern="yyyy-MM-dd") @PathVariable("date") Date date, 
                                     @PathVariable("alertType") String alertType,
                                     @PathVariable("page") String page,
                                     @PathVariable("size") String size, 
@@ -201,7 +201,7 @@ public class AlertController {
     
     @RequestMapping(method = RequestMethod.GET, value = "/my-events/{id}/type/{alertType}/subtype/{subtype}/date/{date}/page/{page}/items/{size}")    
     public Page<Alert> getAllEventsByUserAndAlertTypeAndSubtypeAndDate(@PathVariable("id") String id, 
-                                    @PathVariable("date") Date date, 
+                                    @DateTimeFormat(pattern="yyyy-MM-dd") @PathVariable("date") Date date,  
                                     @PathVariable("alertType") String alertType,
                                     @PathVariable("subtype") String subtype,
                                     @PathVariable("page") String page,
