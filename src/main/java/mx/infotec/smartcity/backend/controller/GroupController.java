@@ -81,17 +81,22 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID must be null");
         } else {
             try {
+                
+                if (groupRepository.findByGroup(group.getGroup()) != null)
+                {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error");
+                }
+                
                 // Add this code lines to set numeric id to vehicle
                 // type////////////////////////////////////////
-                Pageable pageable = new PageRequest(0, 1, new Sort(Sort.Direction.DESC, "id"));
-                List<Group> max = groupRepository.findAll(pageable).getContent();
-                if (!max.isEmpty()) {
-                    group.setId(max.get(0).getId() + 1);
+                Group max = groupRepository.findFirstByOrderByIdDesc();
+                if (max != null) {
+                    group.setId(max.getId() + 1);
                 } else {
                     group.setId(1);
                 }
                 //////////////////////////////////////////////////////////////////////////////////////////////
-
+                
                 group.setDateCreated(new Date());
                 group.setDateModified(new Date());
                 Group GroupRepro = groupRepository.insert(group);
