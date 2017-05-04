@@ -6,35 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
   <body style="background-image: url('${frontImageUrl}/bg_login.009bc52eeb9617af382e.png'); background-color: grey;">
-    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse; margin-top: 25px">
-      <tr>
-        <td>
-          <table align="center" border="1" cellpadding="0" cellspacing="0" width="450" style="border-collapse: collapse; background-color:  #fff; border-color: #6cc4d3;" >
-            <tr>
-              <td style="padding: 0 25px 25px 25px;">
-                <p align="center" style="font-size: 36px; margin-bottom: 25px; font-weight: bold; color: #002D67;">Smart Cities</p>
+    
+    <div style="width: 600px;margin: auto;">
+      <div style="margin: 30px auto;text-align: center;">
+        <img src="${frontImageUrl}/assets/img/smart-sdk.png" alt="logo"/>
+      </div>
+      <div style="margin:25px auto;background-color: #fff;border: 1px solid #6cc4d3;padding: 40px;border-radius: 10px;">
+        <h1 align="center" style="font-size: 36px; margin: 0px 0px 25px 0px; font-weight: bold; color: #002D67;">Smart Cities</h1>
+        <p>Hello ${name}!</p>
+        <br/>
+        <p>Welcome to Smart City App! to enter the application you must first change your password, to change the password you must click on the following URL:</p>
+        <br/>
 
-                <p>Hello ${name}!</p>
-                <br/>
-                <p>Welcome to Smart City App! to enter the application you must first change your password, to change the password you must click on the following URL:</p>
-                <br/>
+        <p><a href="${recoveryLink}" style="color: #fff;background-color: #00D3DE;border-color: #00D3DE;border: 1px solid transparent;padding: 0.5rem 1rem;border-radius: 0.25rem;text-decoration: none;>${recoveryLink}</a> </p>
+      </div>
+      <div style="text-align:center;">
+        <p>&copy; 2017 SmartSDK</p>
+      </div>
+    </div>
 
-                <p><a href="${recoveryLink}">${recoveryLink}</a> </p>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td align="center" style="padding: 30px;">
-          <p>&copy; 2017 SmartSDK</p>
-        </td>
-      </tr>
-      <tr>
-        <td align="center">
-          <img src="${frontImageUrl}/assets/img/smart-sdk.png" alt="logo"/>
-        </td>
-      </tr>
-    </table>
   </body>
 </html>
