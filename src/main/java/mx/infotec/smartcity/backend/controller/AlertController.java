@@ -1,9 +1,14 @@
 package mx.infotec.smartcity.backend.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import mx.infotec.smartcity.backend.model.Alert;
 
@@ -79,7 +84,22 @@ public class AlertController {
         profile.getGroups().forEach((group) -> {
             alertTypes.addAll(group.getNotificationIds());
         });
-        Page<Alert> res = alertRepository.findByAlertTypeInOrderByDateTimeDesc(alertTypes, pageable);
+        
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date today = new Date();
+        try {
+            today = formatter.parse(formatter.format(new Date()));
+        } catch (ParseException ex) {
+            Logger.getLogger(AlertController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Calendar c = Calendar.getInstance();
+        c.setTime(today);
+        c.add(Calendar.DATE, 1);
+        c.add(Calendar.SECOND, -1);
+        Date test = c.getTime();
+        
+        Page<Alert> res = alertRepository.findByAlertTypeInAndDateTimeBetweenOrderByDateTimeDesc(alertTypes,today, c.getTime(),  pageable);
         return res;
     }
     

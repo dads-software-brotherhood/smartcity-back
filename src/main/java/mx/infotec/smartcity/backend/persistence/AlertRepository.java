@@ -18,6 +18,7 @@ public interface AlertRepository extends MongoRepository<Alert, Integer> {
     public Page<Alert> findByDateTimeBetweenOrderByDateTimeDesc(Date start, Date end, Pageable pageable);
     
     public Page<Alert> findByAlertTypeInOrderByDateTimeDesc(List<String> alertTypes, Pageable pageable);
+    public Page<Alert> findByAlertTypeInAndDateTimeBetweenOrderByDateTimeDesc(List<String> alertTypes, Date start, Date end, Pageable pageable);
     public Page<Alert> findByAlertTypeOrderByDateTimeDesc(String alertType, Pageable pageable);
     public Page<Alert> findByAlertTypeAndEventObservedOrderByDateTimeDesc(String alertType, String subalertType, Pageable pageable);
     
