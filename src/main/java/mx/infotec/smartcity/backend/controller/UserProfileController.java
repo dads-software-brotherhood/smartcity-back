@@ -284,6 +284,10 @@ public class UserProfileController {
             if (userProfile != null) {
                 if (userProfile.getAddresses() == null) {
                     userProfile.setAddresses(new ArrayList<>());
+                } else if (address.isFavorite()) {
+                    userProfile.getAddresses().forEach((add) -> {
+                        add.setFavorite(false);
+                    });
                 }
 
                 userProfile.getAddresses().add(address);
@@ -308,6 +312,13 @@ public class UserProfileController {
 
             if (userProfile != null && userProfile.getAddresses() != null
                     && userProfile.getAddresses().size() > index) {
+                
+                if (address.isFavorite()) {
+                    userProfile.getAddresses().forEach((add) -> {
+                        add.setFavorite(false);
+                    });
+                }
+                
                 userProfile.getAddresses().set(index, address);
                 userProfileRepository.save(userProfile);
                 return ResponseEntity.accepted().body(userProfile.getAddresses());

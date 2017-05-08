@@ -17,6 +17,7 @@ public class Address implements Serializable {
     
     private String street;
     private String postalCode;
+    private boolean favorite;
     private AddressType addressType;
 
     @DBRef
@@ -36,6 +37,14 @@ public class Address implements Serializable {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     public AddressType getAddressType() {
