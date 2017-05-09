@@ -9,7 +9,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
+import mx.infotec.smartcity.backend.model.UserModel;
+import mx.infotec.smartcity.backend.model.UserProfile;
+import mx.infotec.smartcity.backend.model.Vehicle;
 import mx.infotec.smartcity.backend.model.VehicleType;
+import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import mx.infotec.smartcity.backend.persistence.VehicleTypeRepository;
+import mx.infotec.smartcity.backend.service.UserService;
+import mx.infotec.smartcity.backend.service.exception.ServiceException;
 import org.springframework.data.domain.Sort;
  /*
  * @author jose.gomez
@@ -35,6 +41,10 @@ public class VehiclesTypeController {
     
     @Autowired
     private VehicleTypeRepository vehicleTypesRepository;
+    @Autowired
+    private UserService keystoneUserService;
+    @Autowired
+    private UserProfileRepository userProfileRepository;
     
     @RequestMapping(method = RequestMethod.GET)    
     public List<VehicleType> getAll() {
@@ -100,11 +110,50 @@ public class VehiclesTypeController {
     }
   }
   
-  @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-  public ResponseEntity<?> deleteByID(@PathVariable Integer id) {
+  @RequestMapping(method = RequestMethod.DELETE, value = "/{id}/type/{type}")
+  public ResponseEntity<?> deleteByID(@PathVariable Integer id,
+                                      @PathVariable("type") String type) throws ServiceException {
     try {
-      vehicleTypesRepository.delete(id);
-      return ResponseEntity.accepted().body("deleted");
+      List<UserModel> userModelList = keystoneUserService.getUserModelList();
+      UserProfile user;
+      boolean existCar = false;
+      List<Vehicle> lstVehiculos;
+      
+      if (userModelList != null && !userModelList.isEmpty()) {
+          for(int i=0; i < userModelList.size(); i++)
+          {
+              user = new UserProfile();
+              user = userProfileRepository.findByEmail(userModelList.get(i).getEmail());
+              if (user != null)
+              {
+                lstVehiculos = user.getVehicles();
+                if(lstVehiculos != null)
+                {
+                for(int j=0; j < lstVehiculos.size(); j++)
+                {
+                    if(lstVehiculos.get(j).getType().equals(type))
+                    {
+                        existCar = true;
+                        break;
+                    }
+                }
+                if(existCar)
+                {
+                    break;
+                }
+              }
+              }
+          }
+      }
+      if(existCar)
+          {
+            return ResponseEntity.badRequest().body("Error");
+          }
+          else
+          {
+            vehicleTypesRepository.delete(id);
+            return ResponseEntity.accepted().body("deleted");
+          }
     } catch (Exception ex) {
       LOGGER.error("Error at delete", ex);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
