@@ -32,25 +32,25 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
 
     @Value("${sa.account}")
     private String saName;
-    
+
     @Value("${sa.passwd}")
     private String saPasswd;
-    
+
     @Autowired
     @Qualifier("adminUtils")
-    private AdminUtilsService   adminUtils;
+    private AdminUtilsService adminUtils;
 
     @Autowired
     @Qualifier("keystoneLoginService")
-    private LoginService        loginService;
+    private LoginService loginService;
 
     @Autowired
     @Qualifier("keystoneRoleService")
-    private RoleService         roleService;
+    private RoleService roleService;
 
     @Autowired
     @Qualifier("keystoneUserService")
-    private UserService         userService;
+    private UserService userService;
 
     public void createRoles() {
         String adminToken = "";
@@ -62,11 +62,9 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
             HashMap<String, RoleId> rolesId = new HashMap<>();
             for (Role role : Role.values()) {
                 Boolean create = true;
-                for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role roleKey : roles
-                        .getRoles()) {
-                    if (roleKey.getName().equals(role.name().toLowerCase())) {
+                for (mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role roleKey : roles.getRoles()) {
+                    if (roleKey.getName().equalsIgnoreCase(role.name())) {
                         create = false;
-
                         rolesId.put(role.name(), new RoleId(role, roleKey.getId()));
                     }
 
@@ -83,11 +81,10 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
         } catch (ServiceException e) {
             LOGGER.error("Error at roles creation", e);
         } finally {
-            if (adminToken != null && !adminToken.equals("")) {
+            if (adminToken != null && !adminToken.isEmpty()) {
                 loginService.invalidToken(adminToken);
             }
         }
-
 
     }
 
@@ -95,42 +92,42 @@ public class CreateRolesAplicationListener implements ApplicationListener<Applic
         String adminToken = "";
         try {
             adminToken = adminUtils.getAdmintoken();
-            
-            List<RoleAssignments> roleAssignamentList =
-                    roleService.getUsersByRoleId(RoleUtil.getIdRole(Role.SA), adminToken);
+
+            List<RoleAssignments> roleAssignamentList = roleService.getUsersByRoleId(RoleUtil.getIdRole(Role.SA),
+                    adminToken);
             if (roleAssignamentList == null || roleAssignamentList.isEmpty()) {
                 LOGGER.debug("It will be create a default SA user, with username: {}", saName);
-                    
+
                 User_ user = new User_();
                 user.setEnabled(true);
                 user.setName(saName);
                 user.setPassword(saPasswd);
                 CreateUser createUser = new CreateUser(user);
-                CreateUser createdUser = userService.createUserWithRole(createUser , Role.SA);
-                
+                CreateUser createdUser = userService.createUserWithRole(createUser, Role.SA);
+
                 // Temporal disable
-                
-//                if (createdUser != null) {
-//                    roleService.assignRoleToUserOnDefaultDomain(RoleUtil.getIdRole(Role.USER), createdUser.getUser().getId(), adminToken);
-//                } else {
-//                    throw new ServiceException("Error to create new user");
-//                }
-                
+
+                // if (createdUser != null) {
+                // roleService.assignRoleToUserOnDefaultDomain(RoleUtil.getIdRole(Role.USER),
+                // createdUser.getUser().getId(), adminToken);
+                // } else {
+                // throw new ServiceException("Error to create new user");
+                // }
+
             }
         } catch (ServiceException e) {
             LOGGER.debug("Error to create default user with SA role, cause: ", e);
         } finally {
-            if (adminToken != null && !adminToken.equals("")) {
+            if (adminToken != null && !adminToken.isEmpty()) {
                 loginService.invalidToken(adminToken);
             }
         }
 
-
-
     }
 
     /*
-     * @Override public void run(String... args) throws Exception { createRoles();
+     * @Override public void run(String... args) throws Exception {
+     * createRoles();
      * 
      * }
      */

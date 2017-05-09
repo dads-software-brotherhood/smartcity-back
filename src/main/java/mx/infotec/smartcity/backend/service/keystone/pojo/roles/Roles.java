@@ -11,12 +11,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(Include.NON_NULL)
 public class Roles implements Serializable {
 
-    private Links             links;
-    private List<Role>        roles            = null;
+    private Links links;
+    private List<Role> roles;
     private final static long serialVersionUID = 1173144707708238359L;
 
     @JsonProperty("role_assignments")
-    private List<RoleAssignments>  roleAssignments;
+    private List<RoleAssignments> roleAssignments;
+
+    public Roles() {
+        roles = null;
+    }
 
     public Links getLinks() {
         return links;
@@ -38,9 +42,8 @@ public class Roles implements Serializable {
         return roleAssignments;
     }
 
-    public void setRoleAssignments(List<RoleAssignments>  roleAssignments) {
+    public void setRoleAssignments(List<RoleAssignments> roleAssignments) {
         this.roleAssignments = roleAssignments;
     }
-    
-    
+
 }

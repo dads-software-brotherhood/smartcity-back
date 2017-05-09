@@ -21,6 +21,10 @@ public interface GroupRepository extends MongoRepository<Group, Integer> {
   List<Group> findAllById(List<String> listId);
 
   Group findById(String id);
+  
+  Group findByGroup(String name);
+  
+  Group findFirstByOrderByIdDesc();
 
 
 
