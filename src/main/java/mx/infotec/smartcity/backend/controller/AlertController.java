@@ -97,7 +97,6 @@ public class AlertController {
         c.setTime(today);
         c.add(Calendar.DATE, 1);
         c.add(Calendar.SECOND, -1);
-        Date test = c.getTime();
         
         Page<Alert> res = alertRepository.findByAlertTypeInAndDateTimeBetweenOrderByDateTimeDesc(alertTypes,today, c.getTime(),  pageable);
         return res;
