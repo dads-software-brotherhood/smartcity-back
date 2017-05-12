@@ -24,6 +24,7 @@ public class Vehicle implements Serializable {
     private FuelType fuelType;
     private Float fuelConsumption;
     private String vehiclPlateIdentifier;
+    private String type;
     private Date dateModified;
     private Date datecreated = new Date();
     
@@ -114,6 +115,14 @@ public class Vehicle implements Serializable {
 
     public void setFuelConsumption(Float fuelConsumption) {
       this.fuelConsumption = fuelConsumption;
+    }
+    
+    public String getType() {
+        return type;
+    }
+    
+    public void setType(String type) {
+        this.type = type;
     }
 
     

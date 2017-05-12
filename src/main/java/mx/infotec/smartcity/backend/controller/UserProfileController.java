@@ -26,10 +26,14 @@ import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.Group;
 import mx.infotec.smartcity.backend.model.HealthProfile;
 import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.Notification;
 import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.model.Vehicle;
+import mx.infotec.smartcity.backend.persistence.GroupRepository;
+import mx.infotec.smartcity.backend.persistence.NotificationRepository;
 import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
+import mx.infotec.smartcity.backend.pojo.SubscribedGroup;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
 import mx.infotec.smartcity.backend.service.UserService;
 import mx.infotec.smartcity.backend.service.keystone.pojo.createUser.CreateUser;
@@ -59,6 +63,10 @@ public class UserProfileController {
     private MailService mailService;
     @Autowired
     private TokenRecoveryService tokenRecoveryService;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @Value("${idm.admin.username}")
     private String idmUser;
@@ -284,6 +292,10 @@ public class UserProfileController {
             if (userProfile != null) {
                 if (userProfile.getAddresses() == null) {
                     userProfile.setAddresses(new ArrayList<>());
+                } else if (address.isFavorite()) {
+                    userProfile.getAddresses().forEach((add) -> {
+                        add.setFavorite(false);
+                    });
                 }
 
                 userProfile.getAddresses().add(address);
@@ -308,6 +320,13 @@ public class UserProfileController {
 
             if (userProfile != null && userProfile.getAddresses() != null
                     && userProfile.getAddresses().size() > index) {
+                
+                if (address.isFavorite()) {
+                    userProfile.getAddresses().forEach((add) -> {
+                        add.setFavorite(false);
+                    });
+                }
+                
                 userProfile.getAddresses().set(index, address);
                 userProfileRepository.save(userProfile);
                 return ResponseEntity.accepted().body(userProfile.getAddresses());
@@ -399,7 +418,145 @@ public class UserProfileController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/{id}/groups")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/groups")
+    public ResponseEntity<?> getGroups(@PathVariable("id") String id) {
+
+        UserProfile userProfile = userProfileRepository.findOne(id);
+
+        if (userProfile != null) {
+            return sendSubscribedGroups(userProfile);
+
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/notifications")
+    public ResponseEntity<?> getUserGroups(@PathVariable("id") String id) {
+
+        UserProfile userProfile = userProfileRepository.findOne(id);
+
+        if (userProfile != null) {
+            List<Notification> notifications = this.notificationRepository.findAll();
+            List<Notification> userNotifications = new ArrayList<Notification>();
+
+            for (Group group : userProfile.getGroups()) {
+                for (String userNotification : group.getNotificationIds()) {
+                    for (Notification notification : notifications) {
+                        if (userNotification.equals(notification.getId())) {
+                            if (!userNotifications.contains(notification)) {
+                                userNotifications.add(notification);
+                            }
+                        }
+                    }
+                }
+            }
+            return ResponseEntity.accepted().body(userNotifications);
+
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+        }
+    }
+
+    private ResponseEntity<?> sendSubscribedGroups(UserProfile userProfile) {
+        List<Group> adminGroups = this.groupRepository.findAll();
+        return ResponseEntity.accepted().body(createGroupPojo(adminGroups, userProfile.getGroups()));
+    }
+
+    private List<SubscribedGroup> createGroupPojo(List<Group> adminGroups, List<Group> userGroups) {
+        if (adminGroups != null && !adminGroups.isEmpty()) {
+
+            List<SubscribedGroup> subscribedGroups = new ArrayList<SubscribedGroup>();
+            for (Group adminGroup : adminGroups) {
+                SubscribedGroup subscribedGroup = new SubscribedGroup();
+                subscribedGroup.convert(adminGroup);
+                if (userGroups != null) {
+                    for (Group userGroup : userGroups) {
+                        if (userGroup != null && userGroup.getId() != null
+                                && userGroup.getId().equals(adminGroup.getId())) {
+                            subscribedGroup.setSubscribed(true);
+                        }
+                    }
+                }
+                subscribedGroups.add(subscribedGroup);
+            }
+
+            return subscribedGroups;
+        }
+        return new ArrayList<SubscribedGroup>();
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{id}/groups")
+    public ResponseEntity<?> changeGroups(@RequestBody List<SubscribedGroup> subscribedGroups,
+            @PathVariable("id") String id) {
+
+        UserProfile userProfile = userProfileRepository.findOne(id);
+
+        if (userProfile != null) {
+
+            List<Group> gg = userProfile.getGroups();
+            if (userProfile.getGroups() == null) {
+                userProfile.setGroups(new ArrayList<>());
+            }
+            List<Group> groups = convertSubscribedGroupsToGroups(subscribedGroups, userProfile.getGroups());
+            userProfile.setGroups(groups);
+
+            userProfileRepository.save(userProfile);
+
+            return sendSubscribedGroups(userProfile);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+        }
+    }
+
+    private List<Group> convertSubscribedGroupsToGroups(List<SubscribedGroup> subscribedGroups, List<Group> groups) {
+        // if the array sended to the services is empty no changes will be made
+        if (subscribedGroups == null || subscribedGroups.isEmpty()) {
+            return groups;
+        }
+        removeOrAddUserGroup(subscribedGroups, groups);
+        return groups;
+    }
+
+    private void removeOrAddUserGroup(List<SubscribedGroup> subscribedGroups, List<Group> groups) {
+        for (SubscribedGroup subscribed : subscribedGroups) {
+            boolean exist = false;
+            if (subscribed.isSubscribed()) {
+                // check if exist
+                for (Group group : groups) {
+                    if (subscribed.getId() != null && group.getId().equals(subscribed.getId())) {
+                        exist = true;
+                        break;
+                    }
+                }
+                if (!exist) {
+
+                    groups.add(convertSubscribedToGroup(subscribed));
+                }
+            } else {
+                // check if needs to be removed
+                for (Group group : groups) {
+                    if (subscribed.getId() != null && group.getId().equals(subscribed.getId())) {
+                        groups.remove(group);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private Group convertSubscribedToGroup(SubscribedGroup subscribed) {
+        Group group = new Group();
+        group.setId(subscribed.getId());
+        group.setGroup(subscribed.getGroup());
+        group.setDateCreated(subscribed.getDateCreated());
+        group.setDateModified(subscribed.getDateModified());
+        group.setNotificationIds(subscribed.getNotificationIds());
+        group.setType(subscribed.getType());
+        return group;
+    }
+
+0       @RequestMapping(method = RequestMethod.POST, value = "/{id}/groups")
     public ResponseEntity<?> addGroups(@RequestBody List<Group> groups, @PathVariable("id") String id) {
 
         UserProfile userProfile = userProfileRepository.findOne(id);

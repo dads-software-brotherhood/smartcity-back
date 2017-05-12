@@ -1,7 +1,9 @@
 package mx.infotec.smartcity.backend.controller;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -71,7 +73,7 @@ public class GroupController {
             return ResponseEntity.accepted().body("deleted");
         } catch (Exception ex) {
             LOGGER.error("Error at delete", ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\":\"" + ex.getMessage() + "\"}");
         }
     }
 
@@ -81,21 +83,26 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID must be null");
         } else {
             try {
+                
+                if (groupRepository.findByGroup(group.getGroup()) != null)
+                {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"There is already a group called '" + group.getGroup() + "'\"}");
+                }
+                
                 // Add this code lines to set numeric id to vehicle
                 // type////////////////////////////////////////
-                Pageable pageable = new PageRequest(0, 1, new Sort(Sort.Direction.DESC, "id"));
-                List<Group> max = groupRepository.findAll(pageable).getContent();
-                if (!max.isEmpty()) {
-                    group.setId(max.get(0).getId() + 1);
+                Group max = groupRepository.findFirstByOrderByIdDesc();
+                if (max != null) {
+                    group.setId(max.getId() + 1);
                 } else {
                     group.setId(1);
                 }
                 //////////////////////////////////////////////////////////////////////////////////////////////
-
+                
                 group.setDateCreated(new Date());
                 group.setDateModified(new Date());
                 Group GroupRepro = groupRepository.insert(group);
-                return ResponseEntity.accepted().body(GroupRepro);
+                return ResponseEntity.created(new URI("")).body(group);
             } catch (Exception ex) {
                 LOGGER.error("Error at insert", ex);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
@@ -107,6 +114,13 @@ public class GroupController {
     public ResponseEntity<?> update(@RequestBody Group group, @PathVariable("id") Integer id) {
         try {
             if (groupRepository.exists(id)) {
+                
+                Group groupSameName = groupRepository.findByGroup(group.getGroup());
+                if (groupSameName != null && !Objects.equals(groupSameName.getId(), id))
+                {
+                    return ResponseEntity.badRequest().body("{\"error\":\"There is already a group called '" + group.getGroup() + "'\"}");
+                }
+                
                 if (group.getId() != null) {
                     LOGGER.warn("ID from object is ignored");
                 }
@@ -114,7 +128,7 @@ public class GroupController {
                 group.setId(id);
                 groupRepository.save(group);
 
-                return ResponseEntity.accepted().body("updated");
+                return ResponseEntity.accepted().body(group);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
             }
