@@ -1,3 +1,4 @@
+
 package mx.infotec.smartcity.backend.controller;
 
 import java.util.ArrayList;
@@ -320,13 +321,13 @@ public class UserProfileController {
 
             if (userProfile != null && userProfile.getAddresses() != null
                     && userProfile.getAddresses().size() > index) {
-                
+
                 if (address.isFavorite()) {
                     userProfile.getAddresses().forEach((add) -> {
                         add.setFavorite(false);
                     });
                 }
-                
+
                 userProfile.getAddresses().set(index, address);
                 userProfileRepository.save(userProfile);
                 return ResponseEntity.accepted().body(userProfile.getAddresses());
@@ -556,7 +557,7 @@ public class UserProfileController {
         return group;
     }
 
-0       @RequestMapping(method = RequestMethod.POST, value = "/{id}/groups")
+    @RequestMapping(method = RequestMethod.POST, value = "/{id}/groups")
     public ResponseEntity<?> addGroups(@RequestBody List<Group> groups, @PathVariable("id") String id) {
 
         UserProfile userProfile = userProfileRepository.findOne(id);
