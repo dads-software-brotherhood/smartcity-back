@@ -4,4 +4,5 @@ mongoimport --db smartcity --collection locality 	--drop --file locality_file.js
 mongoimport --db smartcity --collection notification 	--drop --file notification_file.json
 mongoimport --db smartcity --collection region  	--drop --file region_file.json
 mongoimport --db smartcity --collection vehicleType	--drop --file vehicle_type_file.json
+mongoimport --db smartcity --collection fuelType	--drop --file fuel_type_file.json
 

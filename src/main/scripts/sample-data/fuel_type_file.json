@@ -1,0 +1,15 @@
+{"_id":  1, "name": "Gasoline"}
+{"_id":  2, "name": "Petrol(unleaded)"}
+{"_id":  3, "name": "Petrol(leaded)"}
+{"_id":  4, "name": "Petrol"}
+{"_id":  5, "name": "Diesel"}
+{"_id":  6, "name": "Electric"}
+{"_id":  7, "name": "Hydrogen"}
+{"_id":  8, "name": "LPG"}
+{"_id":  9, "name": "Autogas"}
+{"_id": 10, "name": "CNG"}
+{"_id": 11, "name": "Biodiesel"}
+{"_id": 12, "name": "Ethanol"}
+{"_id": 13, "name": "Hybrid electric/petrol"}
+{"_id": 14, "name": "Hybrid electric/diesel"}
+{"_id": 100, "name": "Other"}
