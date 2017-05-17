@@ -27,12 +27,10 @@ import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.Group;
 import mx.infotec.smartcity.backend.model.HealthProfile;
 import mx.infotec.smartcity.backend.model.IdentityUser;
-import mx.infotec.smartcity.backend.model.Notification;
 import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.model.Vehicle;
 import mx.infotec.smartcity.backend.persistence.GroupRepository;
-import mx.infotec.smartcity.backend.persistence.NotificationRepository;
 import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.pojo.SubscribedGroup;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
@@ -66,8 +64,6 @@ public class UserProfileController {
     private TokenRecoveryService tokenRecoveryService;
     @Autowired
     private GroupRepository groupRepository;
-    @Autowired
-    private NotificationRepository notificationRepository;
 
     @Value("${idm.admin.username}")
     private String idmUser;
@@ -432,33 +428,6 @@ public class UserProfileController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}/notifications")
-    public ResponseEntity<?> getUserGroups(@PathVariable("id") String id) {
-
-        UserProfile userProfile = userProfileRepository.findOne(id);
-
-        if (userProfile != null) {
-            List<Notification> notifications = this.notificationRepository.findAll();
-            List<Notification> userNotifications = new ArrayList<Notification>();
-
-            for (Group group : userProfile.getGroups()) {
-                for (String userNotification : group.getNotificationIds()) {
-                    for (Notification notification : notifications) {
-                        if (userNotification.equals(notification.getId())) {
-                            if (!userNotifications.contains(notification)) {
-                                userNotifications.add(notification);
-                            }
-                        }
-                    }
-                }
-            }
-            return ResponseEntity.accepted().body(userNotifications);
-
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
-        }
-    }
-
     private ResponseEntity<?> sendSubscribedGroups(UserProfile userProfile) {
         List<Group> adminGroups = this.groupRepository.findAll();
         return ResponseEntity.accepted().body(createGroupPojo(adminGroups, userProfile.getGroups()));
@@ -495,7 +464,6 @@ public class UserProfileController {
 
         if (userProfile != null) {
 
-            List<Group> gg = userProfile.getGroups();
             if (userProfile.getGroups() == null) {
                 userProfile.setGroups(new ArrayList<>());
             }
@@ -564,7 +532,6 @@ public class UserProfileController {
 
         if (userProfile != null) {
 
-            List<Group> gg = userProfile.getGroups();
             if (userProfile.getGroups() == null) {
                 userProfile.setGroups(new ArrayList<>());
             }
