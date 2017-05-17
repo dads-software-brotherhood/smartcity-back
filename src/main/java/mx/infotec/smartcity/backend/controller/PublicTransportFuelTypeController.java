@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author Erik Valdivieso
+ * @author Infotec
  */
 @RestController
 @RequestMapping("/public_transport_fuel_type")

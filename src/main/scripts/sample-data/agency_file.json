@@ -1,0 +1,4 @@
+{"_id": 1, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "Agency 1", "phoneNumber": "000-000-0000", "address": "San Fernando..."}
+{"_id": 2, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "Agency 2", "phoneNumber": "111-000-1111", "address": "Tlalpan..."}
+{"_id": 3, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "Agency 3", "phoneNumber": "222-222-0000", "address": "Periferico..."}
+{"_id": 4, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "Agency 4", "phoneNumber": "000-333-3333", "address": "Insurgentes..."}

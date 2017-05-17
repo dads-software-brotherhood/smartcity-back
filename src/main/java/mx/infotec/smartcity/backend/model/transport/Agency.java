@@ -2,6 +2,7 @@ package mx.infotec.smartcity.backend.model.transport;
 
 import java.io.Serializable;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -15,6 +16,7 @@ public class Agency implements Serializable {
     
     @Id
     private Integer id;
+    @Indexed
     private String name;
     private String phoneNumber;
     private String address;

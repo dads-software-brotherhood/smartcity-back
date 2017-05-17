@@ -6,7 +6,7 @@ import org.joda.time.LocalTime;
 
 /**
  *
- * @author Erik Valdivieso
+ * @author Infotec
  */
 public class WeekDay implements Serializable {
 

@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  *
- * @author Erik Valdivieso
+ * @author Infotec
  */
 @Document
 public class TransportSchedule implements Serializable {
