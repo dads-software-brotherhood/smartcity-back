@@ -1,7 +1,11 @@
 package mx.infotec.smartcity.backend.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.Role;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +27,7 @@ import mx.infotec.smartcity.backend.model.transport.ProfilePublicTransport;
 import mx.infotec.smartcity.backend.model.transport.PublicTransport;
 import mx.infotec.smartcity.backend.persistence.ProfilePublicTransportRepository;
 import mx.infotec.smartcity.backend.persistence.PublicTransportRepository;
+import mx.infotec.smartcity.backend.utils.Constants;
 
 /**
  * RestService Public Transport.
@@ -168,13 +173,19 @@ public class PublicTransportController {
   }
 
   @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-  public ResponseEntity<?> deleteByID(@PathVariable String id) {
+  public ResponseEntity<?> deleteByID(@PathVariable String id, HttpServletRequest request) {
     try {
-      ProfilePublicTransport profilePublicTransport =
-          profilePublicTransportRepository.findByIdPublicTransport(id);
-      publicTransportRepository.delete(id);
-      profilePublicTransportRepository.delete(profilePublicTransport);
-      return ResponseEntity.accepted().body("deleted");
+      PublicTransport publicTransport = publicTransportRepository.findById(id);
+      
+      if (canDeleteUpdate(publicTransport, request)) {
+          ProfilePublicTransport profilePublicTransport =
+              profilePublicTransportRepository.findByIdPublicTransport(id);
+          publicTransportRepository.delete(id);
+          profilePublicTransportRepository.delete(profilePublicTransport);
+          return ResponseEntity.accepted().body("deleted");          
+      } else {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only SA user or owner data can delete");
+      }
     } catch (Exception ex) {
       LOGGER.error("Error at delete", ex);
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error");
@@ -182,11 +193,17 @@ public class PublicTransportController {
   }
 
   @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public ResponseEntity<?> add(@RequestBody PublicTransport publicTransport) {
+  public ResponseEntity<?> add(@RequestBody PublicTransport publicTransport, HttpServletRequest request) {
     if (publicTransport.getId() != null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID must be null");
+    } else if (!isValid(publicTransport)) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Name, BrandName and ModelName are required");
     } else {
       try {
+        IdentityUser identityUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
+        publicTransport.setCreatorId(identityUser.getMongoId());
+        publicTransport.setDateCreated(new Date());
+        
         PublicTransport publicTransportRepro = publicTransportRepository.insert(publicTransport);
         this.profilePublicTransportRepository
             .insert(new ProfilePublicTransport(this.PROFILEID, publicTransport.getId()));
@@ -201,19 +218,29 @@ public class PublicTransportController {
   @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
       value = "/{id}")
   public ResponseEntity<?> update(@RequestBody PublicTransport publicTransport,
-      @PathVariable("id") String id) {
+      @PathVariable("id") String id, HttpServletRequest request) {
     try {
-      if (publicTransportRepository.exists(id)) {
+      PublicTransport publicTransportOrin = publicTransportRepository.findById(id);
+      
+      if (publicTransportOrin == null) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
+      } else if (!isValid(publicTransport)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Name, BrandName and ModelName are required");
+      } else if (!canDeleteUpdate(publicTransportOrin, request)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only SA user or owner data can update");
+      } else {
         if (publicTransport.getId() != null) {
           LOGGER.warn("ID from object is ignored");
         }
 
         publicTransport.setId(id);
+        publicTransport.setDateCreated(publicTransportOrin.getDateCreated());
+        publicTransport.setDateModified(new Date());
+        publicTransport.setCreatorId(publicTransportOrin.getCreatorId());
+        
         publicTransportRepository.save(publicTransport);
 
         return ResponseEntity.accepted().body("updated");
-      } else {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID don't exists");
       }
     } catch (Exception ex) {
       LOGGER.error("Error at update", ex);
@@ -221,5 +248,27 @@ public class PublicTransportController {
     }
   }
 
+  private boolean isValid(PublicTransport publicTransport) {
+    return publicTransport != null && publicTransport.getName() != null && publicTransport.getBrandName() != null && publicTransport.getModelName() != null;
+  }
 
+    private boolean canDeleteUpdate(PublicTransport publicTransport, HttpServletRequest request) {
+        if (publicTransport != null) {
+            IdentityUser identityUser = (IdentityUser) request.getAttribute(Constants.USER_REQUES_KEY);
+            
+            return identityUser != null && (isSa(identityUser) || identityUser.getMongoId().equals(publicTransport.getCreatorId()));
+        }
+
+        return false;
+    }
+    
+    private boolean isSa(IdentityUser identityUser) {
+        if (identityUser.getRoles() != null && !identityUser.getRoles().isEmpty()) {
+            if (identityUser.getRoles().stream().anyMatch((role) -> (role == Role.SA))) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }

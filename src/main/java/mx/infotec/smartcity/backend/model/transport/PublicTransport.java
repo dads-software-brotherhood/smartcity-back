@@ -1,167 +1,158 @@
-
 package mx.infotec.smartcity.backend.model.transport;
-
-import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import mx.infotec.smartcity.backend.model.VehicleType;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import java.util.Date;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "type", "name", "vehicleType", "category", "stops", "areaServed",
-    "arrivalTime", "returnTime", "vehiclePlateIdentifier", "dateCreated", "dateModified"})
+@JsonPropertyOrder({"id", "name", "description", "brandName", "modelName", "passengersTotal", "fuelType",
+    "fuelConsumption", "height", "width", "depth", "weight", "dateModified", "dateCreated", "creatorId"})
+@Document
 public class PublicTransport {
-  @Id
-  @JsonProperty("id")
-  private String       id;
-  @JsonProperty("type")
-  private String       type;
-  @JsonProperty("name")
-  private String       name;
-  @JsonProperty("vehicleType")
-  @DBRef
-  private VehicleType       vehicleType;
-  @JsonProperty("category")
-  private List<PublicTransportCategory> category = null;
-  @JsonProperty("stops")
-  private List<GeoJsonPoint>        stops;
-  @JsonProperty("areaServed")
-  private String       areaServed;
-  @JsonProperty("arrivalTime")
-  private String       arrivalTime;
-  @JsonProperty("returnTime")
-  private String       returnTime;
-  @JsonProperty("vehiclePlateIdentifier")
-  private String       vehiclePlateIdentifier;
-  @JsonProperty("dateCreated")
-  private String       dateCreated;
-  @JsonProperty("dateModified")
-  private String       dateModified;
 
-  @JsonProperty("id")
-  public String getId() {
-    return id;
-  }
+    @Id
+    private String id;
+    private String name;
+    private String description;
+    private String brandName;
+    private String modelName;
+    private Integer passengersTotal;
+    @DBRef
+    @JsonProperty("fuelType")
+    private PublicTransportFuelType publicTransportFuelType;
+    private String fuelConsumption;
+    private Integer height;
+    private Integer width;
+    private Integer depth;
+    private Integer weight;
+    private Date dateModified;
+    private Date dateCreated;
 
-  @JsonProperty("id")
-  public void setId(String id) {
-    this.id = id;
-  }
+    private String creatorId;
 
+    public String getId() {
+        return id;
+    }
 
-  @JsonProperty("type")
-  public String getType() {
-    return type;
-  }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-  @JsonProperty("type")
-  public void setType(String type) {
-    this.type = type;
-  }
+    public String getName() {
+        return name;
+    }
 
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  @JsonProperty("name")
-  public void setName(String name) {
-    this.name = name;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  @JsonProperty("vehicleType")
-  public VehicleType getVehicleType() {
-    return vehicleType;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-  @JsonProperty("vehicleType")
-  public void setVehicleType(VehicleType vehicleType) {
-    this.vehicleType = vehicleType;
-  }
+    public String getBrandName() {
+        return brandName;
+    }
 
-  @JsonProperty("category")
-  public List<PublicTransportCategory> getCategory() {
-    return category;
-  }
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
 
-  @JsonProperty("category")
-  public void setCategory(List<PublicTransportCategory> category) {
-    this.category = category;
-  }
+    public String getModelName() {
+        return modelName;
+    }
 
-  @JsonProperty("stops")
-  public List<GeoJsonPoint> getStops() {
-    return stops;
-  }
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
 
-  @JsonProperty("stops")
-  public void setStops(List<GeoJsonPoint> stops) {
-    this.stops = stops;
-  }
+    public Integer getPassengersTotal() {
+        return passengersTotal;
+    }
 
-  @JsonProperty("areaServed")
-  public String getAreaServed() {
-    return areaServed;
-  }
+    public void setPassengersTotal(Integer passengersTotal) {
+        this.passengersTotal = passengersTotal;
+    }
 
-  @JsonProperty("areaServed")
-  public void setAreaServed(String areaServed) {
-    this.areaServed = areaServed;
-  }
+    public PublicTransportFuelType getPublicTransportFuelType() {
+        return publicTransportFuelType;
+    }
 
-  @JsonProperty("arrivalTime")
-  public String getArrivalTime() {
-    return arrivalTime;
-  }
+    public void setPublicTransportFuelType(PublicTransportFuelType publicTransportFuelType) {
+        this.publicTransportFuelType = publicTransportFuelType;
+    }
 
-  @JsonProperty("arrivalTime")
-  public void setArrivalTime(String arrivalTime) {
-    this.arrivalTime = arrivalTime;
-  }
+    public String getFuelConsumption() {
+        return fuelConsumption;
+    }
 
-  @JsonProperty("returnTime")
-  public String getReturnTime() {
-    return returnTime;
-  }
+    public void setFuelConsumption(String fuelConsumption) {
+        this.fuelConsumption = fuelConsumption;
+    }
 
-  @JsonProperty("returnTime")
-  public void setReturnTime(String returnTime) {
-    this.returnTime = returnTime;
-  }
+    public Integer getHeight() {
+        return height;
+    }
 
-  @JsonProperty("vehiclePlateIdentifier")
-  public String getVehiclePlateIdentifier() {
-    return vehiclePlateIdentifier;
-  }
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
 
-  @JsonProperty("vehiclePlateIdentifier")
-  public void setVehiclePlateIdentifier(String vehiclePlateIdentifier) {
-    this.vehiclePlateIdentifier = vehiclePlateIdentifier;
-  }
+    public Integer getWidth() {
+        return width;
+    }
 
-  @JsonProperty("dateCreated")
-  public String getDateCreated() {
-    return dateCreated;
-  }
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
 
-  @JsonProperty("dateCreated")
-  public void setDateCreated(String dateCreated) {
-    this.dateCreated = dateCreated;
-  }
+    public Integer getDepth() {
+        return depth;
+    }
 
-  @JsonProperty("dateModified")
-  public String getDateModified() {
-    return dateModified;
-  }
+    public void setDepth(Integer depth) {
+        this.depth = depth;
+    }
 
-  @JsonProperty("dateModified")
-  public void setDateModified(String dateModified) {
-    this.dateModified = dateModified;
-  }
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    public Date getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
 
 }
