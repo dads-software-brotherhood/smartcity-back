@@ -6,12 +6,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.Date;
+import java.util.List;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"id", "name", "description", "brandName", "modelName", "passengersTotal", "fuelType",
-    "fuelConsumption", "height", "width", "depth", "weight", "dateModified", "dateCreated", "creatorId"})
+    "fuelConsumption", "height", "width", "depth", "weight", "dateModified", "dateCreated", "transportSchedules", "creatorId"})
 @Document
 public class PublicTransport {
 
@@ -32,6 +33,8 @@ public class PublicTransport {
     private Integer weight;
     private Date dateModified;
     private Date dateCreated;
+    @DBRef
+    List<TransportSchedule> transportSchedules;
 
     private String creatorId;
 
@@ -145,6 +148,14 @@ public class PublicTransport {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public List<TransportSchedule> getTransportSchedules() {
+        return transportSchedules;
+    }
+
+    public void setTransportSchedules(List<TransportSchedule> transportSchedules) {
+        this.transportSchedules = transportSchedules;
     }
 
     public String getCreatorId() {
