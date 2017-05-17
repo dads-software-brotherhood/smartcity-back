@@ -1,94 +1,95 @@
-
 package mx.infotec.smartcity.backend.model;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"id", "type", "group", "dateCreated", "dateModified"})
+@JsonPropertyOrder({ "id", "type", "group", "dateCreated", "dateModified" })
 public class Group {
 
-  @JsonProperty("id")
-  private Integer id;
-  @JsonProperty("type")
-  @NotEmpty
-  private String type;
-  @JsonProperty("group")
-  @NotEmpty
-  private String group;
-  @JsonProperty("dateCreated")
-  private Date   dateCreated;
-  @JsonProperty("dateModified")
-  private Date   dateModified;
-  @JsonProperty("notificationIds")
-  private List<String> notificationIds;
-  
+    @JsonProperty("id")
+    private Integer id;
+    @JsonProperty("type")
+    @NotEmpty
+    private String type;
 
-  @JsonProperty("id")
-  public Integer getId() {
-    return id;
-  }
+    @JsonProperty("group")
+    @NotEmpty
+    @Indexed(unique = true)
+    private String group;
 
-  @JsonProperty("id")
-  public void setId(Integer id) {
-    this.id = id;
-  }
+    @JsonProperty("dateCreated")
+    private Date dateCreated;
+    @JsonProperty("dateModified")
+    private Date dateModified;
+    @JsonProperty("notificationIds")
+    private List<String> notificationIds;
 
-  @JsonProperty("type")
-  public String getType() {
-    return type;
-  }
+    @JsonProperty("id")
+    public Integer getId() {
+        return id;
+    }
 
-  @JsonProperty("type")
-  public void setType(String type) {
-    this.type = type;
-  }
+    @JsonProperty("id")
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-  @JsonProperty("group")
-  public String getGroup() {
-    return group;
-  }
+    @JsonProperty("type")
+    public String getType() {
+        return type;
+    }
 
-  @JsonProperty("group")
-  public void setGroup(String group) {
-    this.group = group;
-  }
+    @JsonProperty("type")
+    public void setType(String type) {
+        this.type = type;
+    }
 
-  @JsonProperty("dateCreated")
-  public Date getDateCreated() {
-    return dateCreated;
-  }
+    @JsonProperty("group")
+    public String getGroup() {
+        return group;
+    }
 
-  @JsonProperty("dateCreated")
-  public void setDateCreated(Date dateCreated) {
-    this.dateCreated = dateCreated;
-  }
+    @JsonProperty("group")
+    public void setGroup(String group) {
+        this.group = group;
+    }
 
-  @JsonProperty("dateModified")
-  public Date getDateModified() {
-    return dateModified;
-  }
+    @JsonProperty("dateCreated")
+    public Date getDateCreated() {
+        return dateCreated;
+    }
 
-  @JsonProperty("dateModified")
-  public void setDateModified(Date dateModified) {
-    this.dateModified = dateModified;
-  }
+    @JsonProperty("dateCreated")
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    @JsonProperty("dateModified")
+    public Date getDateModified() {
+        return dateModified;
+    }
+
+    @JsonProperty("dateModified")
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
+    }
 
     @JsonProperty("notificationIds")
     public List<String> getNotificationIds() {
         return notificationIds;
     }
+
     @JsonProperty("notificationIds")
     public void setNotificationIds(List<String> notificationIds) {
         this.notificationIds = notificationIds;
     }
-  
-  
 
 }

@@ -1,0 +1,8 @@
+{"_id": 1, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "Corredores Concesionados", "url": "http://www.semovi.df.gob.mx/", "timezone": "America/Mexico_City", "languaje":"ES"}
+{"_id": 2, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "Metrobús", "url": "http://www.metrobus.df.gob.mx/", "timezone": "America/Mexico_City", "languaje":"ES"}
+{"_id": 3, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "Sistema de Transporte Colectivo Metro", "url": "http://www.metro.df.gob.mx/", "timezone": "America/Mexico_City", "languaje":"ES"}
+{"_id": 4, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "NOCHEBÚS Corredores concesionados", "url": "http://www.semovi.df.gob.mx/", "timezone": "America/Mexico_City", "languaje":"ES"}
+{"_id": 5, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "Red de Transporte de Pasajeros", "url": "http://www.rtp.gob.mx/", "timezone": "America/Mexico_City", "languaje":"ES"}
+{"_id": 6, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "RTP Regresa seguro a casa", "url": "http://www.rtp.gob.mx/", "timezone": "America/Mexico_City", "languaje":"ES"}
+{"_id": 7, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "Servicio de Transportes Eléctricos", "url": "http://www.ste.df.gob.mx/", "timezone": "America/Mexico_City", "languaje":"ES"}
+{"_id": 8, "_class" : "mx.infotec.smartcity.backend.model.transport.Agency", "name": "Ferrocarriles Suburbanos", "url": "http://www.fsuburbanos.com/", "timezone": "America/Mexico_City", "languaje":"ES"}

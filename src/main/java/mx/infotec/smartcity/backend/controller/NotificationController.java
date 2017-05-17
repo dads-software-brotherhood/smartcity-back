@@ -2,13 +2,20 @@ package mx.infotec.smartcity.backend.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import mx.infotec.smartcity.backend.model.Notification;
-import mx.infotec.smartcity.backend.persistence.NotificationRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import mx.infotec.smartcity.backend.model.Group;
+import mx.infotec.smartcity.backend.model.Notification;
+import mx.infotec.smartcity.backend.model.UserProfile;
+import mx.infotec.smartcity.backend.persistence.NotificationRepository;
+import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 
 /**
  *
@@ -20,21 +27,51 @@ public class NotificationController {
 
     @Autowired
     private NotificationRepository notificationRepository;
-    
-    @RequestMapping(method = RequestMethod.GET)    
+
+    @Autowired
+    private UserProfileRepository userProfileRepository;
+
+    @RequestMapping(method = RequestMethod.GET)
     public List<Notification> getAll() {
         List<Notification> res = notificationRepository.findAll();
-        
+
         if (res == null) {
             return new ArrayList<>();
         } else {
             return res;
         }
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public Notification getById(@PathVariable int id) {
         return notificationRepository.findOne(id);
     }
-    
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/notifications")
+    public ResponseEntity<?> getUserGroups(@PathVariable("id") String id) {
+
+        UserProfile userProfile = userProfileRepository.findOne(id);
+
+        if (userProfile != null) {
+            List<Notification> notifications = this.notificationRepository.findAll();
+            List<Notification> userNotifications = new ArrayList<Notification>();
+
+            for (Group group : userProfile.getGroups()) {
+                for (String userNotification : group.getNotificationIds()) {
+                    for (Notification notification : notifications) {
+                        if (userNotification.equals(notification.getId())) {
+                            if (!userNotifications.contains(notification)) {
+                                userNotifications.add(notification);
+                            }
+                        }
+                    }
+                }
+            }
+            return ResponseEntity.accepted().body(userNotifications);
+
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+        }
+    }
+
 }

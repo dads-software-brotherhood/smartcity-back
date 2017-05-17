@@ -1,9 +1,11 @@
 package mx.infotec.smartcity.backend.model;
 
+import java.io.Serializable;
+
+import org.springframework.data.mongodb.core.mapping.DBRef;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import java.io.Serializable;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
 /**
  *
@@ -14,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     private String street;
     private String postalCode;
     private boolean favorite;
@@ -62,5 +64,5 @@ public class Address implements Serializable {
     public void setLocality(Locality locality) {
         this.locality = locality;
     }
-    
+
 }

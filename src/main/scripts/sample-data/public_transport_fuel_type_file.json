@@ -1,0 +1,15 @@
+{"_id":  1, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Gasoline"}
+{"_id":  2, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Petrol(unleaded)"}
+{"_id":  3, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Petrol(leaded)"}
+{"_id":  4, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Petrol"}
+{"_id":  5, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Diesel"}
+{"_id":  6, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Electric"}
+{"_id":  7, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Hydrogen"}
+{"_id":  8, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "LPG"}
+{"_id":  9, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Autogas"}
+{"_id": 10, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "CNG"}
+{"_id": 11, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Biodiesel"}
+{"_id": 12, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Ethanol"}
+{"_id": 13, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Hybrid electric/petrol"}
+{"_id": 14, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Hybrid electric/diesel"}
+{"_id": 15, "_class" : "mx.infotec.smartcity.backend.model.transport.PublicTransportFuelType", "name": "Other"}

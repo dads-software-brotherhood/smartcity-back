@@ -1,9 +1,11 @@
 package mx.infotec.smartcity.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.Date;
+
 import org.springframework.data.mongodb.core.mapping.DBRef;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  *
@@ -11,9 +13,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Vehicle implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private String name;
     private String description;
     @DBRef
@@ -27,8 +29,7 @@ public class Vehicle implements Serializable {
     private String type;
     private Date dateModified;
     private Date datecreated = new Date();
-    
-    
+
     public String getName() {
         return name;
     }
@@ -54,35 +55,35 @@ public class Vehicle implements Serializable {
     }
 
     public String getBrandName() {
-      return brandName;
+        return brandName;
     }
 
     public void setBrandName(String brandName) {
-      this.brandName = brandName;
+        this.brandName = brandName;
     }
-    
+
     public String getModelName() {
-      return modelName;
+        return modelName;
     }
 
     public void setModelName(String modelName) {
-      this.modelName = modelName;
+        this.modelName = modelName;
     }
 
     public Date getVehicleModelDate() {
-      return vehicleModelDate;
+        return vehicleModelDate;
     }
 
     public void setVehicleModelDate(Date vehicleModelDate) {
-      this.vehicleModelDate = vehicleModelDate;
+        this.vehicleModelDate = vehicleModelDate;
     }
 
     public FuelType getFuelType() {
-      return fuelType;
+        return fuelType;
     }
 
     public void setFuelType(FuelType fuelType) {
-      this.fuelType = fuelType;
+        this.fuelType = fuelType;
     }
 
     public String getVehiclPlateIdentifier() {
@@ -110,20 +111,19 @@ public class Vehicle implements Serializable {
     }
 
     public Float getFuelConsumption() {
-      return fuelConsumption;
+        return fuelConsumption;
     }
 
     public void setFuelConsumption(Float fuelConsumption) {
-      this.fuelConsumption = fuelConsumption;
+        this.fuelConsumption = fuelConsumption;
     }
-    
+
     public String getType() {
         return type;
     }
-    
+
     public void setType(String type) {
         this.type = type;
     }
 
-    
 }
