@@ -55,13 +55,14 @@ public class NotificationController {
         if (userProfile != null) {
             List<Notification> notifications = this.notificationRepository.findAll();
             List<Notification> userNotifications = new ArrayList<Notification>();
-
-            for (Group group : userProfile.getGroups()) {
-                for (String userNotification : group.getNotificationIds()) {
-                    for (Notification notification : notifications) {
-                        if (userNotification.equals(notification.getId())) {
-                            if (!userNotifications.contains(notification)) {
-                                userNotifications.add(notification);
+            if (userProfile.getGroups() != null) {
+                for (Group group : userProfile.getGroups()) {
+                    for (String userNotification : group.getNotificationIds()) {
+                        for (Notification notification : notifications) {
+                            if (userNotification.equals(notification.getId())) {
+                                if (!userNotifications.contains(notification)) {
+                                    userNotifications.add(notification);
+                                }
                             }
                         }
                     }
