@@ -18,8 +18,9 @@ public class Agency implements Serializable {
     private Integer id;
     @Indexed
     private String name;
-    private String phoneNumber;
-    private String address;
+    private String url;
+    private String timezone;
+    private String languaje;
 
     public Integer getId() {
         return id;
@@ -37,19 +38,27 @@ public class Agency implements Serializable {
         this.name = name;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getUrl() {
+        return url;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getAddress() {
-        return address;
+    public String getTimezone() {
+        return timezone;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
+    public String getLanguaje() {
+        return languaje;
+    }
+
+    public void setLanguaje(String languaje) {
+        this.languaje = languaje;
     }
 }
