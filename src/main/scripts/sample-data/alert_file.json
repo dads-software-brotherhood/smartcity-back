@@ -6,7 +6,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Paseo de la Reforma",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
 	"eventObserved": "Heavy Traffic Jam",
 	"description": "Traffic jam in Paseo de la Reforma. Emergency services at place",
 	"refUser": "59090bc481da53308bf322b2"
@@ -19,7 +19,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Tlalpan",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
 	"eventObserved": "Car Stopped On Road",
 	"description": "Traffic Jam in Calzada Tlalpan from south to north near Azteca stadium",
 	"refDevice": "Device:2"
@@ -32,7 +32,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Universidad",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-02T09:25:55.00Z"},
 	"eventObserved": "Car crashes",
 	"description": "Reported accident in Universidad avenue, slow transit",
 	"refUser": "591b281b81da535a385a1193"
@@ -45,7 +45,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Tacuba",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-02T09:25:55.00Z"},
 	"eventObserved": "Bikers injured",
 	"description": "Accident reported on Tacuba road, ambulances stop traffic",
 	"refDevice": "Device:3"
@@ -58,7 +58,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"CDMX",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-05T09:25:55.00Z"},
 	"eventObserved": "Foggy",
 	"description": "Sunny with no chance of rain",
 	"refUser": "59090bc481da53308bf322b2"
@@ -71,7 +71,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"San Cristobal, Ecatepec",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-06T09:25:55.00Z"},
 	"eventObserved": "Tornado warning",
 	"description": "High probability of rain in the Valley of Mexico",
 	"refDevice": "Device:4"
@@ -84,7 +84,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Bosques de Aragon",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-11T09:25:55.00Z"},
 	"eventObserved":"Contingency alert",
 	"description": "Low levels of pollution at the exit of Cuernavaca",
 	"refUser": "user1"
@@ -97,7 +97,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Oceania, CDMX",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-12T09:25:55.00Z"},
 	"eventObserved": "Level of emissions",
 	"description": "Contamination in maximum level, avoid to transit near the center of the city",
 	"refDevice": "Device:5"
@@ -136,7 +136,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Insurgentes avenue",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
 	"eventObserved": "Pothole",
 	"description": "Traffic jam in Insurgentes avenue. Police at place",
 	"refUser": "59090bc481da53308bf322b2"
@@ -149,7 +149,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Montevideo avenue",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
 	"eventObserved": "Roadworks",
 	"description": "Traffic Jam in Montevideo avenue from south to north near Politecnico",
 	"refDevice": "Device:7"
@@ -162,7 +162,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Chapultepec avenue",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-16T09:25:55.00Z"},
 	"eventObserved": "Minor Accident",
 	"description": "Reported accident in Chapultepec avenue, slow transit",
 	"refUser": "591b281b81da535a385a1193"
@@ -175,7 +175,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Tacuba",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-13T09:25:55.00Z"},
 	"eventObserved": "Hazard on Road",
 	"description": "Accident reported on Tacuba road, ambulances stop traffic",
 	"refDevice": "Device:8"
@@ -188,7 +188,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"CDMX",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-13T09:25:55.00Z"},
 	"eventObserved": "Rain",
 	"description": "Sunny with no chance of rain",
 	"refUser": "59090bc481da53308bf322b2"
@@ -201,7 +201,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Chilangolandia",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
 	"eventObserved": "Flood watch",
 	"description": "High probability of rain in the Valley of Mexico",
 	"refDevice": "Device:9"
@@ -214,7 +214,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Insurgente sur",
-	"dateTime": {$date:"2017-05-17T10:25:55.00Z"},
+	"dateTime": {$date:"2017-05-15T10:25:55.00Z"},
 	"eventObserved": "Visible pollution (smog)",
 	"description": "Low levels of pollution at the exit of Cuernavaca",
 	"refUser": "user1"
@@ -227,7 +227,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Centro CDMX",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
 	"eventObserved": "Pre-contingency alert",
 	"description": "Contamination in maximum level, avoid to transit near the center of the city",
 	"refDevice": "Device:10"
@@ -240,7 +240,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Paseo de la Reforma",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-06T09:25:55.00Z"},
 	"eventObserved": "Symptoms or discomforts of users",
 	"description": "High level of pollen in Paseo de la Reforma",
 	"refUser": "user1"
@@ -253,7 +253,7 @@
 		"coordinates": [-3.712247222222222, 40.423852777777775]
 	},
 	"locationDescription":"Polanco",
-	"dateTime": {$date:"2017-05-17T09:25:55.00Z"},
+	"dateTime": {$date:"2017-05-09T09:25:55.00Z"},
 	"eventObserved": "Pollen concentration",
 	"description": "High level of pollen in Polanco",
 	"refDevice": "Device:1"
