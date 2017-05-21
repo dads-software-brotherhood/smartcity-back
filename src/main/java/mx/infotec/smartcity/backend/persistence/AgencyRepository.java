@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.Query;
  *
  * @author Infotec
  */
-public interface AgencyRepository extends MongoRepository<Agency, Integer> {
+public interface AgencyRepository extends MongoRepository<Agency, String> {
     
     @Query(value = "{'name': {$regex : ?0, $options: 'i'}}")
     List<Agency> findByName(String name);

@@ -2,7 +2,7 @@ package mx.infotec.smartcity.backend.model.transport;
 
 import java.io.Serializable;
 import mx.infotec.smartcity.backend.model.DayName;
-import org.joda.time.LocalTime;
+import mx.infotec.smartcity.backend.model.Time;
 
 /**
  *
@@ -13,8 +13,8 @@ public class WeekDay implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private DayName dayName;
-    private LocalTime departureTime;
-    private LocalTime arrivalTime;
+    private Time departureTime;
+    private Time arrivalTime;
     private boolean active;
 
     public DayName getDayName() {
@@ -25,19 +25,19 @@ public class WeekDay implements Serializable {
         this.dayName = dayName;
     }
 
-    public LocalTime getDepartureTime() {
+    public Time getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(LocalTime departureTime) {
+    public void setDepartureTime(Time departureTime) {
         this.departureTime = departureTime;
     }
 
-    public LocalTime getArrivalTime() {
+    public Time getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(LocalTime arrivalTime) {
+    public void setArrivalTime(Time arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
