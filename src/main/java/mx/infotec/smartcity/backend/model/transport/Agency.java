@@ -20,7 +20,7 @@ public class Agency implements Serializable {
     private String name;
     private String url;
     private String timezone;
-    private String languaje;
+    private String language;
 
     public String getId() {
         return id;
@@ -54,11 +54,11 @@ public class Agency implements Serializable {
         this.timezone = timezone;
     }
 
-    public String getLanguaje() {
-        return languaje;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setLanguaje(String languaje) {
-        this.languaje = languaje;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }
