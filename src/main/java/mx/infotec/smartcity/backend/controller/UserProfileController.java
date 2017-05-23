@@ -397,6 +397,11 @@ public class UserProfileController {
                 if (userProfile.getVehicles() == null) {
                     userProfile.setVehicles(new ArrayList<>());
                 }
+                else if (vehicle.getFavorite()) {
+                    userProfile.getVehicles().forEach((add) -> {
+                        add.setFavorite(false);
+                    });
+                }
 
                 vehicle.setDatecreated(new Date());
                 vehicle.setDateModified(new Date());
@@ -412,6 +417,47 @@ public class UserProfileController {
         } else {
             LOGGER.error("Invalid vehicle: {}", vehicle);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
+        }
+    }
+    
+        @RequestMapping(method = RequestMethod.PUT, value = "/{id}/vehicle/{index}")
+    public ResponseEntity<?> updateVehicle(@RequestBody Vehicle vehicle, @PathVariable("id") String id,
+            @PathVariable("index") int index) {
+        if (isValid(vehicle)) {
+            UserProfile userProfile = userProfileRepository.findOne(id);
+
+            if (userProfile != null && userProfile.getVehicles() != null && userProfile.getVehicles().size() > index) {
+                
+                if (vehicle.getFavorite()) {
+                    userProfile.getVehicles().forEach((add) -> {
+                        add.setFavorite(false);
+                    });
+                }
+                
+                vehicle.setDateModified(new Date());
+                userProfile.getVehicles().set(index, vehicle);
+                userProfileRepository.save(userProfile);
+                return ResponseEntity.accepted().body(userProfile.getVehicles());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
+            }
+        } else {
+            LOGGER.error("Invalid vehicle: {}", vehicle);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}/vehicle/{index}")
+    public ResponseEntity<?> deleteVehicle(@PathVariable("id") String id, @PathVariable("index") int index) {
+        // TODO: Agregar validaciones y bloques de try/catch
+        UserProfile userProfile = userProfileRepository.findOne(id);
+
+        if (userProfile != null && userProfile.getVehicles() != null && userProfile.getVehicles().size() > index) {
+            userProfile.getVehicles().remove(index);
+            userProfileRepository.save(userProfile);
+            return ResponseEntity.accepted().body(userProfile.getVehicles());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
         }
     }
 
@@ -541,40 +587,6 @@ public class UserProfileController {
             userProfileRepository.save(userProfile);
 
             return ResponseEntity.accepted().body(userProfile.getGroups());
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.PUT, value = "/{id}/vehicle/{index}")
-    public ResponseEntity<?> updateVehicle(@RequestBody Vehicle vehicle, @PathVariable("id") String id,
-            @PathVariable("index") int index) {
-        if (isValid(vehicle)) {
-            UserProfile userProfile = userProfileRepository.findOne(id);
-
-            if (userProfile != null && userProfile.getVehicles() != null && userProfile.getVehicles().size() > index) {
-                vehicle.setDateModified(new Date());
-                userProfile.getVehicles().set(index, vehicle);
-                userProfileRepository.save(userProfile);
-                return ResponseEntity.accepted().body(userProfile.getVehicles());
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
-            }
-        } else {
-            LOGGER.error("Invalid vehicle: {}", vehicle);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Required fields not present in request");
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}/vehicle/{index}")
-    public ResponseEntity<?> deleteVehicle(@PathVariable("id") String id, @PathVariable("index") int index) {
-        // TODO: Agregar validaciones y bloques de try/catch
-        UserProfile userProfile = userProfileRepository.findOne(id);
-
-        if (userProfile != null && userProfile.getVehicles() != null && userProfile.getVehicles().size() > index) {
-            userProfile.getVehicles().remove(index);
-            userProfileRepository.save(userProfile);
-            return ResponseEntity.accepted().body(userProfile.getVehicles());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
         }

@@ -27,6 +27,7 @@ public class Vehicle implements Serializable {
     private Float fuelConsumption;
     private String vehiclPlateIdentifier;
     private String type;
+    private Boolean favorite;
     private Date dateModified;
     private Date datecreated = new Date();
 
@@ -124,6 +125,14 @@ public class Vehicle implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+    
+    public Boolean getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
     }
 
 }
