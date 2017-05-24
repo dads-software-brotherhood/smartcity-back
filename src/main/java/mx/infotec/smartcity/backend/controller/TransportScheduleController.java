@@ -48,6 +48,18 @@ public class TransportScheduleController {
     public Page<TransportSchedule> getPage(@PathVariable Integer page) {
         return null;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public ResponseEntity<?> getById(@PathVariable String id) {
+        TransportSchedule tmp = transportScheduleRepository.findOne(id);
+        
+        if (tmp == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("not found");
+        } else {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(tmp);
+        }
+        
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> add(@RequestBody TransportSchedule transportSchedule, HttpServletRequest request) {
