@@ -65,7 +65,7 @@ public class Application extends SpringBootServletInitializer {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(loggedUserFilter());
         registration.addUrlPatterns("/user-profile/*", "/public-transport/*", "/register/update-password", "/admin/*",
-                  "/alerts/*", "/vehicletype/*", "/groups/*", "/notifications/*");
+                  "/alerts/*", "/vehicletype/*", "/groups/*", "/notifications/*", "/transport-schedule/*", "/agency/*");
         registration.setName("loggedUserFilter");
         registration.setOrder(1);
 
@@ -113,7 +113,7 @@ public class Application extends SpringBootServletInitializer {
     public FilterRegistrationBean selfTransportAdminRoleFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(transportAdminRoleFilter());
-        registration.addUrlPatterns("/public-transport/*");
+        registration.addUrlPatterns("/public-transport/*", "/transport-schedule/*", "/agency/*");
         registration.addServletNames("transportAdminRoleFilter");
         registration.setOrder(3);
 

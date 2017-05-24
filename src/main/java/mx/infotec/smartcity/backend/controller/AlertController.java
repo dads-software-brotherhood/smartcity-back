@@ -83,21 +83,23 @@ public class AlertController {
             alertTypes.addAll(group.getNotificationIds());
         });
 
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date today = new Date();
-        try {
-            today = formatter.parse(formatter.format(new Date()));
-        } catch (ParseException ex) {
-            Logger.getLogger(AlertController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+//        Date today = new Date();
+//        try {
+//            today = formatter.parse(formatter.format(new Date()));
+//        } catch (ParseException ex) {
+//            Logger.getLogger(AlertController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        Calendar c = Calendar.getInstance();
+//        c.setTime(today);
+//        c.add(Calendar.DATE, 1);
+//        c.add(Calendar.SECOND, -1);
+//
+//        Page<Alert> res = alertRepository.findByAlertTypeInAndDateTimeBetweenOrderByDateTimeDesc(alertTypes, today,
+//                c.getTime(), pageable);
 
-        Calendar c = Calendar.getInstance();
-        c.setTime(today);
-        c.add(Calendar.DATE, 1);
-        c.add(Calendar.SECOND, -1);
-
-        Page<Alert> res = alertRepository.findByAlertTypeInAndDateTimeBetweenOrderByDateTimeDesc(alertTypes, today,
-                c.getTime(), pageable);
+          Page<Alert> res = alertRepository.findByAlertTypeInOrderByDateTimeDesc(alertTypes, pageable);
         return res;
     }
 

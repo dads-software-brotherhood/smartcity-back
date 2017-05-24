@@ -1,5 +1,7 @@
 package mx.infotec.smartcity.backend.model.transport;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -9,24 +11,26 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * @author Infotec
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Document
 public class Agency implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
     @Id
-    private Integer id;
+    private String id;
     @Indexed
     private String name;
     private String url;
     private String timezone;
-    private String languaje;
+    private String language;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -54,11 +58,11 @@ public class Agency implements Serializable {
         this.timezone = timezone;
     }
 
-    public String getLanguaje() {
-        return languaje;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setLanguaje(String languaje) {
-        this.languaje = languaje;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

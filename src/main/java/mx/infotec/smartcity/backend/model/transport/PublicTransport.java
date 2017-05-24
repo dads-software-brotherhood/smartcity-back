@@ -1,5 +1,6 @@
 package mx.infotec.smartcity.backend.model.transport;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({"id", "name", "description", "brandName", "modelName", "passengersTotal", "fuelType",
     "fuelConsumption", "height", "width", "depth", "weight", "dateModified", "dateCreated", "transportSchedules", "creatorId"})
 @Document

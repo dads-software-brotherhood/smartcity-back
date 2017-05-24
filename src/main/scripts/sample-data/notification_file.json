@@ -1,5 +1,6 @@
 {
 	"_id":"TrafficJam",
+    "_class" : "mx.infotec.smartcity.backend.model.Notification",
 	"name":"Traffic jam",
 	"subnotifications":["Standstill Traffic Jam",
 						"Heavy Traffic Jam",
@@ -15,6 +16,7 @@
 }
 {
 	"_id":"Accidents",
+    "_class" : "mx.infotec.smartcity.backend.model.Notification",
 	"name":"Accidents",
 	"subnotifications":["Minor Accident",
 						"Car Accident",
@@ -27,6 +29,7 @@
 }
 {
 	"_id":"WeatherConditions",
+    "_class" : "mx.infotec.smartcity.backend.model.Notification",
 	"name":"Weather conditions",
 	"subnotifications":["Rain",
 						"Sunny",
@@ -45,6 +48,7 @@
 }
 {
 	"_id":"Pollutions",
+    "_class" : "mx.infotec.smartcity.backend.model.Notification",
 	"name":"Pollutions",
 	"subnotifications":["Visible pollution (smog)",
 						"Level of emissions",
@@ -54,6 +58,7 @@
 }
 {
 	"_id":"Pollen",
+    "_class" : "mx.infotec.smartcity.backend.model.Notification",
 	"name":"Pollen",
 	"subnotifications":["Symptoms or discomforts of users",
 						"Level of pollen on air",
@@ -61,6 +66,7 @@
 }
 {
 	"_id":"AsthmaAttacks",
+    "_class" : "mx.infotec.smartcity.backend.model.Notification",
 	"name":"Asthma attacks",
 	"subnotifications":["People with asthma attacks at specific point"]
 }
