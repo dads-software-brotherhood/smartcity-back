@@ -1,5 +1,7 @@
 package mx.infotec.smartcity.backend.model.transport;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -9,6 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  * @author Infotec
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Document
 public class Agency implements Serializable {
 

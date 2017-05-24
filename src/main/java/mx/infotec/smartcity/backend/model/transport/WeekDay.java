@@ -1,5 +1,7 @@
 package mx.infotec.smartcity.backend.model.transport;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import mx.infotec.smartcity.backend.model.DayName;
 import mx.infotec.smartcity.backend.model.Time;
@@ -8,6 +10,8 @@ import mx.infotec.smartcity.backend.model.Time;
  *
  * @author Infotec
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WeekDay implements Serializable {
 
     private static final long serialVersionUID = 1L;
