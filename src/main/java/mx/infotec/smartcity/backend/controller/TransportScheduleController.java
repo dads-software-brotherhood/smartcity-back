@@ -15,13 +15,18 @@ import mx.infotec.smartcity.backend.utils.ControllerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -39,14 +44,60 @@ public class TransportScheduleController {
     @Autowired
     private AgencyRepository agencyRepository;
 
+    private static final int LIMIT = 5;
+    
     @RequestMapping(method = RequestMethod.GET)
     public List<TransportSchedule> getAll() {
         return transportScheduleRepository.findAll();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/page/{page}")
-    public Page<TransportSchedule> getPage(@PathVariable Integer page) {
-        return null;
+    public Page<TransportSchedule> getPage(@PathVariable Integer page,
+            @RequestParam(value = "routeName", required = false) String routeName,
+            @RequestParam(value = "frequencyHour", required = false) Integer frequencyHour,
+            @RequestParam(value = "frequencyMinute", required = false) Integer frequencyMinute,
+            @RequestParam(value = "idAgency", required = false) String idAgency) {
+        Pageable pageable = new PageRequest(page, LIMIT);
+        
+        if (routeName == null && idAgency == null && frequencyHour == null && frequencyMinute == null) {
+            return transportScheduleRepository.findAll(pageable);
+        } else {
+            TransportSchedule transportSchedule = new TransportSchedule();
+            
+            if (routeName != null) {
+                transportSchedule.setRouteName(routeName);
+            }
+            if (frequencyHour != null || frequencyMinute != null) {
+                Time frequency = new Time();
+                
+                frequency.setHour(frequencyHour);
+                frequency.setMinute(frequencyMinute);
+                
+                if (frequencyHour != null && frequencyMinute == null) {
+                    frequency.setMinute(0);
+                }             
+                
+                transportSchedule.setFrequency(frequency);
+            }
+            if (idAgency != null) {
+                Agency agency = new Agency();
+                agency.setId(idAgency);
+                
+                transportSchedule.setAgency(agency);
+            }
+            
+            ExampleMatcher matcher = ExampleMatcher.matchingAll()
+                    .withMatcher("routeName", match -> match.contains().ignoreCase())
+                    .withIgnorePaths("weekDays", "id", "creatorId")
+                    .withIgnoreNullValues();
+            
+            Example<TransportSchedule> example = Example.of(transportSchedule, matcher);
+            
+            
+            
+            return transportScheduleRepository.findAll(example, pageable);
+            
+        }
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
