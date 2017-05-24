@@ -41,7 +41,13 @@ front:
 sa:
   account: admin@localhost.mx
   passwd: adminadmin
-  
+
+logging:
+  level:
+    org.springframework.data:
+      mongodb.core.MongoTemplate: DEBUG
+
+
 ---
 spring:
     profiles: development
@@ -88,6 +94,11 @@ sa:
   account: admin@localhost.mx
   passwd: adminadmin
   
+logging:
+  level:
+    org.springframework.data:
+      mongodb.core.MongoTemplate: DEBUG
+
 ---
 spring:
     profiles: qa
@@ -135,6 +146,11 @@ sa:
   account: admin@localhost.mx
   passwd: adminadmin
   
+logging:
+  level:
+    org.springframework.data:
+      mongodb.core.MongoTemplate: WARN
+
 ---
 spring:
     profiles: production
@@ -181,3 +197,8 @@ front:
 sa:
   account: admin@localhost.mx
   passwd: adminadmin
+
+logging:
+  level:
+    org.springframework.data:
+      mongodb.core.MongoTemplate: WARN
