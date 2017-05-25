@@ -27,10 +27,12 @@ import mx.infotec.smartcity.backend.model.Email;
 import mx.infotec.smartcity.backend.model.Group;
 import mx.infotec.smartcity.backend.model.HealthProfile;
 import mx.infotec.smartcity.backend.model.IdentityUser;
+import mx.infotec.smartcity.backend.model.Notification;
 import mx.infotec.smartcity.backend.model.Role;
 import mx.infotec.smartcity.backend.model.UserProfile;
 import mx.infotec.smartcity.backend.model.Vehicle;
 import mx.infotec.smartcity.backend.persistence.GroupRepository;
+import mx.infotec.smartcity.backend.persistence.NotificationRepository;
 import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 import mx.infotec.smartcity.backend.pojo.SubscribedGroup;
 import mx.infotec.smartcity.backend.service.AdminUtilsService;
@@ -64,6 +66,9 @@ public class UserProfileController {
     private TokenRecoveryService tokenRecoveryService;
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
+    
 
     @Value("${idm.admin.username}")
     private String idmUser;
@@ -460,6 +465,8 @@ public class UserProfileController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");
         }
     }
+    
+    
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/groups")
     public ResponseEntity<?> getGroups(@PathVariable("id") String id) {
@@ -480,6 +487,8 @@ public class UserProfileController {
     }
 
     private List<SubscribedGroup> createGroupPojo(List<Group> adminGroups, List<Group> userGroups) {
+    	 List<Notification> notificacions = this.notificationRepository.findAll();
+         
         if (adminGroups != null && !adminGroups.isEmpty()) {
 
             List<SubscribedGroup> subscribedGroups = new ArrayList<SubscribedGroup>();
@@ -494,6 +503,15 @@ public class UserProfileController {
                         }
                     }
                 }
+            	List<String> notificacionNames = new ArrayList<String>();
+                for(String notificationId : subscribedGroup.getNotificationIds()){
+            		notificacions.forEach((notificacion)->{
+            			if(notificationId.equals(notificacion.getId())){
+            				notificacionNames.add(notificacion.getName());
+            			}
+                	});
+                }
+                subscribedGroup.setNotificacionNames(notificacionNames);
                 subscribedGroups.add(subscribedGroup);
             }
 

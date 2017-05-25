@@ -1,9 +1,12 @@
 package mx.infotec.smartcity.backend.pojo;
 
+import java.util.List;
+
 import mx.infotec.smartcity.backend.model.Group;
 
 public class SubscribedGroup extends Group {
     private boolean subscribed;
+    private List<String> notificacionNames;
 
     public boolean isSubscribed() {
         return subscribed;
@@ -21,5 +24,15 @@ public class SubscribedGroup extends Group {
         this.setNotificationIds(group.getNotificationIds());
 
     }
+
+	public List<String> getNotificacionNames() {
+		return notificacionNames;
+	}
+
+	public void setNotificacionNames(List<String> notificacionNames) {
+		this.notificacionNames = notificacionNames;
+	}
+    
+    
 
 }
