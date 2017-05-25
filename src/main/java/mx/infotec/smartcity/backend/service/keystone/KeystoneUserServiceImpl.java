@@ -541,7 +541,7 @@ public class KeystoneUserServiceImpl implements UserService {
             ExampleMatcher matcher = ExampleMatcher.matching().withStringMatcher(StringMatcher.CONTAINING);
             if (model.getRole() != null) {
                 // 1 Recuperamos el rol del usuario
-                SelfRole role = roleService.getRoleByName(model.getRole().toString().toLowerCase(),
+            	SelfRole role = roleService.getRoleByName(model.getRole().name().toLowerCase(),
                         adminToken);
                 // 2 Creamos una lista de roles la cual se utiliza para obtener el nombre del rol a mostrar en el front
                 List<mx.infotec.smartcity.backend.service.keystone.pojo.roles.Role> roles = new ArrayList<>();
