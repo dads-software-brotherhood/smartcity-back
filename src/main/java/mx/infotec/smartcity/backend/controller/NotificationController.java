@@ -1,6 +1,7 @@
 package mx.infotec.smartcity.backend.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,12 @@ public class NotificationController {
                             }
                         }
                     }
+                }
+                
+                // Se agregan estas líneas de codigo solo para devolver la lista de notificaciones ordenada por nombre en orden alfabetico (Manu)
+                if(userNotifications.size() > 0)
+                {
+                    Collections.sort(userNotifications, (Notification n1, Notification n2) -> n1.getName().compareTo(n2.getName()));
                 }
             }
            // return ResponseEntity.accepted().body(notifications);
