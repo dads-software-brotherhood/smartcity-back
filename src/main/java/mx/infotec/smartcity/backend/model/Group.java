@@ -1,5 +1,6 @@
 package mx.infotec.smartcity.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -26,9 +27,13 @@ public class Group {
     private String group;
 
     @JsonProperty("dateCreated")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm a z")
     private Date dateCreated;
+    
     @JsonProperty("dateModified")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm a z")
     private Date dateModified;
+    
     @JsonProperty("notificationIds")
     private List<String> notificationIds;
 

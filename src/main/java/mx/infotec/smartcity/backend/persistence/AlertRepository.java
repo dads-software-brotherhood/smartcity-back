@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import mx.infotec.smartcity.backend.model.Alert;
+import mx.infotec.smartcity.backend.model.Notification;
 
 /**
  *
@@ -16,6 +17,8 @@ import mx.infotec.smartcity.backend.model.Alert;
 public interface AlertRepository extends MongoRepository<Alert, Integer> {
     public List<Alert> findAllByOrderByDateTimeDesc();
 
+    public List<Alert> findByAlertType(String id);
+    
     public Page<Alert> findAllByOrderByDateTimeDesc(Pageable pageable);
 
     public Page<Alert> findByDateTimeBetweenOrderByDateTimeDesc(Date start, Date end, Pageable pageable);
@@ -51,4 +54,6 @@ public interface AlertRepository extends MongoRepository<Alert, Integer> {
 
     public Page<Alert> findByRefUserAndAlertTypeAndEventObservedAndDateTimeBetweenOrderByDateTimeDesc(String id,
             String alertType, String subalertType, Date start, Date end, Pageable pageable);
+
+	
 }
