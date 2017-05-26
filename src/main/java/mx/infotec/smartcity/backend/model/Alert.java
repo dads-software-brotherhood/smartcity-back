@@ -1,6 +1,7 @@
 package mx.infotec.smartcity.backend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.util.Date;
 import org.springframework.data.annotation.Id;
@@ -19,6 +20,7 @@ public class Alert implements Serializable {
     private String alertType;
     private String eventObserved;
     private String locationDescription;
+    @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss")
     private Date dateTime;
     private String description;
     private String refUser;

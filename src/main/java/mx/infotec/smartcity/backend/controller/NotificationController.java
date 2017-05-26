@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import mx.infotec.smartcity.backend.model.Group;
 import mx.infotec.smartcity.backend.model.Notification;
 import mx.infotec.smartcity.backend.model.UserProfile;
+import mx.infotec.smartcity.backend.persistence.AlertRepository;
 import mx.infotec.smartcity.backend.persistence.NotificationRepository;
 import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 
@@ -30,6 +31,9 @@ public class NotificationController {
 
     @Autowired
     private UserProfileRepository userProfileRepository;
+    
+    @Autowired
+    private AlertRepository alertRepository;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Notification> getAll() {
@@ -51,7 +55,7 @@ public class NotificationController {
     public ResponseEntity<?> getUserGroups(@PathVariable("id") String id) {
 
         UserProfile userProfile = userProfileRepository.findOne(id);
-
+        String str = "";
         if (userProfile != null) {
             List<Notification> notifications = this.notificationRepository.findAll();
             List<Notification> userNotifications = new ArrayList<Notification>();
@@ -59,16 +63,19 @@ public class NotificationController {
                 for (Group group : userProfile.getGroups()) {
                     for (String userNotification : group.getNotificationIds()) {
                         for (Notification notification : notifications) {
-                            if (userNotification.equals(notification.getId())) {
+                        	if (userNotification.equals(notification.getId())) {
+                            	
                                 if (!userNotifications.contains(notification)) {
-                                    userNotifications.add(notification);
-                                }
+                                    notification.setCount(this.alertRepository.findByAlertType(notification.getId()).size());
+                                	userNotifications.add(notification);
+                                }	
                             }
                         }
                     }
                 }
             }
-            return ResponseEntity.accepted().body(userNotifications);
+           // return ResponseEntity.accepted().body(notifications);
+           return ResponseEntity.accepted().body(userNotifications);
 
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserProfile not valid");

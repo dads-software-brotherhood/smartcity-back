@@ -16,6 +16,7 @@ public class Notification implements Serializable {
     private String id;
     private String name;
     private List<String> subnotifications;
+    private int count;
 
     public String getId() {
         return id;
@@ -40,6 +41,15 @@ public class Notification implements Serializable {
     public void setSubnotifications(List<String> subnotifications) {
         this.subnotifications = subnotifications;
     }
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
 
     
 }
