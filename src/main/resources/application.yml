@@ -131,8 +131,8 @@ server:
 # Rodrigo's cloud server
 idm:
     servers:
-        keystone: http://191.168.186.252:5000
-        orion: http://192.168.56.11:1026
+        keystone: http://localhost:5000
+        orion: http://localhost:1026
     admin:
         username: idm
         password: idm
