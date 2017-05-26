@@ -43,21 +43,19 @@ public class TransportScheduleController {
     private TransportScheduleRepository transportScheduleRepository;
     @Autowired
     private AgencyRepository agencyRepository;
-
-    private static final int LIMIT = 5;
     
     @RequestMapping(method = RequestMethod.GET)
     public List<TransportSchedule> getAll() {
         return transportScheduleRepository.findAll();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/page/{page}")
-    public Page<TransportSchedule> getPage(@PathVariable Integer page,
+    @RequestMapping(method = RequestMethod.GET, value = "/page/{page}/{size}")
+    public Page<TransportSchedule> getPage(@PathVariable("page") Integer page, @PathVariable("size") Integer size,
             @RequestParam(value = "routeName", required = false) String routeName,
             @RequestParam(value = "frequencyHour", required = false) Integer frequencyHour,
             @RequestParam(value = "frequencyMinute", required = false) Integer frequencyMinute,
             @RequestParam(value = "idAgency", required = false) String idAgency) {
-        Pageable pageable = new PageRequest(page, LIMIT);
+        Pageable pageable = new PageRequest(page, size);
         
         if (routeName == null && idAgency == null && frequencyHour == null && frequencyMinute == null) {
             return transportScheduleRepository.findAll(pageable);
