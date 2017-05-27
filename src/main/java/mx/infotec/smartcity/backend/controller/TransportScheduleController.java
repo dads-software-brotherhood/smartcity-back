@@ -45,10 +45,14 @@ public class TransportScheduleController {
     private AgencyRepository agencyRepository;
     
     @RequestMapping(method = RequestMethod.GET)
-    public List<TransportSchedule> getAll() {
-        return transportScheduleRepository.findAll();
+    public List<TransportSchedule> getAll(@RequestParam(value = "routeName", required = false) String routeName) {
+        if (routeName == null) {
+            return transportScheduleRepository.findAll();
+        } else {
+            return transportScheduleRepository.findByRouteName(routeName);
+        }
     }
-
+    
     @RequestMapping(method = RequestMethod.GET, value = "/page/{page}/{size}")
     public Page<TransportSchedule> getPage(@PathVariable("page") Integer page, @PathVariable("size") Integer size,
             @RequestParam(value = "routeName", required = false) String routeName,
