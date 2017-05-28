@@ -267,7 +267,7 @@
 	},
 	"locationDescription":"Av. San Fernando, CDMX",
 	"dateTime": {$date:"2017-05-06T11:24:08.00Z"},
-	"eventObserved": "User report asthma attack",
+	"eventObserved": "People with asthma attacks at specific point",
 	"description": "User report asthma attack",
 	"refUser": "591b281b81da535a385a1193"
 }
@@ -280,8 +280,8 @@
 	},
 	"locationDescription":"Av. Fray Servando, CDMX",
 	"dateTime": {$date:"2017-05-21T15:17:26.00Z"},
-	"eventObserved": "User report asthma attack",
-	"description": "User report asthma attack",
+	"eventObserved": "People with asthma attacks at specific point",
+	"description": "People report an accident by asthma attack",
 	"refUser": "591b281b81da535a385a1193"
 }
 {
@@ -293,8 +293,8 @@
 	},
 	"locationDescription":"Cjon. 3 Cruces, CDMX",
 	"dateTime": {$date:"2017-05-21T15:17:26.00Z"},
-	"eventObserved": "User report asthma attack",
-	"description": "User report asthma attack",
+	"eventObserved": "People with asthma attacks at specific point",
+	"description": "I have an asthma attack",
 	"refUser": "59090bc481da53308bf322b2"
 }
 {
@@ -306,8 +306,8 @@
 	},
 	"locationDescription":"Av. Insurgentes Sur, CDMX",
 	"dateTime": {$date:"2017-05-22T13:54:02.00Z"},
-	"eventObserved": "User report asthma attack",
-	"description": "User report asthma attack",
+	"eventObserved": "People with asthma attacks at specific point",
+	"description": "Asthma Attack by high level of pollutions",
 	"refUser": "59090bc481da53308bf322b2"
 }
 

@@ -29,6 +29,7 @@ import mx.infotec.smartcity.backend.persistence.ProfilePublicTransportRepository
 import mx.infotec.smartcity.backend.persistence.PublicTransportRepository;
 import mx.infotec.smartcity.backend.utils.Constants;
 import mx.infotec.smartcity.backend.utils.ControllerUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * RestService Public Transport.
@@ -174,7 +175,9 @@ public class PublicTransportController {
   }
 
   @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-  public ResponseEntity<?> deleteByID(@PathVariable String id, HttpServletRequest request) {
+  public ResponseEntity<?> deleteByID(@PathVariable String id,
+          @RequestParam(value = "removeReason", required = true) String removeReason,
+          HttpServletRequest request) {
     try {
       PublicTransport publicTransport = publicTransportRepository.findById(id);
       
@@ -183,6 +186,10 @@ public class PublicTransportController {
               profilePublicTransportRepository.findByIdPublicTransport(id);
           publicTransportRepository.delete(id);
           profilePublicTransportRepository.delete(profilePublicTransport);
+          
+          // TODO: Persists
+          LOGGER.info("Public transport deleted, reason: {}", removeReason);
+          
           return ResponseEntity.accepted().body("deleted");          
       } else {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only SA user or owner data can delete");
@@ -249,7 +256,7 @@ public class PublicTransportController {
   }
 
   private boolean isValid(PublicTransport publicTransport) {
-    return publicTransport != null && publicTransport.getName() != null && publicTransport.getBrandName() != null && publicTransport.getModelName() != null;
+    return publicTransport != null && publicTransport.getName() != null && publicTransport.getBrandName() != null && publicTransport.getModelName() != null && publicTransport.getPublicTransportFuelType() != null && publicTransport.getPublicTransportFuelType().getId() != null;
   }
 
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Infotec
  */
 @RestController
-@RequestMapping("/public_transport_fuel_type")
+@RequestMapping("/public-transport-fuel-type")
 public class PublicTransportFuelTypeController {
     
     @Autowired
