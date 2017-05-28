@@ -249,7 +249,7 @@ public class PublicTransportController {
   }
 
   private boolean isValid(PublicTransport publicTransport) {
-    return publicTransport != null && publicTransport.getName() != null && publicTransport.getBrandName() != null && publicTransport.getModelName() != null;
+    return publicTransport != null && publicTransport.getName() != null && publicTransport.getBrandName() != null && publicTransport.getModelName() != null && publicTransport.getPublicTransportFuelType() != null && publicTransport.getPublicTransportFuelType().getId() != null;
   }
 
 }
