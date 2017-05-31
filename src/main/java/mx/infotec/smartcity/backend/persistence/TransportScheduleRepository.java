@@ -43,43 +43,43 @@ public interface TransportScheduleRepository extends MongoRepository<TransportSc
     List<TransportSchedule> findByActiveDaysQuery(List<String> dayname);
      
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} ,'departureTime':?1}}}")
-    Page<List<TransportSchedule>> findByActiveDaysAndDepartureTimeQuery(List<String> dayname,Time time, Pageable pageable);
+    List<TransportSchedule> findByActiveDaysAndDepartureTimeQuery(List<String> dayname,Time time);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} , 'arrivalTime':?1}}}")
-    Page<List<TransportSchedule>> findByActiveDaysArrivalTimeQuery(List<String> dayname,Time time, Pageable pageable);
+    List<TransportSchedule> findByActiveDaysArrivalTimeQuery(List<String> dayname,Time time);
    
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} ,'departureTime':?1, 'arrivalTime':?2}}}")
-    Page<List<TransportSchedule>> findByActiveDaysAndDepartureTimeAndArrivalTimeQuery(List<String> dayname,Time time,Time time2, Pageable pageable);
+    List<TransportSchedule> findByActiveDaysAndDepartureTimeAndArrivalTimeQuery(List<String> dayname,Time time,Time time2);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true,'departureTime':?0, 'arrivalTime':?1}}}")
-    Page<List<TransportSchedule>> findByDepartureTimeAndArrivalTimeQuery(Time time, Time time2, Pageable pageable);
+    List<TransportSchedule> findByDepartureTimeAndArrivalTimeQuery(Time time, Time time2);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'arrivalTime':?0}}}")
-    Page<List<TransportSchedule>> findByArrivalTimeQuery(Time time, Pageable pageable);
+    List<TransportSchedule> findByArrivalTimeQuery(Time time);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true,'departureTime':?0 }}}")
-    Page<List<TransportSchedule>> findByDepartureTimeQuery(Time time, Pageable pageable);
+    List<TransportSchedule> findByDepartureTimeQuery(Time time);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} }}, 'routeName': ?1}")
-    Page<List<TransportSchedule>> findByActiveDaysRouteNameQuery(List<String> dayname, String routeName, Pageable pageable);
+    List<TransportSchedule> findByActiveDaysRouteNameQuery(List<String> dayname, String routeName);
      
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} ,'departureTime':?1}}, 'routeName': ?2}")
-    Page<List<TransportSchedule>> findByActiveDaysAndDepartureTimeRouteNameQuery(List<String> dayname,Time time, String routeName, Pageable pageable);
+   List<TransportSchedule> findByActiveDaysAndDepartureTimeRouteNameQuery(List<String> dayname,Time time, String routeName);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} , 'arrivalTime':?1}}, 'routeName': ?2}")
-    Page<List<TransportSchedule>> findByActiveDaysArrivalTimeRouteNameQuery(List<String> dayname,Time time, String routeName, Pageable pageable);
+    List<TransportSchedule> findByActiveDaysArrivalTimeRouteNameQuery(List<String> dayname,Time time, String routeName);
    
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} ,'departureTime':?1, 'arrivalTime':?2}}, 'routeName': ?3}")
-    Page<List<TransportSchedule>> findByActiveDaysAndDepartureTimeAndArrivalTimeRouteNameQuery(List<String> dayname,Time time,Time time2, String routeName, Pageable pageable);
+    List<TransportSchedule> findByActiveDaysAndDepartureTimeAndArrivalTimeRouteNameQuery(List<String> dayname,Time time,Time time2, String routeName);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true,'departureTime':?0, 'arrivalTime':?1}}, 'routeName': ?2}")
-    Page<List<TransportSchedule>> findByDepartureTimeAndArrivalTimeRouteNameQuery(Time time,Time time2, String routeName, Pageable pageable);
+   List<TransportSchedule> findByDepartureTimeAndArrivalTimeRouteNameQuery(Time time,Time time2, String routeName);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'arrivalTime':?0}}, 'routeName': ?1}")
-    Page<List<TransportSchedule>> findByArrivalTimeRouteNameQuery(Time time, String routeName, Pageable pageable);
+   List<TransportSchedule> findByArrivalTimeRouteNameQuery(Time time, String routeName);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true,'departureTime':?0 }}, 'routeName': ?1}")
-    Page<List<TransportSchedule>> findByDepartureTimeRouteNameQuery(Time time, String routeName, Pageable pageable);
+    List<TransportSchedule> findByDepartureTimeRouteNameQuery(Time time, String routeName);
     
    
     
