@@ -20,7 +20,7 @@ import org.springframework.data.mongodb.repository.Query;
  */
 public interface TransportScheduleRepository extends MongoRepository<TransportSchedule, String> {
 
-    @Query(value = "{'routeName': {$regex : ?0, $options: 'i'}}")
+    @Query(value = "{'routeName': {$regex : ?0}}")
     List<TransportSchedule> findByRouteName(String routeName);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': ?0}}}")
@@ -61,7 +61,7 @@ public interface TransportScheduleRepository extends MongoRepository<TransportSc
     List<TransportSchedule> findByDepartureTimeQuery(Time time);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} }}, 'routeName': ?1}")
-    List<TransportSchedule> findByActiveDaysRouteNameQuery(List<String> dayname, String routeName);
+    List<TransportSchedule> findByActiveDaysAndRouteNameQuery(List<String> dayname, String routeName);
      
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} ,'departureTime':?1}}, 'routeName': ?2}")
    List<TransportSchedule> findByActiveDaysAndDepartureTimeRouteNameQuery(List<String> dayname,Time time, String routeName);
@@ -76,10 +76,10 @@ public interface TransportScheduleRepository extends MongoRepository<TransportSc
    List<TransportSchedule> findByDepartureTimeAndArrivalTimeRouteNameQuery(Time time,Time time2, String routeName);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'arrivalTime':?0}}, 'routeName': ?1}")
-   List<TransportSchedule> findByArrivalTimeRouteNameQuery(Time time, String routeName);
+   List<TransportSchedule> findByArrivalTimeAndRouteNameQuery(Time time, String routeName);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true,'departureTime':?0 }}, 'routeName': ?1}")
-    List<TransportSchedule> findByDepartureTimeRouteNameQuery(Time time, String routeName);
+    List<TransportSchedule> findByDepartureTimeAndRouteNameQuery(Time time, String routeName);
     
    
     

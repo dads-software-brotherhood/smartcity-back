@@ -85,106 +85,34 @@ public class PublicTransportController {
           @RequestParam(value = "departuretime", required = false) String departureTime,
           @RequestParam(value = "arrivaltime", required = false) String arrivalTime) {
     Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
-    ExampleMatcher matcher = ExampleMatcher.matchingAll()
-        .withMatcher("name", match -> match.contains().ignoreCase())
-        .withMatcher("routeName", match -> match.contains().ignoreCase())
-        .withIgnoreNullValues();
-    
+   
     if(name == null && routeName == null && weekdays == null && departureTime == null && arrivalTime == null){
     	return publicTransportRepository.findAll(pageable);
     }
-    PublicTransport publicTransport = new PublicTransport();
-    TransportSchedule transportSchedule = new TransportSchedule();
-    boolean transportScheduleSetted = false;
-    if(name != null){
-    	publicTransport.setName(name);
-        return publicTransportRepository.findByNameQuery(name, pageable);
-    }
-    
-    if(routeName != null){
-    	transportSchedule.setRouteName(routeName);
-    	transportScheduleSetted = true;
-        return publicTransportRepository.findByTransportSchedulesIn(this.transportScheduleRepository.findByRouteName(routeName),pageable);
-    }
-    Time depTime = new Time();
+    Time depTime = null;
     if(departureTime != null){
          depTime = stringToTime(departureTime);
     }
-    Time arrTime = new Time();
+    Time arrTime = null;
     if(arrivalTime != null){
     	arrTime = stringToTime(arrivalTime);
     }
-    if(weekdays != null && ( departureTime != null || arrivalTime != null)){
-    	transportScheduleSetted = true;
-    	List<WeekDay> wkDays = new ArrayList<WeekDay>();
-    	
-    	
-    	for(String weekday : weekdays){
-    		DayName dayName = DayName.valueOf(weekday);
-    		WeekDay weekDay = new WeekDay();
-    		weekDay.setActive(true);
-    		if(departureTime != null){
-    			weekDay.setArrivalTime(arrTime);
-    		}
-    		if(arrivalTime != null){
-    			weekDay.setDepartureTime(depTime);
-    		}
-    		weekDay.setDayName(dayName);
-    		wkDays.add(weekDay);
-    	}
-    	transportSchedule.setWeekDays(wkDays);
+    if(name != null ){
+    	List<TransportSchedule> transportSchedules = validateAndSearchTransportSchedules(routeName, weekdays, depTime, arrTime);
+        if(transportSchedules != null){
+            return publicTransportRepository.findByNameLikeAndTransportSchedulesIn(name,transportSchedules, pageable);
+        }
+        
+    } else {
+        List<TransportSchedule> transportSchedules = validateAndSearchTransportSchedules(routeName, weekdays, depTime, arrTime);
+        if(transportSchedules != null){
+            return publicTransportRepository.findByTransportSchedulesIn(transportSchedules, pageable);
+        }
     }
-    else 
-    	
-        {
-            if(weekdays != null){
-                
-                return this.publicTransportRepository.findByTransportSchedulesIn(this.transportScheduleRepository.findByActiveDaysQuery(weekdays), pageable);
-                  /*  transportScheduleSetted = true;
-                    //List<WeekDay> wkDays = this.createWeekdays();
-                    List<WeekDay> wkDays = new ArrayList<WeekDay>();
-                    weekdays.forEach((weekday) -> {
-                      //  WeekDay weekd = new WeekDay();
-                      //  this.activateWeekDay(wkDays, weekday);
-                      WeekDay weekd = new WeekDay();
-                      weekd.setActive(true);
-                      weekd.setDayName(DayName.valueOf(weekday));
-                });
-                    transportSchedule.setWeekDays(wkDays);*/
-            } else {
-                    if( arrivalTime != null || departureTime != null){
-                            transportScheduleSetted = true;
-                            List<WeekDay> wkDays = new ArrayList<WeekDay>();
-                           
-                            if(arrivalTime != null){
-                                    arrTime = stringToTime(arrivalTime);
-                            }
-                            
-                            if(departureTime != null){
-                                    depTime = stringToTime(departureTime);
-                            }
-
-                            WeekDay weekDay = new WeekDay();
-                    weekDay.setActive(true);
-                    if(arrivalTime != null){
-                            weekDay.setArrivalTime(arrTime);
-                    }
-                    if(departureTime != null){
-                            weekDay.setDepartureTime(depTime);
-                    }
-                    wkDays.add(weekDay);
-                    transportSchedule.setWeekDays(wkDays);
-                }
-
-            }
-    }
-    if(transportScheduleSetted == true){
-       
-        return transportScheduleRepository.findByWeekDays(transportSchedule.getWeekDays(), pageable);
-    }
-
-    Example<PublicTransport> example = Example.of(publicTransport, matcher);
-    return publicTransportRepository.findAll(example,pageable);
+    
+    
+   
+    return null;
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/page/{page}")
@@ -411,5 +339,74 @@ public class PublicTransportController {
 		  }
 	  }
   }
+
+    private List<TransportSchedule> validateAndSearchTransportSchedules(String routeName, List<String> weekdays, Time departureTime, Time arrivalTime) {
+        if( routeName != null){
+            if( weekdays != null){
+                if(departureTime != null){
+                    if(arrivalTime != null){
+                        return this.transportScheduleRepository.findByActiveDaysAndDepartureTimeAndArrivalTimeRouteNameQuery( weekdays, departureTime, arrivalTime,routeName);
+                    } else {
+                        return this.transportScheduleRepository.findByActiveDaysAndDepartureTimeRouteNameQuery( weekdays, departureTime, routeName);
+                    }
+                } else {
+                    if(arrivalTime != null){
+                        return this.transportScheduleRepository.findByActiveDaysArrivalTimeRouteNameQuery( weekdays, arrivalTime,routeName);
+                    } else {
+                        return this.transportScheduleRepository.findByActiveDaysAndRouteNameQuery( weekdays, routeName);
+                    }
+                }
+            } else {
+                if(departureTime != null){
+                    if(arrivalTime != null){
+                        return this.transportScheduleRepository.findByDepartureTimeAndArrivalTimeRouteNameQuery(departureTime, arrivalTime,routeName);
+                    } else {
+                        return this.transportScheduleRepository.findByDepartureTimeAndRouteNameQuery(departureTime, routeName);
+                    }
+                } else {
+                    if(arrivalTime != null){
+                        return this.transportScheduleRepository.findByArrivalTimeAndRouteNameQuery(arrivalTime,routeName);
+                    } else {
+                        return this.transportScheduleRepository.findByRouteName( routeName);
+                    }
+                }
+            } 
+        } else {
+            if( weekdays.size()>0){
+                if(departureTime != null){
+                    if(arrivalTime != null){
+                        return this.transportScheduleRepository.findByActiveDaysAndDepartureTimeAndArrivalTimeQuery( weekdays, departureTime, arrivalTime);
+                    } else {
+                        return this.transportScheduleRepository.findByActiveDaysAndDepartureTimeQuery( weekdays, departureTime);
+                    }
+                } else {
+                    if(arrivalTime != null){
+                        return this.transportScheduleRepository.findByActiveDaysArrivalTimeQuery( weekdays, arrivalTime);
+                    } else {
+                        return this.transportScheduleRepository.findByActiveDaysQuery( weekdays);
+                    }
+                }
+            } else {
+                if(departureTime != null){
+                    if(arrivalTime != null){
+                        return this.transportScheduleRepository.findByDepartureTimeAndArrivalTimeQuery(departureTime, arrivalTime);
+                    } else {
+                        return this.transportScheduleRepository.findByDepartureTimeQuery(departureTime);
+                    }
+                } else {
+                    if(arrivalTime != null){
+                        return this.transportScheduleRepository.findByArrivalTimeQuery(arrivalTime);
+                    } else {
+                        return null;
+                    }
+                }
+            }
+                    
+        }
+        
+            
+        
+        
+    }
   
 }
