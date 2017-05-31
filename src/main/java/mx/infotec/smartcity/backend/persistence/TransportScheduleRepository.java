@@ -14,4 +14,7 @@ public interface TransportScheduleRepository extends MongoRepository<TransportSc
     @Query(value = "{'routeName': {$regex : ?0, $options: 'i'}}")
     List<TransportSchedule> findByRouteName(String routeName);
     
+    @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': ?0}}}")
+    List<TransportSchedule> findByActiveDay(String routeName);
+    
 }
