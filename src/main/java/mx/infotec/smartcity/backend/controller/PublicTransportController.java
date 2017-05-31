@@ -98,12 +98,13 @@ public class PublicTransportController {
     boolean transportScheduleSetted = false;
     if(name != null){
     	publicTransport.setName(name);
-        
+        return publicTransportRepository.findByNameQuery(name, pageable);
     }
     
     if(routeName != null){
     	transportSchedule.setRouteName(routeName);
     	transportScheduleSetted = true;
+        return publicTransportRepository.findByTransportSchedulesIn(this.transportScheduleRepository.findByRouteName(routeName),pageable);
     }
     Time depTime = new Time();
     if(departureTime != null){
@@ -138,7 +139,7 @@ public class PublicTransportController {
         {
             if(weekdays != null){
                 
-                return this.publicTransportRepository.findByActiveDaysQuery(this.transportScheduleRepository.findByActiveDaysQuery(weekdays), pageable);
+                return this.publicTransportRepository.findByTransportSchedulesIn(this.transportScheduleRepository.findByActiveDaysQuery(weekdays), pageable);
                   /*  transportScheduleSetted = true;
                     //List<WeekDay> wkDays = this.createWeekdays();
                     List<WeekDay> wkDays = new ArrayList<WeekDay>();

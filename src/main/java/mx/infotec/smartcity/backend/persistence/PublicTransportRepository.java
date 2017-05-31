@@ -26,7 +26,20 @@ public interface PublicTransportRepository extends MongoRepository<PublicTranspo
   List<PublicTransport> findAllById(Iterable<String> listaIdPublicTransportIterator,
       Pageable pageable);
 
-  @Query(value = "{ 'transportSchedules':  {$in:?0} }")
-  Page<List<PublicTransport>> findByActiveDaysQuery(List<TransportSchedule> ts, Pageable pageable);
+  @Query(value = "{ 'transportSchedules':  { 'weekDays': { '$elemMatch':{ 'active': true, 'dayName': {$in:?0} }}}}")
+  Page<List<PublicTransport>> findByActiveDaysQuery(List<String> days, Pageable pageable);
+  
+  @Query(value = "{ 'transportSchedules': [{ 'weekDays': { 'routeName': ?0}}]}")
+   Page<List<PublicTransport>> findByRouteNameQuery(String routeName, Pageable pageable);
+  Page<List<PublicTransport>> findByTransportSchedules(List<TransportSchedule>ts, Pageable pageable);
+  
+  @Query(value = "{ 'name':  {$regex :?0}}")
+  Page<List<PublicTransport>> findByNameQuery(String routeName, Pageable pageable);
+  
+  Page<List<PublicTransport>> findByTransportSchedulesRouteName(String routeName, Pageable pageable);
+  
+  Page<List<PublicTransport>> findByTransportSchedulesIn(List<TransportSchedule>ts, Pageable pageable);
+   
+  
 
 }

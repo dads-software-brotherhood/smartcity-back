@@ -39,7 +39,7 @@ public interface TransportScheduleRepository extends MongoRepository<TransportSc
     
     Page<List<TransportSchedule>> findByWeekDaysLike(List<WeekDay> weekDay,Pageable pageable);
    
-    @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} }}}")
+    @Query(value = "{ 'weekDays': { '$elemMatch':{ 'active': true, 'dayName': {$in:?0} }}}")
     List<TransportSchedule> findByActiveDaysQuery(List<String> dayname);
      
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} ,'departureTime':?1}}}")
