@@ -85,6 +85,10 @@ public class PublicTransportController {
           @RequestParam(value = "departuretime", required = false) String departureTime,
           @RequestParam(value = "arrivaltime", required = false) String arrivalTime) {
     Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
+    ExampleMatcher matcher = ExampleMatcher.matchingAll()
+        .withMatcher("name", match -> match.contains().ignoreCase())
+        .withMatcher("routeName", match -> match.contains().ignoreCase())
+        .withIgnoreNullValues();
     
     if(name == null && routeName == null && weekdays == null && departureTime == null && arrivalTime == null){
     	return publicTransportRepository.findAll(pageable);
@@ -101,18 +105,19 @@ public class PublicTransportController {
     	transportSchedule.setRouteName(routeName);
     	transportScheduleSetted = true;
     }
+    Time depTime = new Time();
+    if(departureTime != null){
+         depTime = stringToTime(departureTime);
+    }
+    Time arrTime = new Time();
+    if(arrivalTime != null){
+    	arrTime = stringToTime(arrivalTime);
+    }
     if(weekdays != null && ( departureTime != null || arrivalTime != null)){
     	transportScheduleSetted = true;
     	List<WeekDay> wkDays = new ArrayList<WeekDay>();
     	
-    	Time depTime = new Time();
-    	if(departureTime != null){
-    		depTime = stringToTime(departureTime);
-    	}
-    	Time arrTime = new Time();
-    	if(arrivalTime != null){
-    		arrTime = stringToTime(arrivalTime);
-    	}
+    	
     	for(String weekday : weekdays){
     		DayName dayName = DayName.valueOf(weekday);
     		WeekDay weekDay = new WeekDay();
@@ -132,23 +137,28 @@ public class PublicTransportController {
     	
         {
             if(weekdays != null){
-                    transportScheduleSetted = true;
+                
+                return this.publicTransportRepository.findByActiveDaysQuery(this.transportScheduleRepository.findByActiveDaysQuery(weekdays), pageable);
+                  /*  transportScheduleSetted = true;
+                    //List<WeekDay> wkDays = this.createWeekdays();
                     List<WeekDay> wkDays = new ArrayList<WeekDay>();
                     weekdays.forEach((weekday) -> {
-                        WeekDay weekd = new WeekDay();
-                        weekd.setDayName(DayName.valueOf(weekday));
-                        wkDays.add(weekd);
+                      //  WeekDay weekd = new WeekDay();
+                      //  this.activateWeekDay(wkDays, weekday);
+                      WeekDay weekd = new WeekDay();
+                      weekd.setActive(true);
+                      weekd.setDayName(DayName.valueOf(weekday));
                 });
-                    transportSchedule.setWeekDays(wkDays);
+                    transportSchedule.setWeekDays(wkDays);*/
             } else {
                     if( arrivalTime != null || departureTime != null){
                             transportScheduleSetted = true;
                             List<WeekDay> wkDays = new ArrayList<WeekDay>();
-                            Time arrTime = new Time(); 
+                           
                             if(arrivalTime != null){
                                     arrTime = stringToTime(arrivalTime);
                             }
-                            Time depTime = new Time();
+                            
                             if(departureTime != null){
                                     depTime = stringToTime(departureTime);
                             }
@@ -168,30 +178,10 @@ public class PublicTransportController {
             }
     }
     if(transportScheduleSetted == true){
-        ExampleMatcher matcher = ExampleMatcher.matchingAll()
-            //.withMatcher("name", match -> match.contains().ignoreCase())
-            //.withIgnoreCase("arrivalTime","departureTime","weekDays","id", "creatorId")
-            //.withIgnorePaths("id", "creatorId","arrivalTime","departureTime","active","dayName")
-            .withMatcher("name", match -> match.contains().ignoreCase())
-            .withMatcher("routeName", match -> match.contains().ignoreCase())
-            
-            .withIgnoreNullValues();
-    	List<TransportSchedule> transportSchedules = new ArrayList<TransportSchedule>();
-    	transportSchedules.add(transportSchedule);
-    	Example<TransportSchedule> example2 = Example.of(transportSchedule, matcher);
-    	
-    	//publicTransport.setTransportSchedules(transportScheduleRepository.findAll(example2));
-    	return transportScheduleRepository.findAll(example2,pageable);
+       
+        return transportScheduleRepository.findByWeekDays(transportSchedule.getWeekDays(), pageable);
     }
-    //return null;
-    ExampleMatcher matcher = ExampleMatcher.matchingAll()
-            //.withMatcher("name", match -> match.contains().ignoreCase())
-            //.withIgnoreCase("arrivalTime","departureTime","weekDays","id", "creatorId")
-            //.withIgnorePaths("id", "creatorId","arrivalTime","departureTime","active","dayName")
-            .withMatcher("name", match -> match.contains().ignoreCase())
-            .withMatcher("routeName", match -> match.contains().ignoreCase())
-            .withMatcher("weekDays", match->match.stringMatcher(ExampleMatcher.StringMatcher.CONTAINING))
-            .withIgnoreNullValues();
+
     Example<PublicTransport> example = Example.of(publicTransport, matcher);
     return publicTransportRepository.findAll(example,pageable);
   }

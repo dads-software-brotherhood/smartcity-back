@@ -6,6 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import mx.infotec.smartcity.backend.model.transport.PublicTransport;
+import mx.infotec.smartcity.backend.model.transport.TransportSchedule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.mongodb.repository.Query;
 
 
 /**
@@ -23,5 +26,7 @@ public interface PublicTransportRepository extends MongoRepository<PublicTranspo
   List<PublicTransport> findAllById(Iterable<String> listaIdPublicTransportIterator,
       Pageable pageable);
 
+  @Query(value = "{ 'transportSchedules':  {$in:?0} }")
+  Page<List<PublicTransport>> findByActiveDaysQuery(List<TransportSchedule> ts, Pageable pageable);
 
 }
