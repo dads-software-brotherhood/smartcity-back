@@ -113,6 +113,18 @@ public class TransportScheduleController {
         }
         
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/day/{day}")
+    public ResponseEntity<?> getByDay(@PathVariable String day) {
+        List<TransportSchedule> tmp = transportScheduleRepository.findByActiveDayQuery(day);
+        
+        if (tmp == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("not found");
+        } else {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(tmp);
+        }
+        
+    }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> add(@RequestBody TransportSchedule transportSchedule, HttpServletRequest request) {

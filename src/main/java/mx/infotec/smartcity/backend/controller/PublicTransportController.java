@@ -1,15 +1,18 @@
 package mx.infotec.smartcity.backend.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import mx.infotec.smartcity.backend.model.IdentityUser;
-import mx.infotec.smartcity.backend.model.Role;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -25,8 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import mx.infotec.smartcity.backend.model.transport.ProfilePublicTransport;
 import mx.infotec.smartcity.backend.model.transport.PublicTransport;
+import mx.infotec.smartcity.backend.model.transport.TransportSchedule;
+import mx.infotec.smartcity.backend.model.transport.WeekDay;
+import mx.infotec.smartcity.backend.model.DayName;
+import mx.infotec.smartcity.backend.model.Time;
+
 import mx.infotec.smartcity.backend.persistence.ProfilePublicTransportRepository;
 import mx.infotec.smartcity.backend.persistence.PublicTransportRepository;
+import mx.infotec.smartcity.backend.persistence.TransportScheduleRepository;
 import mx.infotec.smartcity.backend.utils.Constants;
 import mx.infotec.smartcity.backend.utils.ControllerUtils;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,6 +54,8 @@ public class PublicTransportController {
 
   @Autowired
   private PublicTransportRepository        publicTransportRepository;
+  @Autowired
+  private TransportScheduleRepository transportScheduleRepository;
 
 
   @Autowired
@@ -63,13 +74,116 @@ public class PublicTransportController {
   public PublicTransport getById(@PathVariable("id") String id) {
     return publicTransportRepository.findOne(id);
   }
-
+  
   @RequestMapping(method = RequestMethod.GET, value = "/page/{page}/{size}")
-  public Page<PublicTransport> getByPageSize(@PathVariable("page") String page,
-      @PathVariable("size") String size) {
+  public Page<?> getByPageSize(
+		  @PathVariable("page") String page,
+		  @PathVariable("size") String size,
+		  @RequestParam(value = "name", required = false) String name,
+          @RequestParam(value = "routename", required = false) String routeName,
+          @RequestParam(value = "weekdays", required = false) List<String> weekdays,
+          @RequestParam(value = "departuretime", required = false) String departureTime,
+          @RequestParam(value = "arrivaltime", required = false) String arrivalTime) {
     Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
+    ExampleMatcher matcher = ExampleMatcher.matchingAll()
+        .withMatcher("name", match -> match.contains().ignoreCase())
+        .withMatcher("routeName", match -> match.contains().ignoreCase())
+        .withIgnoreNullValues();
+    
+    if(name == null && routeName == null && weekdays == null && departureTime == null && arrivalTime == null){
+    	return publicTransportRepository.findAll(pageable);
+    }
+    PublicTransport publicTransport = new PublicTransport();
+    TransportSchedule transportSchedule = new TransportSchedule();
+    boolean transportScheduleSetted = false;
+    if(name != null){
+    	publicTransport.setName(name);
+        
+    }
+    
+    if(routeName != null){
+    	transportSchedule.setRouteName(routeName);
+    	transportScheduleSetted = true;
+    }
+    Time depTime = new Time();
+    if(departureTime != null){
+         depTime = stringToTime(departureTime);
+    }
+    Time arrTime = new Time();
+    if(arrivalTime != null){
+    	arrTime = stringToTime(arrivalTime);
+    }
+    if(weekdays != null && ( departureTime != null || arrivalTime != null)){
+    	transportScheduleSetted = true;
+    	List<WeekDay> wkDays = new ArrayList<WeekDay>();
+    	
+    	
+    	for(String weekday : weekdays){
+    		DayName dayName = DayName.valueOf(weekday);
+    		WeekDay weekDay = new WeekDay();
+    		weekDay.setActive(true);
+    		if(departureTime != null){
+    			weekDay.setArrivalTime(arrTime);
+    		}
+    		if(arrivalTime != null){
+    			weekDay.setDepartureTime(depTime);
+    		}
+    		weekDay.setDayName(dayName);
+    		wkDays.add(weekDay);
+    	}
+    	transportSchedule.setWeekDays(wkDays);
+    }
+    else 
+    	
+        {
+            if(weekdays != null){
+                
+                return this.publicTransportRepository.findByActiveDaysQuery(this.transportScheduleRepository.findByActiveDaysQuery(weekdays), pageable);
+                  /*  transportScheduleSetted = true;
+                    //List<WeekDay> wkDays = this.createWeekdays();
+                    List<WeekDay> wkDays = new ArrayList<WeekDay>();
+                    weekdays.forEach((weekday) -> {
+                      //  WeekDay weekd = new WeekDay();
+                      //  this.activateWeekDay(wkDays, weekday);
+                      WeekDay weekd = new WeekDay();
+                      weekd.setActive(true);
+                      weekd.setDayName(DayName.valueOf(weekday));
+                });
+                    transportSchedule.setWeekDays(wkDays);*/
+            } else {
+                    if( arrivalTime != null || departureTime != null){
+                            transportScheduleSetted = true;
+                            List<WeekDay> wkDays = new ArrayList<WeekDay>();
+                           
+                            if(arrivalTime != null){
+                                    arrTime = stringToTime(arrivalTime);
+                            }
+                            
+                            if(departureTime != null){
+                                    depTime = stringToTime(departureTime);
+                            }
 
-    return publicTransportRepository.findAll(pageable);
+                            WeekDay weekDay = new WeekDay();
+                    weekDay.setActive(true);
+                    if(arrivalTime != null){
+                            weekDay.setArrivalTime(arrTime);
+                    }
+                    if(departureTime != null){
+                            weekDay.setDepartureTime(depTime);
+                    }
+                    wkDays.add(weekDay);
+                    transportSchedule.setWeekDays(wkDays);
+                }
+
+            }
+    }
+    if(transportScheduleSetted == true){
+       
+        return transportScheduleRepository.findByWeekDays(transportSchedule.getWeekDays(), pageable);
+    }
+
+    Example<PublicTransport> example = Example.of(publicTransport, matcher);
+    return publicTransportRepository.findAll(example,pageable);
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/page/{page}")
@@ -258,5 +372,43 @@ public class PublicTransportController {
   private boolean isValid(PublicTransport publicTransport) {
     return publicTransport != null && publicTransport.getName() != null && publicTransport.getBrandName() != null && publicTransport.getModelName() != null && publicTransport.getPublicTransportFuelType() != null && publicTransport.getPublicTransportFuelType().getId() != null;
   }
+  // needs to have format HH:mm
+  private Time stringToTime(String str){
+	  SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm"); //HH = 24h format
+	  dateFormat.setLenient(false); //this will not enable 25:67 for example
+	  Time time = new Time();
+	  Calendar calendar = Calendar.getInstance();
+	  
+	  try {
 
+		Date date = dateFormat.parse(str);
+		calendar.setTime(date);
+		time.setHour(calendar.get(Calendar.HOUR));
+		time.setMinute(calendar.get(Calendar.MINUTE));
+		return time;
+	} catch (ParseException e) {
+		throw new RuntimeException("Invalid time "+ str, e);
+	}
+	  
+  }
+
+  private List<WeekDay> createWeekdays(){
+	  List<WeekDay> weekdays = new ArrayList<WeekDay>();
+	  for(DayName dayName: DayName.values()){
+		  WeekDay weekDay = new WeekDay();
+		  weekDay.setActive(false);
+		  weekDay.setDayName(dayName);
+                  weekdays.add(weekDay);
+	  }
+	  return weekdays;
+  }
+  
+  private void activateWeekDay(List<WeekDay> weekDays,String dayname){
+	  for(WeekDay weekDay: weekDays){
+		  if(weekDay.getDayName().equals(DayName.valueOf(dayname))){
+			  weekDay.setActive(true);
+		  }
+	  }
+  }
+  
 }
