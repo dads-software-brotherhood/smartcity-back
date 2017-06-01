@@ -372,7 +372,7 @@ public class PublicTransportController {
                 }
             } 
         } else {
-            if( weekdays.size()>0){
+            if( weekdays != null){
                 if(departureTime != null){
                     if(arrivalTime != null){
                         return this.transportScheduleRepository.findByActiveDaysAndDepartureTimeAndArrivalTimeQuery( weekdays, departureTime, arrivalTime);
