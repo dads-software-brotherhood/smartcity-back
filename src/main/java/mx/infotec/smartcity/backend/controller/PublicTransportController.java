@@ -100,7 +100,7 @@ public class PublicTransportController {
             return publicTransportRepository.findByNameLikeAndTransportSchedulesIn(name,transportSchedules);
         } else
         {
-        	return publicTransportRepository.findByNameLike(name);
+            return publicTransportRepository.findByNameLike(name);
         }
         
     } else {
@@ -352,7 +352,7 @@ public class PublicTransportController {
 
 		Date date = dateFormat.parse(str);
 		calendar.setTime(date);
-		time.setHour(calendar.get(Calendar.HOUR));
+		time.setHour(calendar.get(Calendar.HOUR_OF_DAY));
 		time.setMinute(calendar.get(Calendar.MINUTE));
 		return time;
 	} catch (ParseException e) {
@@ -429,13 +429,13 @@ public class PublicTransportController {
             } else {
                 if(departureTime != null){
                     if(arrivalTime != null){
-                        return this.transportScheduleRepository.findByDepartureTimeAndArrivalTimeQuery(departureTime, arrivalTime);
+                        return this.transportScheduleRepository.findByWeekDaysDepartureTimeAndWeekDaysArrivalTime(departureTime, arrivalTime);
                     } else {
-                        return this.transportScheduleRepository.findByDepartureTimeQuery(departureTime);
+                        return this.transportScheduleRepository.findByWeekDaysDepartureTime(departureTime);
                     }
                 } else {
                     if(arrivalTime != null){
-                        return this.transportScheduleRepository.findByArrivalTimeQuery(arrivalTime);
+                        return this.transportScheduleRepository.findByWeekDaysArrivalTime(arrivalTime);
                     } else {
                         return null;
                     }

@@ -51,14 +51,13 @@ public interface TransportScheduleRepository extends MongoRepository<TransportSc
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} ,'departureTime':?1, 'arrivalTime':?2}}}")
     List<TransportSchedule> findByActiveDaysAndDepartureTimeAndArrivalTimeQuery(List<String> dayname,Time time,Time time2);
     
-    @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true,'departureTime':?0, 'arrivalTime':?1}}}")
-    List<TransportSchedule> findByDepartureTimeAndArrivalTimeQuery(Time time, Time time2);
+   
+    List<TransportSchedule> findByWeekDaysDepartureTimeAndWeekDaysArrivalTime(Time time, Time time2);
     
-    @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'arrivalTime':?0}}}")
-    List<TransportSchedule> findByArrivalTimeQuery(Time time);
+   
+    List<TransportSchedule> findByWeekDaysArrivalTime(Time time);
     
-    @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true,'departureTime':?0 }}}")
-    List<TransportSchedule> findByDepartureTimeQuery(Time time);
+    List<TransportSchedule> findByWeekDaysDepartureTime(Time time);
     
     @Query(value = "{ 'weekDays': { '$elemMatch': { 'active': true, 'dayName': {$in:?0} }}, 'routeName': ?1}")
     List<TransportSchedule> findByActiveDaysAndRouteNameQuery(List<String> dayname, String routeName);
