@@ -75,13 +75,53 @@ public class PublicTransportController {
     return publicTransportRepository.findOne(id);
   }
   
+  @RequestMapping(method = RequestMethod.GET, value = "/search")
+  public List<PublicTransport> search(
+		  @RequestParam(value = "name", required = false) String name,
+          @RequestParam(value = "routename", required = false) String routeName,
+          @RequestParam(value = "weekday", required = false) List<String> weekdays,
+          @RequestParam(value = "departuretime", required = false) String departureTime,
+          @RequestParam(value = "arrivaltime", required = false) String arrivalTime) {
+   
+    if(name == null && routeName == null && weekdays == null && departureTime == null && arrivalTime == null){
+    	return publicTransportRepository.findAll();
+    }
+    Time depTime = null;
+    if(departureTime != null){
+         depTime = stringToTime(departureTime);
+    }
+    Time arrTime = null;
+    if(arrivalTime != null){
+    	arrTime = stringToTime(arrivalTime);
+    }
+    if(name != null ){
+    	List<TransportSchedule> transportSchedules = validateAndSearchTransportSchedules(routeName, weekdays, depTime, arrTime);
+        if(transportSchedules != null){
+            return publicTransportRepository.findByNameLikeAndTransportSchedulesIn(name,transportSchedules);
+        } else
+        {
+        	return publicTransportRepository.findByNameLike(name);
+        }
+        
+    } else {
+        List<TransportSchedule> transportSchedules = validateAndSearchTransportSchedules(routeName, weekdays, depTime, arrTime);
+        if(transportSchedules != null){
+            return publicTransportRepository.findByTransportSchedulesIn(transportSchedules);
+        }
+    }
+    
+    
+   
+    return null;
+  }
+  
   @RequestMapping(method = RequestMethod.GET, value = "/page/{page}/{size}")
   public Page<?> getByPageSize(
 		  @PathVariable("page") String page,
 		  @PathVariable("size") String size,
 		  @RequestParam(value = "name", required = false) String name,
           @RequestParam(value = "routename", required = false) String routeName,
-          @RequestParam(value = "weekdays", required = false) List<String> weekdays,
+          @RequestParam(value = "weekday", required = false) List<String> weekdays,
           @RequestParam(value = "departuretime", required = false) String departureTime,
           @RequestParam(value = "arrivaltime", required = false) String arrivalTime) {
     Pageable pageable = new PageRequest(Integer.parseInt(page), Integer.parseInt(size));
