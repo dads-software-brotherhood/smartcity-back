@@ -310,6 +310,58 @@
 	"description": "Asthma Attack by high level of pollutions",
 	"refUser": "59090bc481da53308bf322b2"
 }
+{
+	"type": "Alert",
+	"alertType": "TrafficJam",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Eje 6 Sur",
+	"dateTime": {$date:"2017-05-23T21:12:43.00Z"},
+	"eventObserved": "Car in opposite way",
+	"description": "Car in opposite way in Eje 6 Sur",
+	"refUser": "58ff268881da534112238a92"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. Barranca del Muerto",
+	"dateTime": {$date:"2017-05-28T12:02:13.00Z"},
+	"eventObserved": "Suspicious activities",
+	"description": "Suspicious activities of two persons",
+	"refUser": "58ff268881da534112238a92"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. Reforma",
+	"dateTime": {$date:"2017-05-29T08:29:53.00Z"},
+	"eventObserved": "Car Accident",
+	"description": "Accident reported in from of Auditorio Nacional",
+	"refUser": "58ff268881da534112238a92"
+}
+{
+	"type": "Alert",
+	"alertType": "WeatherConditions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"CDMX",
+	"dateTime": {$date:"2017-05-31T07:21:46.00Z"},
+	"eventObserved": "Severe storm warning",
+	"description": "Severe storm",
+	"refUser": "58ff268881da534112238a92"
+}
 
 
 

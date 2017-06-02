@@ -86,7 +86,7 @@ public class GroupController {
                 
                 if (groupRepository.findByGroup(group.getGroup()) != null)
                 {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"There is already a group called '" + group.getGroup() + "'\"}");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"The group you want to add already exists\"}");
                 }
                 
                 // Add this code lines to set numeric id to vehicle
