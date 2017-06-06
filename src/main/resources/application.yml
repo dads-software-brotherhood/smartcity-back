@@ -166,7 +166,7 @@ spring:
         protocol: smtp
         from: test.smartcity.sdk@gmail.com
         username: test.smartcity.sdk@gmail.com
-        password:
+        password: 
         tls: true
         properties.mail.smtp:
             auth: true
@@ -191,8 +191,8 @@ idm:
     default:
         domain: default
 front:
-    url: http://207.249.127.91/#
-    image-url: http://207.249.127.180
+    url: http://207.249.127.135/#
+    image-url: http://207.249.127.135
 
 sa:
   account: admin@localhost.mx

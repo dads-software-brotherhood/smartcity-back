@@ -39,9 +39,14 @@ public interface PublicTransportRepository extends MongoRepository<PublicTranspo
   Page<List<PublicTransport>> findByTransportSchedulesRouteName(String routeName, Pageable pageable);
   
   Page<List<PublicTransport>> findByTransportSchedulesIn(List<TransportSchedule>ts, Pageable pageable);
-  
+  List<PublicTransport> findByTransportSchedulesIn(List<TransportSchedule>ts);
+  List<PublicTransport> findByTransportSchedulesLike(List<TransportSchedule>ts);
+  List<PublicTransport> findByTransportSchedules(List<TransportSchedule>ts);
   Page<List<PublicTransport>> findByNameLikeAndTransportSchedulesIn(String name, List<TransportSchedule>ts, Pageable pageable);
-   
+  
+  List<PublicTransport> findByNameLikeAndTransportSchedulesIn(String name, List<TransportSchedule>ts);
+  
+  List<PublicTransport> findByNameLike(String name);
   
 
 }
