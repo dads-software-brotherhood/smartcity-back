@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import mx.infotec.smartcity.backend.model.Group;
 import mx.infotec.smartcity.backend.persistence.GroupRepository;
+import mx.infotec.smartcity.backend.persistence.UserProfileRepository;
 
 /**
  * RestService Public Transport.
@@ -39,6 +40,9 @@ public class GroupController {
 
     @Autowired
     private GroupRepository groupRepository;
+    
+    @Autowired
+    private UserProfileRepository userProfileRepository;
 
     private int SIZE = 5;
 
@@ -69,8 +73,17 @@ public class GroupController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public ResponseEntity<?> deleteByID(@PathVariable Integer id) {
         try {
-            groupRepository.delete(id);
-            return ResponseEntity.accepted().body("deleted");
+            
+            
+            if (userProfileRepository.findByGroupID(id).size() > 0)
+            {
+                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"You can not remove this group, it is related to one or more users \"}");
+            }
+            else
+            {
+                groupRepository.delete(id);
+                return ResponseEntity.accepted().body("deleted");
+            }
         } catch (Exception ex) {
             LOGGER.error("Error at delete", ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\":\"" + ex.getMessage() + "\"}");
