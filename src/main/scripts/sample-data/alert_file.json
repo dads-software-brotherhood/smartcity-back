@@ -9,7 +9,449 @@
 	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
 	"eventObserved": "Heavy Traffic Jam",
 	"description": "Traffic jam in Paseo de la Reforma. Emergency services at place",
-	"refUser": "59090bc481da53308bf322b2"
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "TrafficJam",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Periferico Sur 3000",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Bumper to bumper traffic",
+	"description": "Pruebas 1",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "TrafficJam",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Minerva 23",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Bumper to bumper traffic",
+	"description": "Pruebas 2",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "TrafficJam",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Masarik, Polanco",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Bumper to bumper traffic",
+	"description": "Pruebas 3",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "TrafficJam",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. de los cien metros 345",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "When a car suddenly stops",
+	"description": "Prueba 4",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "TrafficJam",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Paseo de la Reforma",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "When a car suddenly stops",
+	"description": "Pruebas 5",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "TrafficJam",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Paseo de la Reforma",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "When a car suddenly stops",
+	"description": "Pruebas 6",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. Constituyentes 67",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Car Accident",
+	"description": "Pruebas 7",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. Chapultepec 34",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Car Accident",
+	"description": "Pruebas 8",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Calle Amapolas 34",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Car Accident",
+	"description": "Pruebas 9",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. R1, periferico",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Car crashes",
+	"description": "Pruebas 10",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. Central, frente centro comercial Las Américas",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Car crashes",
+	"description": "Pruebas 11",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Accidents",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. Central 456",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Car crashes",
+	"description": "Pruebas 12",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollutions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. Insurgentes Norte 47",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Pre-contingency alert",
+	"description": "Prueba 13",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollutions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. Montevideo 150",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Pre-contingency alert",
+	"description": "Prueba 14",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollutions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Calz. de Guadalupe",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Pre-contingency alert",
+	"description": "Prueba 15",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollutions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Indios Verdes",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Visible pollution (smog)",
+	"description": "Prueba 16",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollutions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Autopista Mexico-Pachuca KM. 5",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Visible pollution (smog)",
+	"description": "Prueba 17",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollutions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. Insurgentes Norte",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Visible pollution (smog)",
+	"description": "Prueba 18",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "AsthmaAttacks",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Central de Abastos",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "People with asthma attacks at specific point",
+	"description": "Prueba 19",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "AsthmaAttacks",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Estación del Metro San Lazaro",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "People with asthma attacks at specific point",
+	"description": "Prueba 20",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "AsthmaAttacks",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"En el mercado de Sonora",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "People with asthma attacks at specific point",
+	"description": "Prueba 21",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "AsthmaAttacks",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Ataque de asma en el Zocalo",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "People with asthma attacks at specific point",
+	"description": "Prueba 22",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "WeatherConditions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Carretera México-Puebla Km. 56",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Dense fog",
+	"description": "Prueba 23",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "WeatherConditions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Carretera México-Cuernavaca km. 24",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Dense fog",
+	"description": "Prueba 24",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "WeatherConditions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Carretera Guanajuato-Aguascalientes km. 45",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Dense fog",
+	"description": "Prueba 25",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "WeatherConditions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. Barranca del Muerto",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Dense fog",
+	"description": "Prueba 26",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Av. Chapultepec 34",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Pollen concentration",
+	"description": "Prueba 27",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Colonia Fuentes del Pedregal",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Pollen concentration",
+	"description": "Prueba 28",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Colonia Jardín Balbuena",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Pollen concentration",
+	"description": "Prueba 29",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Colonia Jardín Balbuena",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Pollen concentration",
+	"description": "Prueba 30",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Polanco",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Pollen concentration",
+	"description": "Prueba 31",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Polanco",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Symptoms or discomforts of users",
+	"description": "Prueba 32",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Candelaria",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Symptoms or discomforts of users",
+	"description": "Prueba 33",
+	"refUser": "591b281b81da535a385a1193"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Amapolas",
+	"dateTime": {$date:"2017-05-18T09:25:55.00Z"},
+	"eventObserved": "Symptoms or discomforts of users",
+	"description": "Prueba 34",
+	"refUser": "591b281b81da535a385a1193"
 }
 {
 	"type": "Alert",
@@ -61,7 +503,7 @@
 	"dateTime": {$date:"2017-05-05T07:21:46.00Z"},
 	"eventObserved": "Foggy",
 	"description": "Sunny with no chance of rain",
-	"refUser": "59090bc481da53308bf322b2"
+	"refUser": "591b281b81da535a385a1193"
 }
 {
 	"type": "Alert",
@@ -87,7 +529,7 @@
 	"dateTime": {$date:"2017-05-11T14:38:25.00Z"},
 	"eventObserved":"Contingency alert",
 	"description": "Low levels of pollution at the exit of Cuernavaca",
-	"refUser": "user1"
+	"refUser": "58ff268881da534112238a92"
 }
 {
 	"type": "Alert",
@@ -113,7 +555,7 @@
 	"dateTime": {$date:"2017-05-17T16:16:16.00Z"},
 	"eventObserved": "Pollen concentration",
 	"description": "High level of pollen in Paseo de la Reforma",
-	"refUser": "user1"
+	"refUser": "58ff268881da534112238a92"
 }
 {
 	"type": "Alert",
@@ -139,7 +581,7 @@
 	"dateTime": {$date:"2017-05-18T08:55:57.00Z"},
 	"eventObserved": "Pothole",
 	"description": "Traffic jam in Insurgentes avenue. Police at place",
-	"refUser": "59090bc481da53308bf322b2"
+	"refUser": "591b281b81da535a385a1193"
 }
 {
 	"type": "Alert",
@@ -191,7 +633,7 @@
 	"dateTime": {$date:"2017-05-13T09:25:55.00Z"},
 	"eventObserved": "Rain",
 	"description": "Sunny with no chance of rain",
-	"refUser": "59090bc481da53308bf322b2"
+	"refUser": "591b281b81da535a385a1193"
 }
 {
 	"type": "Alert",
@@ -217,7 +659,7 @@
 	"dateTime": {$date:"2017-05-15T17:14:52.00Z"},
 	"eventObserved": "Visible pollution (smog)",
 	"description": "Low levels of pollution at the exit of Cuernavaca",
-	"refUser": "user1"
+	"refUser": "58ff268881da534112238a92"
 }
 {
 	"type": "Alert",
@@ -243,7 +685,7 @@
 	"dateTime": {$date:"2017-05-06T14:24:08.00Z"},
 	"eventObserved": "Symptoms or discomforts of users",
 	"description": "High level of pollen in Paseo de la Reforma",
-	"refUser": "user1"
+	"refUser": "58ff268881da534112238a92"
 }
 {
 	"type": "Alert",
@@ -295,7 +737,7 @@
 	"dateTime": {$date:"2017-05-21T15:17:26.00Z"},
 	"eventObserved": "People with asthma attacks at specific point",
 	"description": "I have an asthma attack",
-	"refUser": "59090bc481da53308bf322b2"
+	"refUser": "591b281b81da535a385a1193"
 }
 {
 	"type": "Alert",
@@ -308,7 +750,7 @@
 	"dateTime": {$date:"2017-05-22T13:54:02.00Z"},
 	"eventObserved": "People with asthma attacks at specific point",
 	"description": "Asthma Attack by high level of pollutions",
-	"refUser": "59090bc481da53308bf322b2"
+	"refUser": "591b281b81da535a385a1193"
 }
 {
 	"type": "Alert",
@@ -361,6 +803,58 @@
 	"eventObserved": "Severe storm warning",
 	"description": "Severe storm",
 	"refUser": "58ff268881da534112238a92"
+}
+{
+	"type": "Alert",
+	"alertType": "AsthmaAttacks",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Polanco, CDMX",
+	"dateTime": {$date:"2017-06-05T08:54:02.00Z"},
+	"eventObserved": "People with asthma attacks at specific point",
+	"description": "Asthma Attack When Biking",
+	"refUser": "59359aaf81da532039eb10bd"
+}
+{
+	"type": "Alert",
+	"alertType": "WeatherConditions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Ecatepec, Estado de México",
+	"dateTime": {$date:"2017-06-05T09:21:46.00Z"},
+	"eventObserved": "Severe storm warning",
+	"description": "Severe storm",
+	"refUser": "59359aaf81da532039eb10bd"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollutions",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Centro CDMX",
+	"dateTime": {$date:"2017-06-05T09:30:03.00Z"},
+	"eventObserved": "Pre-contingency alert",
+	"description": "Contamination in medium level near the center of the city",
+	"refUser": "59359aaf81da532039eb10bd"
+}
+{
+	"type": "Alert",
+	"alertType": "Pollen",
+	"location": {
+		"type": "Point",
+		"coordinates": [-3.712247222222222, 40.423852777777775]
+	},
+	"locationDescription":"Cerca Bosque de Tlalpan, Tlalpan CDMX",
+	"dateTime": {$date:"2017-06-05T11:24:08.00Z"},
+	"eventObserved": "Pollen concentration",
+	"description": "High level of pollen",
+	"refUser": "59359aaf81da532039eb10bd"
 }
 
 
